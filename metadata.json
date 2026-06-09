@@ -1,0 +1,8 @@
+{
+  "name": "Remix: CBBCL Final 4.1",
+  "description": "Cox\u0027s Bazar Boat Club Limited — Cox\u0027s Bazar\u0027s premier private members\u0027 club located on the coast of Bangladesh.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

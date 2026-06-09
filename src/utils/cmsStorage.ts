@@ -1,0 +1,396 @@
+import { Facility, EventItem, Affiliation, RoutePath } from "../types";
+import { FACILITIES_DATA, EVENTS_DATA, PAST_EVENTS_DATA, AFFILIATIONS_DATA } from "../data";
+// @ts-ignore
+import cruiseHero from "../assets/images/cruise_hero_1780825257603.png";
+
+// Interfaces
+export interface MediaItem {
+  id: string;
+  url: string; // Base64
+  name: string;
+  category: "Board Photos" | "News Images" | "Events" | "Gallery" | "Logos" | "Unspecified";
+  uploadedAt: string;
+}
+
+export interface PageCMSContent {
+  home: {
+    heroTitle: string;
+    heroSubtitle: string;
+    heroCover: string;
+    welcomeTitle: string;
+    welcomeText: string;
+    metricMembers: string;
+    metricTonnage: string;
+    metricEvents: string;
+    metricVessels: string;
+    isAboutSummaryActive: boolean;
+    aboutSummaryTitle: string;
+    aboutSummaryText: string;
+  };
+  about: {
+    title: string;
+    subtitle: string;
+    storyTitle: string;
+    storyParagraphs: string[];
+    visionText: string;
+    missionText: string;
+    introductionText?: string;
+    storyText?: string;
+    visionVision?: string;
+    visionMission?: string;
+    coverImage?: string;
+  };
+  membership: {
+    title: string;
+    subtitle: string;
+    preamble: string;
+    scrutinyText: string;
+    categories?: { title: string; desc: string; voters: string; fee: string }[];
+    eligibilitySteps?: { title: string; text: string }[];
+  };
+  contact: {
+    title: string;
+    address: string;
+    phone: string;
+    email: string;
+    temporaryOffice: string;
+  };
+}
+
+// Keys
+const MEDIA_KEY = "cbbcl_cms_media";
+const PAGES_KEY = "cbbcl_cms_pages";
+const FACILITIES_KEY = "cbbcl_cms_facilities";
+const EVENTS_KEY = "cbbcl_cms_events";
+const AFFILIATIONS_KEY = "cbbcl_cms_affiliations";
+
+// Defaults Info
+const DEFAULT_MEDIA: MediaItem[] = [
+  {
+    id: "m-1",
+    name: "Golden Sunset Bay",
+    url: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=400",
+    category: "Gallery",
+    uploadedAt: "2026-06-07T08:00:00Z"
+  },
+  {
+    id: "m-2",
+    name: "Prestige Lounge Main",
+    url: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=400",
+    category: "Gallery",
+    uploadedAt: "2026-06-07T08:05:00Z"
+  }
+];
+
+const DEFAULT_PAGE_CONTENT: PageCMSContent = {
+  home: {
+    heroTitle: "COX'S BAZAR BOAT CLUB",
+    heroSubtitle: "A Prestigious Socio-Cultural & Nautical Sanctuary Duly Chartered Under The Companies Act, 1994",
+    heroCover: cruiseHero,
+    welcomeTitle: "Anchor of Camrades & Coastal Stewardship",
+    welcomeText: "Proudly registered under the Joint Stock Companies & Firms (RJSC) of Bangladesh, Cox’s Bazar Boat Club Limited (CBBCL) stands as an elite private socio-recreational institution. Designed for shipping pioneers, corporate chiefs, and environment advocates, we offer a safe, luxurious marina haven that celebrates South Asia's maritime legacy on the longest sandy beach in the world.",
+    metricMembers: "35+",
+    metricTonnage: "50-Berth",
+    metricEvents: "12+",
+    metricVessels: "15+",
+    isAboutSummaryActive: true,
+    aboutSummaryTitle: "The Charter Legacy",
+    aboutSummaryText: "Incorporated strictly as a private non-profit Company Limited by Guarantee, CBBCL is constructed to protect the pristine shorelines of Cox's Bazar while nurturing close ties of nautical camrade among families. We foster high athletic safety and provide elite reciprocal hospitality with prime clubs worldwide."
+  },
+  about: {
+    title: "Our Heritage & Maritime Vision",
+    subtitle: "Built as an elegant private institution, Cox's Bazar Boat Club Limited embodies the premium standard of leisure, community, and oceanic preservation.",
+    storyTitle: "Our Foundation Story",
+    storyParagraphs: [
+      "Incorporated in January 2026 as a private non-profit Company Limited by Guarantee under The Companies Act, 1994, Cox’s Bazar Boat Club Limited (CBBCL) is the long-awaited fulfillment of premium oceanfront social spaces in Bangladesh.",
+      "The club was pioneered by Founding President Humayun Kabir Robel alongside an eminent board of shipping leaders, legal advocates, and retired military command staff. They shared a vision: to construct an elite marine complex comparable to South Asia's historic clubs that supports yachting, water sports, and environmental preservation in the world's longest sand beach zone.",
+      "CBBCL acts as a social, professional, and philanthropic nexus, maintaining a warm harbor for members, elite dining suites, modern snooker rooms, and dedicated standing councils to defend our coastal dunes against pollution."
+    ],
+    visionText: "To stand as Bangladesh's premier private nautical institution, recognized globally for its elite membership, luxurious sea recreation, and deep-seated coastal protection legacy.",
+    missionText: "To build a world-class clubhouse complex and private marina, uphold strict safety codes, curate dynamic athletic and cultural calendars, and foster a tight-knit community of maritime pioneers and leaders."
+  },
+  membership: {
+    title: "Exclusive Executive Membership",
+    subtitle: "Admissions to CBBCL undergo highly protective, multi-tier vetting by our Scrutiny Committee to ensure standard alignment.",
+    preamble: "Admissions of new club entities are conducted by Invitation Only or through certified sponsors' proposals. Under the club Articles, our committee scrutinizes each candidate's professional status, community contributions, and alignment with the club's code of behavior.",
+    scrutinyText: "Once proposed, names are posted on the Secretariat Notice Board for official review. Following strict vetting rounds, successfully elected member logs are registered under Life Member, Permanent Member, or Donor Member tiers."
+  },
+  contact: {
+    title: "Maritime Registry Headquarters",
+    address: "Waterfront Boulevard, Sector 1, Marina District, Cox's Bazar, Bangladesh",
+    phone: "+880 1812 345678, +880 1711 987654",
+    email: "registry@cbbcl.org, admin@cbbcl.org",
+    temporaryOffice: "VIP Executive Suite, Hotel Sea Albatross, Kolatoli Point, Cox's Bazar"
+  }
+};
+
+// MEDIA LIBRARY GET / SET
+export function getMediaLibrary(): MediaItem[] {
+  const data = localStorage.getItem(MEDIA_KEY);
+  if (!data) {
+    localStorage.setItem(MEDIA_KEY, JSON.stringify(DEFAULT_MEDIA));
+    return DEFAULT_MEDIA;
+  }
+  try {
+    return JSON.parse(data);
+  } catch (e) {
+    return DEFAULT_MEDIA;
+  }
+}
+
+export function saveMediaLibrary(items: MediaItem[]): void {
+  localStorage.setItem(MEDIA_KEY, JSON.stringify(items));
+}
+
+// PAGE CONTENT GET / SET
+export function getPageContent(): PageCMSContent {
+  const data = localStorage.getItem(PAGES_KEY);
+  if (!data) {
+    localStorage.setItem(PAGES_KEY, JSON.stringify(DEFAULT_PAGE_CONTENT));
+    return DEFAULT_PAGE_CONTENT;
+  }
+  try {
+    const page = JSON.parse(data);
+    // Deep merge to ensure newly added keys are present
+    return {
+      home: { ...DEFAULT_PAGE_CONTENT.home, ...page.home },
+      about: { ...DEFAULT_PAGE_CONTENT.about, ...page.about },
+      membership: { ...DEFAULT_PAGE_CONTENT.membership, ...page.membership },
+      contact: { ...DEFAULT_PAGE_CONTENT.contact, ...page.contact }
+    };
+  } catch (e) {
+    return DEFAULT_PAGE_CONTENT;
+  }
+}
+
+export function savePageContent(content: PageCMSContent): void {
+  localStorage.setItem(PAGES_KEY, JSON.stringify(content));
+}
+
+// FACILITIES GET / SET
+export function getCMSFacilities(): Facility[] {
+  const data = localStorage.getItem(FACILITIES_KEY);
+  if (!data) {
+    localStorage.setItem(FACILITIES_KEY, JSON.stringify(FACILITIES_DATA));
+    return FACILITIES_DATA;
+  }
+  try {
+    return JSON.parse(data);
+  } catch (e) {
+    return FACILITIES_DATA;
+  }
+}
+
+export function saveCMSFacilities(facilities: Facility[]): void {
+  localStorage.setItem(FACILITIES_KEY, JSON.stringify(facilities));
+}
+
+// EVENTS GET / SET
+export function getCMSEvents(): EventItem[] {
+  const data = localStorage.getItem(EVENTS_KEY);
+  if (!data) {
+    const combined = [...EVENTS_DATA, ...PAST_EVENTS_DATA];
+    localStorage.setItem(EVENTS_KEY, JSON.stringify(combined));
+    return combined;
+  }
+  try {
+    return JSON.parse(data);
+  } catch (e) {
+    const combined = [...EVENTS_DATA, ...PAST_EVENTS_DATA];
+    return combined;
+  }
+}
+
+export function saveCMSEvents(events: EventItem[]): void {
+  localStorage.setItem(EVENTS_KEY, JSON.stringify(events));
+}
+
+// AFFILIATIONS GET / SET
+export function getCMSAffiliations(): Affiliation[] {
+  const data = localStorage.getItem(AFFILIATIONS_KEY);
+  if (!data) {
+    localStorage.setItem(AFFILIATIONS_KEY, JSON.stringify(AFFILIATIONS_DATA));
+    return AFFILIATIONS_DATA;
+  }
+  try {
+    const list: Affiliation[] = JSON.parse(data);
+    if (!list.some(aff => aff.id === "ezbooking" || aff.name.toLowerCase() === "ezbooking")) {
+      const ez = AFFILIATIONS_DATA.find(aff => aff.id === "ezbooking");
+      if (ez) {
+        list.push(ez);
+        localStorage.setItem(AFFILIATIONS_KEY, JSON.stringify(list));
+      }
+    }
+    return list;
+  } catch (e) {
+    return AFFILIATIONS_DATA;
+  }
+}
+
+export function saveCMSAffiliations(affiliations: Affiliation[]): void {
+  localStorage.setItem(AFFILIATIONS_KEY, JSON.stringify(affiliations));
+}
+
+const NAVIGATION_KEY = "cbbcl_cms_navigation";
+const FOOTER_KEY = "cbbcl_cms_footer";
+
+export interface NavMenuItem {
+  label: string;
+  path: RoutePath;
+  dropdown?: { label: string; sub: string }[];
+}
+
+export interface NavCMSData {
+  logo: string;
+  navbarLogo: string;
+  footerLogo: string;
+  menuItems: NavMenuItem[];
+}
+
+export interface FooterCMSData {
+  logo: string;
+  tagline: string;
+  description: string;
+  quickLinks: { label: string; path: RoutePath }[];
+  membershipLinks: string[];
+  address: string;
+  email: string;
+  phone: string;
+  copyright: string;
+  socials: {
+    facebook: string;
+    twitter: string;
+    linkedin: string;
+    instagram: string;
+  };
+}
+
+const DEFAULT_NAV: NavCMSData = {
+  logo: "",
+  navbarLogo: "",
+  footerLogo: "",
+  menuItems: [
+    { label: "Home", path: "/" },
+    {
+      label: "About",
+      path: "/about.html",
+      dropdown: [
+        { label: "Club Introduction", sub: "overview" },
+        { label: "History & Story", sub: "history" },
+        { label: "Vision & Mission", sub: "vision" },
+        { label: "Key Objectives", sub: "objectives" }
+      ]
+    },
+    { label: "Facilities", path: "/facilities.html" },
+    {
+      label: "Membership",
+      path: "/membership.html",
+      dropdown: [
+        { label: "Donor Membership", sub: "donor" },
+        { label: "Life Membership", sub: "life" },
+        { label: "Permanent Membership", sub: "permanent" },
+        { label: "Associate Membership", sub: "associate" },
+        { label: "Diplomat & Foreign", sub: "" },
+        { label: "Corporate", sub: "" }
+      ]
+    },
+    {
+      label: "Governance",
+      path: "/governance.html",
+      dropdown: [
+        { label: "Articles of Association", sub: "articles" },
+        { label: "Club Constitution", sub: "constitution" },
+        { label: "Club Rules", sub: "rules" },
+        { label: "Standing Committees", sub: "committees" }
+      ]
+    },
+    { label: "Board of Directors", path: "/board.html" },
+    { label: "Club Members", path: "/members.html" },
+    { label: "Events", path: "/events.html" },
+    { label: "News Feed", path: "/news-feed.html" },
+    { label: "Affiliations", path: "/affiliations.html" },
+    { label: "Contact", path: "/contact.html" }
+  ]
+};
+
+const DEFAULT_FOOTER: FooterCMSData = {
+  logo: "",
+  tagline: "Bangladesh’s premier coastal sanctuary and private social club, incorporated as a Non-Profit Company under The Companies Act, 1994. Elevating nautical culture and oceanfront companionship.",
+  description: "Bangladesh’s premier coastal sanctuary and private social club, incorporated as a Non-Profit Company under The Companies Act, 1994.",
+  quickLinks: [
+    { label: "Home Base", path: "/" },
+    { label: "About Our Story", path: "/about.html" },
+    { label: "Club Facilities Showcase", path: "/facilities.html" },
+    { label: "Board of Directors", path: "/board.html" },
+    { label: "Club News Feed", path: "/news-feed.html" },
+    { label: "Affiliations", path: "/affiliations.html" }
+  ],
+  membershipLinks: [
+    "🏆 Donor Membership",
+    "🏵️ Life Membership",
+    "🛡️ Permanent Membership",
+    "⚓ Associate Membership",
+    "🌍 Diplomat & Foreign Cadet",
+    "🏢 Corporate Patronage",
+    "🤝 Honorary Board Membership"
+  ],
+  address: "Coastal Point Bypass, Marine Drive Boulevard, Cox's Bazar, Bangladesh.",
+  email: "registry@cbbcl.org / admin@cbbcl.org",
+  phone: "+880 1711-223344 (Registry Desk)",
+  copyright: "© 2026 Cox's Bazar Boat Club Limited. All Rights Reserved. Incorporated under The Companies Act, 1994, Bangladesh.",
+  socials: {
+    facebook: "https://facebook.com",
+    twitter: "https://twitter.com",
+    linkedin: "https://linkedin.com",
+    instagram: "https://instagram.com"
+  }
+};
+
+export function getNavCMS(): NavCMSData {
+  const data = localStorage.getItem(NAVIGATION_KEY);
+  if (!data) {
+    localStorage.setItem(NAVIGATION_KEY, JSON.stringify(DEFAULT_NAV));
+    return DEFAULT_NAV;
+  }
+  try {
+    const parsed = JSON.parse(data);
+    return {
+      ...DEFAULT_NAV,
+      ...parsed,
+      menuItems: parsed.menuItems || DEFAULT_NAV.menuItems
+    };
+  } catch (e) {
+    return DEFAULT_NAV;
+  }
+}
+
+export function saveNavCMS(nav: NavCMSData): void {
+  localStorage.setItem(NAVIGATION_KEY, JSON.stringify(nav));
+}
+
+export function getFooterCMS(): FooterCMSData {
+  const data = localStorage.getItem(FOOTER_KEY);
+  if (!data) {
+    localStorage.setItem(FOOTER_KEY, JSON.stringify(DEFAULT_FOOTER));
+    return DEFAULT_FOOTER;
+  }
+  try {
+    const parsed = JSON.parse(data);
+    return {
+      ...DEFAULT_FOOTER,
+      ...parsed,
+      quickLinks: parsed.quickLinks || DEFAULT_FOOTER.quickLinks,
+      membershipLinks: parsed.membershipLinks || DEFAULT_FOOTER.membershipLinks,
+      socials: {
+        ...DEFAULT_FOOTER.socials,
+        ...(parsed.socials || {})
+      }
+    };
+  } catch (e) {
+    return DEFAULT_FOOTER;
+  }
+}
+
+export function saveFooterCMS(footer: FooterCMSData): void {
+  localStorage.setItem(FOOTER_KEY, JSON.stringify(footer));
+}

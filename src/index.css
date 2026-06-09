@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Jost:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #1a2744;
+  --color-navy-mid: #1f3158;
+  --color-navy-light: #263a6b;
+  --color-gold: #c9a84c;
+  --color-gold-light: #e8c96a;
+  --color-gold-dark: #a8873a;
+  --color-silver: #d0d8e8;
+  --color-bg-primary: #faf8f3;
+  --color-bg-secondary: #f5f1e8;
+  --color-bg-white: #ffffff;
+  --color-text-dark: #1a2744;
+  --color-text-body: #4a5568;
+  --color-text-light: #8a96a8;
+  --color-text-gold: #c9a84c;
+  
+  --font-display: "Cormorant Garamond", serif;
+  --font-sans: "Jost", sans-serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #faf8f3;
+}
+::-webkit-scrollbar-thumb {
+  background: #c9a84c;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a8873a;
+}
+
+/* Page base settings */
+body {
+  font-family: "Jost", sans-serif;
+  background-color: #faf8f3;
+  color: #4a5568;
+  line-height: 1.85;
+}
+
+/* FORCE SINGLE-LINE NAVIGATION (NO LAYOUT BREAKS) */
+nav, .navbar, .main-nav {
+  white-space: nowrap;
+}
+
+.navbar ul li,
+.navbar a {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+}
+
+.navbar .dropdown {
+  white-space: nowrap;
+}
+
+
