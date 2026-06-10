@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import { EVENTS_DATA, PAST_EVENTS_DATA } from "../../data";
+import { getCMSEvents } from "../../utils/cmsStorage";
+import CardMedia from "../CardMedia";
 import { Calendar, MapPin, Users, Ticket, X, Check, Anchor, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
 export default function Events() {
+  const [allEvents] = useState(getCMSEvents());
+  const upcomingEvents = allEvents.filter(e => e.isUpcoming);
+  const pastEvents = allEvents.filter(e => !e.isUpcoming);
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ticketQty, setTicketQty] = useState("1");
@@ -84,15 +88,15 @@ export default function Events() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {EVENTS_DATA.map((event) => (
+          {upcomingEvents.map((event) => (
             <div
               key={event.id}
               className="bg-white border border-slate-200 rounded-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
             >
               {/* Cover card overlay content */}
               <div className="relative h-48 overflow-hidden bg-navy">
-                <img
-                  src={event.image}
+                <CardMedia
+                  media={event.image}
                   alt={event.title}
                   className="w-full h-full object-cover filter brightness-95"
                 />
@@ -155,7 +159,7 @@ export default function Events() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {PAST_EVENTS_DATA.map((event) => (
+          {pastEvents.map((event) => (
             <div
               key={event.id}
               className="bg-white border border-slate-200 rounded-sm p-6 flex flex-col justify-between h-96 group hover:shadow-lg transition-all"
@@ -168,8 +172,8 @@ export default function Events() {
 
                 {event.image && (
                   <div className="h-28 overflow-hidden rounded-xs bg-slate-100 border">
-                    <img
-                      src={event.image}
+                    <CardMedia
+                      media={event.image}
                       alt={event.title}
                       className="w-full h-full object-cover filter saturate-50 group-hover:saturate-100 transition-all duration-300"
                     />

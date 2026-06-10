@@ -126,109 +126,151 @@ const DEFAULT_PAGE_CONTENT: PageCMSContent = {
 
 // MEDIA LIBRARY GET / SET
 export function getMediaLibrary(): MediaItem[] {
-  const data = localStorage.getItem(MEDIA_KEY);
-  if (!data) {
+  try {
+    const data = localStorage.getItem(MEDIA_KEY);
+    if (!data) {
+      localStorage.setItem(MEDIA_KEY, JSON.stringify(DEFAULT_MEDIA));
+      return DEFAULT_MEDIA;
+    }
+    const parsed = JSON.parse(data);
+    if (Array.isArray(parsed)) {
+      return parsed;
+    }
     localStorage.setItem(MEDIA_KEY, JSON.stringify(DEFAULT_MEDIA));
     return DEFAULT_MEDIA;
-  }
-  try {
-    return JSON.parse(data);
   } catch (e) {
     return DEFAULT_MEDIA;
   }
 }
 
 export function saveMediaLibrary(items: MediaItem[]): void {
-  localStorage.setItem(MEDIA_KEY, JSON.stringify(items));
+  try {
+    localStorage.setItem(MEDIA_KEY, JSON.stringify(items));
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 // PAGE CONTENT GET / SET
 export function getPageContent(): PageCMSContent {
-  const data = localStorage.getItem(PAGES_KEY);
-  if (!data) {
+  try {
+    const data = localStorage.getItem(PAGES_KEY);
+    if (!data) {
+      localStorage.setItem(PAGES_KEY, JSON.stringify(DEFAULT_PAGE_CONTENT));
+      return DEFAULT_PAGE_CONTENT;
+    }
+    const page = JSON.parse(data);
+    if (page && typeof page === "object") {
+      // Deep merge to ensure newly added keys are present
+      return {
+        home: { ...DEFAULT_PAGE_CONTENT.home, ...(page.home || {}) },
+        about: { ...DEFAULT_PAGE_CONTENT.about, ...(page.about || {}) },
+        membership: { ...DEFAULT_PAGE_CONTENT.membership, ...(page.membership || {}) },
+        contact: { ...DEFAULT_PAGE_CONTENT.contact, ...(page.contact || {}) }
+      };
+    }
     localStorage.setItem(PAGES_KEY, JSON.stringify(DEFAULT_PAGE_CONTENT));
     return DEFAULT_PAGE_CONTENT;
-  }
-  try {
-    const page = JSON.parse(data);
-    // Deep merge to ensure newly added keys are present
-    return {
-      home: { ...DEFAULT_PAGE_CONTENT.home, ...page.home },
-      about: { ...DEFAULT_PAGE_CONTENT.about, ...page.about },
-      membership: { ...DEFAULT_PAGE_CONTENT.membership, ...page.membership },
-      contact: { ...DEFAULT_PAGE_CONTENT.contact, ...page.contact }
-    };
   } catch (e) {
     return DEFAULT_PAGE_CONTENT;
   }
 }
 
 export function savePageContent(content: PageCMSContent): void {
-  localStorage.setItem(PAGES_KEY, JSON.stringify(content));
+  try {
+    localStorage.setItem(PAGES_KEY, JSON.stringify(content));
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 // FACILITIES GET / SET
 export function getCMSFacilities(): Facility[] {
-  const data = localStorage.getItem(FACILITIES_KEY);
-  if (!data) {
+  try {
+    const data = localStorage.getItem(FACILITIES_KEY);
+    if (!data) {
+      localStorage.setItem(FACILITIES_KEY, JSON.stringify(FACILITIES_DATA));
+      return FACILITIES_DATA;
+    }
+    const parsed = JSON.parse(data);
+    if (Array.isArray(parsed)) {
+      return parsed;
+    }
     localStorage.setItem(FACILITIES_KEY, JSON.stringify(FACILITIES_DATA));
     return FACILITIES_DATA;
-  }
-  try {
-    return JSON.parse(data);
   } catch (e) {
     return FACILITIES_DATA;
   }
 }
 
 export function saveCMSFacilities(facilities: Facility[]): void {
-  localStorage.setItem(FACILITIES_KEY, JSON.stringify(facilities));
+  try {
+    localStorage.setItem(FACILITIES_KEY, JSON.stringify(facilities));
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 // EVENTS GET / SET
 export function getCMSEvents(): EventItem[] {
-  const data = localStorage.getItem(EVENTS_KEY);
-  if (!data) {
+  try {
+    const data = localStorage.getItem(EVENTS_KEY);
     const combined = [...EVENTS_DATA, ...PAST_EVENTS_DATA];
+    if (!data) {
+      localStorage.setItem(EVENTS_KEY, JSON.stringify(combined));
+      return combined;
+    }
+    const parsed = JSON.parse(data);
+    if (Array.isArray(parsed)) {
+      return parsed;
+    }
     localStorage.setItem(EVENTS_KEY, JSON.stringify(combined));
     return combined;
-  }
-  try {
-    return JSON.parse(data);
   } catch (e) {
-    const combined = [...EVENTS_DATA, ...PAST_EVENTS_DATA];
-    return combined;
+    return [...EVENTS_DATA, ...PAST_EVENTS_DATA];
   }
 }
 
 export function saveCMSEvents(events: EventItem[]): void {
-  localStorage.setItem(EVENTS_KEY, JSON.stringify(events));
+  try {
+    localStorage.setItem(EVENTS_KEY, JSON.stringify(events));
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 // AFFILIATIONS GET / SET
 export function getCMSAffiliations(): Affiliation[] {
-  const data = localStorage.getItem(AFFILIATIONS_KEY);
-  if (!data) {
+  try {
+    const data = localStorage.getItem(AFFILIATIONS_KEY);
+    if (!data) {
+      localStorage.setItem(AFFILIATIONS_KEY, JSON.stringify(AFFILIATIONS_DATA));
+      return AFFILIATIONS_DATA;
+    }
+    const list: Affiliation[] = JSON.parse(data);
+    if (Array.isArray(list)) {
+      if (!list.some(aff => aff && (aff.id === "ezbooking" || aff.name?.toLowerCase() === "ezbooking"))) {
+        const ez = AFFILIATIONS_DATA.find(aff => aff.id === "ezbooking");
+        if (ez) {
+          list.push(ez);
+          localStorage.setItem(AFFILIATIONS_KEY, JSON.stringify(list));
+        }
+      }
+      return list;
+    }
     localStorage.setItem(AFFILIATIONS_KEY, JSON.stringify(AFFILIATIONS_DATA));
     return AFFILIATIONS_DATA;
-  }
-  try {
-    const list: Affiliation[] = JSON.parse(data);
-    if (!list.some(aff => aff.id === "ezbooking" || aff.name.toLowerCase() === "ezbooking")) {
-      const ez = AFFILIATIONS_DATA.find(aff => aff.id === "ezbooking");
-      if (ez) {
-        list.push(ez);
-        localStorage.setItem(AFFILIATIONS_KEY, JSON.stringify(list));
-      }
-    }
-    return list;
   } catch (e) {
     return AFFILIATIONS_DATA;
   }
 }
 
 export function saveCMSAffiliations(affiliations: Affiliation[]): void {
-  localStorage.setItem(AFFILIATIONS_KEY, JSON.stringify(affiliations));
+  try {
+    localStorage.setItem(AFFILIATIONS_KEY, JSON.stringify(affiliations));
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 const NAVIGATION_KEY = "cbbcl_cms_navigation";
@@ -347,50 +389,66 @@ const DEFAULT_FOOTER: FooterCMSData = {
 };
 
 export function getNavCMS(): NavCMSData {
-  const data = localStorage.getItem(NAVIGATION_KEY);
-  if (!data) {
+  try {
+    const data = localStorage.getItem(NAVIGATION_KEY);
+    if (!data) {
+      localStorage.setItem(NAVIGATION_KEY, JSON.stringify(DEFAULT_NAV));
+      return DEFAULT_NAV;
+    }
+    const parsed = JSON.parse(data);
+    if (parsed && typeof parsed === "object") {
+      return {
+        ...DEFAULT_NAV,
+        ...parsed,
+        menuItems: Array.isArray(parsed.menuItems) ? parsed.menuItems : DEFAULT_NAV.menuItems
+      };
+    }
     localStorage.setItem(NAVIGATION_KEY, JSON.stringify(DEFAULT_NAV));
     return DEFAULT_NAV;
-  }
-  try {
-    const parsed = JSON.parse(data);
-    return {
-      ...DEFAULT_NAV,
-      ...parsed,
-      menuItems: parsed.menuItems || DEFAULT_NAV.menuItems
-    };
   } catch (e) {
     return DEFAULT_NAV;
   }
 }
 
 export function saveNavCMS(nav: NavCMSData): void {
-  localStorage.setItem(NAVIGATION_KEY, JSON.stringify(nav));
+  try {
+    localStorage.setItem(NAVIGATION_KEY, JSON.stringify(nav));
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 export function getFooterCMS(): FooterCMSData {
-  const data = localStorage.getItem(FOOTER_KEY);
-  if (!data) {
+  try {
+    const data = localStorage.getItem(FOOTER_KEY);
+    if (!data) {
+      localStorage.setItem(FOOTER_KEY, JSON.stringify(DEFAULT_FOOTER));
+      return DEFAULT_FOOTER;
+    }
+    const parsed = JSON.parse(data);
+    if (parsed && typeof parsed === "object") {
+      return {
+        ...DEFAULT_FOOTER,
+        ...parsed,
+        quickLinks: Array.isArray(parsed.quickLinks) ? parsed.quickLinks : DEFAULT_FOOTER.quickLinks,
+        membershipLinks: Array.isArray(parsed.membershipLinks) ? parsed.membershipLinks : DEFAULT_FOOTER.membershipLinks,
+        socials: {
+          ...DEFAULT_FOOTER.socials,
+          ...((parsed.socials && typeof parsed.socials === "object") ? parsed.socials : {})
+        }
+      };
+    }
     localStorage.setItem(FOOTER_KEY, JSON.stringify(DEFAULT_FOOTER));
     return DEFAULT_FOOTER;
-  }
-  try {
-    const parsed = JSON.parse(data);
-    return {
-      ...DEFAULT_FOOTER,
-      ...parsed,
-      quickLinks: parsed.quickLinks || DEFAULT_FOOTER.quickLinks,
-      membershipLinks: parsed.membershipLinks || DEFAULT_FOOTER.membershipLinks,
-      socials: {
-        ...DEFAULT_FOOTER.socials,
-        ...(parsed.socials || {})
-      }
-    };
   } catch (e) {
     return DEFAULT_FOOTER;
   }
 }
 
 export function saveFooterCMS(footer: FooterCMSData): void {
-  localStorage.setItem(FOOTER_KEY, JSON.stringify(footer));
+  try {
+    localStorage.setItem(FOOTER_KEY, JSON.stringify(footer));
+  } catch (e) {
+    console.error(e);
+  }
 }

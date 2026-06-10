@@ -3,6 +3,7 @@ import { RoutePath } from "../../types";
 import { getBoardMembers, getNewsPosts, getDirectorPortrait } from "../../utils/storage";
 import { getPageContent, getCMSFacilities, getCMSEvents, getCMSAffiliations } from "../../utils/cmsStorage";
 import BoardProfileCard from "../BoardProfileCard";
+import CardMedia from "../CardMedia";
 import { getHomeLayoutCMS } from "../../utils/homeCmsStorage";
 import { ArrowRight, Quote, Calendar, MapPin, Mail, Phone, Clock, Anchor, Users, Shield, Award, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
@@ -347,8 +348,8 @@ export default function Home({ navigate }: HomeProps) {
                         className="group relative h-[320px] overflow-hidden bg-navy-mid cursor-pointer shadow-md rounded-sm border border-slate-200/50"
                       >
                         {/* Facility Background */}
-                        <img
-                          src={facility.image}
+                        <CardMedia
+                          media={facility.image}
                           alt={facility.name}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 brightness-90 group-hover:brightness-50"
                         />
@@ -414,8 +415,8 @@ export default function Home({ navigate }: HomeProps) {
                       >
                         {/* Image block with Date overlay */}
                         <div className="relative h-48 overflow-hidden bg-navy-mid">
-                          <img
-                            src={event.image || "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80&w=600"}
+                          <CardMedia
+                            media={event.image || "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80&w=600"}
                             alt={event.title}
                             className="w-full h-full object-cover filter brightness-95"
                           />
@@ -514,8 +515,8 @@ export default function Home({ navigate }: HomeProps) {
 
                           {post.image && (
                             <div className="h-28 overflow-hidden rounded-xs bg-slate-100">
-                              <img
-                                src={post.image}
+                              <CardMedia
+                                media={post.image}
                                 alt="News post visuals"
                                 className="w-full h-full object-cover filter saturate-75"
                               />

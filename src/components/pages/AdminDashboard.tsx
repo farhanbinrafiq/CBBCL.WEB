@@ -4790,6 +4790,16 @@ export default function AdminDashboard({ navigate, onLogout, initialActiveTab }:
                     onClear={() => setNewsForm({ ...newsForm, image: "" })}
                     label="Cover Banner Image"
                   />
+                  <div className="mt-2 space-y-1">
+                    <label className="text-[10px] text-[#9e7f46] block uppercase font-bold">Or Raw Image URL / Raw Embed Code (Canva, YouTube, SVG, iframe HTML)</label>
+                    <textarea
+                      value={newsForm.image}
+                      onChange={(e) => setNewsForm({ ...newsForm, image: e.target.value })}
+                      className="w-full border p-2 bg-slate-50 focus:bg-white text-[11px] font-mono outline-none"
+                      rows={3}
+                      placeholder='Paste raw link (e.g. https://...) or complete embed code (e.g. <iframe ...></iframe>, <div style="...">...</div>)'
+                    />
+                  </div>
                 </div>
 
                 <div className="space-y-1">
@@ -4910,6 +4920,16 @@ export default function AdminDashboard({ navigate, onLogout, initialActiveTab }:
                     onClear={() => setAffForm({ ...affForm, logoUrl: "" })}
                     label="Partner Organization Logo"
                   />
+                  <div className="mt-2 space-y-1">
+                    <label className="text-[10px] text-[#9e7f46] block uppercase font-bold">Or Raw Image URL / Raw Embed Code (Canva, YouTube, SVG, iframe HTML)</label>
+                    <textarea
+                      value={affForm.logoUrl}
+                      onChange={(e) => setAffForm({ ...affForm, logoUrl: e.target.value })}
+                      className="w-full border p-2 bg-slate-50 focus:bg-white text-[11px] font-mono outline-none"
+                      rows={3}
+                      placeholder='Paste raw link (e.g. https://...) or complete embed code (e.g. <iframe ...></iframe>, <div style="...">...</div>)'
+                    />
+                  </div>
                 </div>
               </div>
 

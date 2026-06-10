@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { FACILITIES_DATA } from "../../data";
+import { getCMSFacilities } from "../../utils/cmsStorage";
+import CardMedia from "../CardMedia";
 import { MapPin, Users, Calendar, Clock, Anchor, ShieldCheck, X, Check } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
 export default function Facilities() {
+  const [facilities] = useState(getCMSFacilities());
   const [selectedFacility, setSelectedFacility] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bookingFormData, setBookingFormData] = useState({ date: "", time: "", guests: "2", memberId: "" });
@@ -68,7 +70,7 @@ export default function Facilities() {
       {/* Facilities Grid with Alternating Cards */}
       <section className="py-20 px-6 max-w-6xl mx-auto">
         <div className="space-y-24">
-          {FACILITIES_DATA.map((fac, index) => {
+          {facilities.map((fac, index) => {
             const isEven = index % 2 === 0;
             return (
               <div
@@ -85,8 +87,8 @@ export default function Facilities() {
                 >
                   <div className="absolute -inset-2 border border-gold/30 transform translate-x-3 translate-y-3 transition-transform duration-300 group-hover:translate-x-1 group-hover:translate-y-1"></div>
                   <div className="relative overflow-hidden bg-navy-mid border border-gold/60 max-h-[380px] h-[340px]">
-                    <img
-                      src={fac.image}
+                    <CardMedia
+                      media={fac.image}
                       alt={fac.name}
                       className="w-full h-full object-cover filter saturate-75 brightness-95 group-hover:scale-105 group-hover:brightness-100 transition-all duration-700"
                     />

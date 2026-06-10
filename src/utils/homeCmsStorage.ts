@@ -201,36 +201,45 @@ const DEFAULT_HOME_LAYOUT: HomeCMSLayoutData = {
 };
 
 export function getHomeLayoutCMS(): HomeCMSLayoutData {
-  const stored = localStorage.getItem(LAYOUT_STORAGE_KEY);
-  if (!stored) {
+  try {
+    const stored = localStorage.getItem(LAYOUT_STORAGE_KEY);
+    if (!stored) {
+      localStorage.setItem(LAYOUT_STORAGE_KEY, JSON.stringify(DEFAULT_HOME_LAYOUT));
+      return DEFAULT_HOME_LAYOUT;
+    }
+    const parsed = JSON.parse(stored);
+    if (parsed && typeof parsed === "object") {
+      // Deep merge sections to survive schema upgrades
+      const order = Array.isArray(parsed.order) ? parsed.order : DEFAULT_HOME_LAYOUT.order;
+      const s = parsed.sections || {};
+      const sections = {
+        hero: { ...DEFAULT_HOME_LAYOUT.sections.hero, ...(s.hero || {}) },
+        stats: { ...DEFAULT_HOME_LAYOUT.sections.stats, ...(s.stats || {}) },
+        president: { ...DEFAULT_HOME_LAYOUT.sections.president, ...(s.president || {}) },
+        overview: { ...DEFAULT_HOME_LAYOUT.sections.overview, ...(s.overview || {}) },
+        facilities: { ...DEFAULT_HOME_LAYOUT.sections.facilities, ...(s.facilities || {}) },
+        events: { ...DEFAULT_HOME_LAYOUT.sections.events, ...(s.events || {}) },
+        news: { ...DEFAULT_HOME_LAYOUT.sections.news, ...(s.news || {}) },
+        board: { ...DEFAULT_HOME_LAYOUT.sections.board, ...(s.board || {}) },
+        membership: { ...DEFAULT_HOME_LAYOUT.sections.membership, ...(s.membership || {}) },
+        affiliations: { ...DEFAULT_HOME_LAYOUT.sections.affiliations, ...(s.affiliations || {}) },
+        contact: { ...DEFAULT_HOME_LAYOUT.sections.contact, ...(s.contact || {}) }
+      };
+      return { order, sections };
+    }
     localStorage.setItem(LAYOUT_STORAGE_KEY, JSON.stringify(DEFAULT_HOME_LAYOUT));
     return DEFAULT_HOME_LAYOUT;
-  }
-  try {
-    const parsed = JSON.parse(stored);
-    // Deep merge sections to survive schema upgrades
-    const order = parsed.order || DEFAULT_HOME_LAYOUT.order;
-    const sections = {
-      hero: { ...DEFAULT_HOME_LAYOUT.sections.hero, ...parsed.sections?.hero },
-      stats: { ...DEFAULT_HOME_LAYOUT.sections.stats, ...parsed.sections?.stats },
-      president: { ...DEFAULT_HOME_LAYOUT.sections.president, ...parsed.sections?.president },
-      overview: { ...DEFAULT_HOME_LAYOUT.sections.overview, ...parsed.sections?.overview },
-      facilities: { ...DEFAULT_HOME_LAYOUT.sections.facilities, ...parsed.sections?.facilities },
-      events: { ...DEFAULT_HOME_LAYOUT.sections.events, ...parsed.sections?.events },
-      news: { ...DEFAULT_HOME_LAYOUT.sections.news, ...parsed.sections?.news },
-      board: { ...DEFAULT_HOME_LAYOUT.sections.board, ...parsed.sections?.board },
-      membership: { ...DEFAULT_HOME_LAYOUT.sections.membership, ...parsed.sections?.membership },
-      affiliations: { ...DEFAULT_HOME_LAYOUT.sections.affiliations, ...parsed.sections?.affiliations },
-      contact: { ...DEFAULT_HOME_LAYOUT.sections.contact, ...parsed.sections?.contact }
-    };
-    return { order, sections };
   } catch (e) {
     return DEFAULT_HOME_LAYOUT;
   }
 }
 
 export function saveHomeLayoutCMS(layout: HomeCMSLayoutData): void {
-  localStorage.setItem(LAYOUT_STORAGE_KEY, JSON.stringify(layout));
+  try {
+    localStorage.setItem(LAYOUT_STORAGE_KEY, JSON.stringify(layout));
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 // Media upload custom utility to automatically sync image to Central Media Library,

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getNewsPosts } from "../../utils/storage";
 import { NewsPost } from "../../types";
+import CardMedia from "../CardMedia";
 import { Search, Heart, MessageSquare, Tag, X, Send, Calendar, Anchor, ShieldAlert } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -201,8 +202,8 @@ export default function NewsFeed() {
                     {/* Image thumb */}
                     {post.image ? (
                       <div className="h-32 overflow-hidden bg-slate-100 rounded-xs border border-slate-100">
-                        <img
-                          src={post.image}
+                        <CardMedia
+                          media={post.image}
                           alt={post.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 saturate-75"
                         />
@@ -291,8 +292,8 @@ export default function NewsFeed() {
               {/* Cover layout inside Modal */}
               {activePost.image && (
                 <div className="h-64 overflow-hidden rounded-xs border border-slate-100 bg-slate-50">
-                  <img
-                    src={activePost.image}
+                  <CardMedia
+                    media={activePost.image}
                     alt="Cover banner details"
                     className="w-full h-full object-cover filter brightness-95 saturate-100"
                   />

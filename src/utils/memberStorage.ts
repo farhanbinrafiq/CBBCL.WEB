@@ -359,25 +359,30 @@ const DEFAULT_MEMBERS: ClubMember[] = [
 ];
 
 export function getClubMembers(): ClubMember[] {
-  const data = localStorage.getItem(MEMBERS_KEY);
-  if (!data) {
-    localStorage.setItem(MEMBERS_KEY, JSON.stringify(DEFAULT_MEMBERS));
-    return DEFAULT_MEMBERS;
-  }
   try {
-    let list = JSON.parse(data) as ClubMember[];
+    const data = localStorage.getItem(MEMBERS_KEY);
+    if (!data) {
+      localStorage.setItem(MEMBERS_KEY, JSON.stringify(DEFAULT_MEMBERS));
+      return DEFAULT_MEMBERS;
+    }
+    let list = JSON.parse(data);
+    if (!Array.isArray(list)) {
+      localStorage.setItem(MEMBERS_KEY, JSON.stringify(DEFAULT_MEMBERS));
+      return DEFAULT_MEMBERS;
+    }
     
     // Check if the list lacks the new comprehensive dummy list
-    const hasNewDummyData = list.some(item => item.id === "humayun-kabir-robel");
+    const hasNewDummyData = list.some(item => item && item.id === "humayun-kabir-robel");
     if (!hasNewDummyData || list.length < 15) {
       // Force rewrite to updated dummy set, preserving any custom user-added items
-      const userAdded = list.filter(item => !DEFAULT_MEMBERS.some(def => def.id === item.id));
+      const userAdded = list.filter(item => item && !DEFAULT_MEMBERS.some(def => def.id === item.id));
       list = [...DEFAULT_MEMBERS, ...userAdded];
       localStorage.setItem(MEMBERS_KEY, JSON.stringify(list));
     }
 
     let changed = false;
     list.forEach((item, idx) => {
+      if (!item) return;
       if (item.order === undefined) {
         item.order = idx;
         changed = true;
@@ -406,18 +411,22 @@ export function getClubMembers(): ClubMember[] {
     if (changed) {
       localStorage.setItem(MEMBERS_KEY, JSON.stringify(list));
     }
-    return list.sort((a, b) => a.order - b.order);
+    return list.filter(Boolean).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   } catch (e) {
     return DEFAULT_MEMBERS;
   }
 }
 
 export function saveClubMembers(members: ClubMember[]): void {
-  const sorted = [...members].sort((a, b) => a.order - b.order);
-  sorted.forEach((item, idx) => {
-    item.order = idx;
-  });
-  localStorage.setItem(MEMBERS_KEY, JSON.stringify(sorted));
+  try {
+    const sorted = [...members].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    sorted.forEach((item, idx) => {
+      if (item) item.order = idx;
+    });
+    localStorage.setItem(MEMBERS_KEY, JSON.stringify(sorted));
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 // Initial default applications to make the system look active upon loading
@@ -453,20 +462,29 @@ const DEFAULT_APPLICATIONS: MembershipApplication[] = [
 ];
 
 export function getMembershipApplications(): MembershipApplication[] {
-  const data = localStorage.getItem(APPLICATIONS_KEY);
-  if (!data) {
+  try {
+    const data = localStorage.getItem(APPLICATIONS_KEY);
+    if (!data) {
+      localStorage.setItem(APPLICATIONS_KEY, JSON.stringify(DEFAULT_APPLICATIONS));
+      return DEFAULT_APPLICATIONS;
+    }
+    const parsed = JSON.parse(data);
+    if (Array.isArray(parsed)) {
+      return parsed;
+    }
     localStorage.setItem(APPLICATIONS_KEY, JSON.stringify(DEFAULT_APPLICATIONS));
     return DEFAULT_APPLICATIONS;
-  }
-  try {
-    return JSON.parse(data);
   } catch (e) {
     return DEFAULT_APPLICATIONS;
   }
 }
 
 export function saveMembershipApplications(applications: MembershipApplication[]): void {
-  localStorage.setItem(APPLICATIONS_KEY, JSON.stringify(applications));
+  try {
+    localStorage.setItem(APPLICATIONS_KEY, JSON.stringify(applications));
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 const AFF_REQUESTS_KEY = "cbbcl_affiliation_requests";
@@ -499,20 +517,29 @@ const DEFAULT_AFF_REQUESTS: AffiliationRequest[] = [
 ];
 
 export function getAffiliationRequests(): AffiliationRequest[] {
-  const data = localStorage.getItem(AFF_REQUESTS_KEY);
-  if (!data) {
+  try {
+    const data = localStorage.getItem(AFF_REQUESTS_KEY);
+    if (!data) {
+      localStorage.setItem(AFF_REQUESTS_KEY, JSON.stringify(DEFAULT_AFF_REQUESTS));
+      return DEFAULT_AFF_REQUESTS;
+    }
+    const parsed = JSON.parse(data);
+    if (Array.isArray(parsed)) {
+      return parsed;
+    }
     localStorage.setItem(AFF_REQUESTS_KEY, JSON.stringify(DEFAULT_AFF_REQUESTS));
     return DEFAULT_AFF_REQUESTS;
-  }
-  try {
-    return JSON.parse(data);
   } catch (e) {
     return DEFAULT_AFF_REQUESTS;
   }
 }
 
 export function saveAffiliationRequests(requests: AffiliationRequest[]): void {
-  localStorage.setItem(AFF_REQUESTS_KEY, JSON.stringify(requests));
+  try {
+    localStorage.setItem(AFF_REQUESTS_KEY, JSON.stringify(requests));
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 const EZBOOKING_KEY = "cbbcl_ezbooking_reservations";
@@ -542,21 +569,29 @@ const DEFAULT_EZ_RESERVATIONS: EZBookingReservation[] = [
   }
 ];
 
-
 export function getEZBookingReservations(): EZBookingReservation[] {
-  const data = localStorage.getItem(EZBOOKING_KEY);
-  if (!data) {
+  try {
+    const data = localStorage.getItem(EZBOOKING_KEY);
+    if (!data) {
+      localStorage.setItem(EZBOOKING_KEY, JSON.stringify(DEFAULT_EZ_RESERVATIONS));
+      return DEFAULT_EZ_RESERVATIONS;
+    }
+    const parsed = JSON.parse(data);
+    if (Array.isArray(parsed)) {
+      return parsed;
+    }
     localStorage.setItem(EZBOOKING_KEY, JSON.stringify(DEFAULT_EZ_RESERVATIONS));
     return DEFAULT_EZ_RESERVATIONS;
-  }
-  try {
-    return JSON.parse(data);
   } catch (e) {
     return DEFAULT_EZ_RESERVATIONS;
   }
 }
 
 export function saveEZBookingReservations(reservations: EZBookingReservation[]): void {
-  localStorage.setItem(EZBOOKING_KEY, JSON.stringify(reservations));
+  try {
+    localStorage.setItem(EZBOOKING_KEY, JSON.stringify(reservations));
+  } catch (e) {
+    console.error(e);
+  }
 }
 

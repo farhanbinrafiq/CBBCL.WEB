@@ -4,6 +4,7 @@ import { Menu, X, ChevronDown, Compass, Award, LifeBuoy, FileText, Anchor, LogIn
 import { getNavCMS } from "../utils/cmsStorage";
 import { getBoardMembers } from "../utils/storage";
 import { DIRECTORS_DATA } from "../data";
+import LogoSvg from "./LogoSvg";
 // @ts-ignore
 import cbbclLogo from "../assets/logo.png";
 
@@ -31,6 +32,12 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
 
   const menuItems = navCms.menuItems;
   const currentLogo = navCms.navbarLogo || navCms.logo || cbbclLogo;
+  const isDefaultLogo =
+    currentLogo === cbbclLogo ||
+    !navCms.navbarLogo ||
+    navCms.navbarLogo === "" ||
+    navCms.navbarLogo.includes("logo.png") ||
+    navCms.navbarLogo.includes("Logo");
 
   const handleNavClick = (path: RoutePath, sub?: string) => {
     navigate(path);
@@ -76,21 +83,27 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
           <div
             id="cbbcl-logo"
             onClick={() => handleNavClick("/" as RoutePath)}
-            className="flex items-center space-x-3 cursor-pointer group"
+            className="navbar-logo flex items-center space-x-3 cursor-pointer group"
           >
             {/* Real img from PRD */}
-            <div className="relative h-[52px] flex items-center">
-              <img
-                src={currentLogo}
-                alt="Cox's Bazar Boat Club Limited Logo"
-                className="object-contain h-[38px] sm:h-[46px] lg:h-[52px]"
-                style={{ imageRendering: "auto" }}
-                onError={(e) => {
-                  e.currentTarget.style.display = "none";
-                  const fallback = e.currentTarget.parentElement?.querySelector(".cbbcl-logo-fallback");
-                  if (fallback) fallback.classList.remove("hidden");
-                }}
-              />
+            <div className="relative h-[38px] sm:h-[46px] lg:h-[52px] flex items-center">
+              {isDefaultLogo ? (
+                <LogoSvg
+                  className="h-full w-auto max-w-full block"
+                />
+              ) : (
+                <img
+                  src={currentLogo}
+                  alt="Cox's Bazar Boat Club Limited Logo"
+                  className="object-contain h-full w-auto block"
+                  style={{ imageRendering: "auto" }}
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                    const fallback = e.currentTarget.parentElement?.querySelector(".cbbcl-logo-fallback");
+                    if (fallback) fallback.classList.remove("hidden");
+                  }}
+                />
+              )}
               <div className="cbbcl-logo-fallback hidden flex items-center space-x-2">
                 <div className="bg-navy text-gold p-1.5 rounded-full border border-gold">
                   <Anchor className="w-5 h-5 animate-pulse" />
@@ -163,38 +176,47 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
           </nav>
 
           {/* CTA Member Button & Mobile Toggle */}
-          <div className="flex items-center space-x-4">
+          <div
+            className="flex items-center space-x-4 shrink-0"
+            style={{
+              width: "auto",
+              minWidth: "max-content",
+              paddingRight: "40px",
+              paddingLeft: "0px",
+              paddingBottom: "0px"
+            }}
+          >
             {currentUser ? (
-              <div className="hidden md:flex items-center space-x-3">
+              <div className="hidden md:flex items-center space-x-3 whitespace-nowrap">
                 <button
                   onClick={() => handleNavClick(currentUser.role === "admin" ? "/admin-dashboard.html" : "/dashboard.html")}
-                  className="bg-navy text-gold text-[10px] font-sans font-bold uppercase tracking-widest px-4 py-2 border border-gold hover:bg-gold hover:text-navy transition-all duration-300 rounded-xs flex items-center space-x-1 text-center"
+                  className="bg-navy text-gold text-[10px] font-sans font-bold uppercase tracking-widest px-4 py-2 border border-gold hover:bg-gold hover:text-navy transition-all duration-300 rounded-xs flex items-center space-x-1 text-center whitespace-nowrap shrink-0"
                 >
                   <UserCheck className="w-3.5 h-3.5" />
-                  <span>{currentUser.role === "admin" ? "Admin Terminal" : "My Console"}</span>
+                  <span className="whitespace-nowrap">{currentUser.role === "admin" ? "Admin Terminal" : "My Console"}</span>
                 </button>
                 <button
                   onClick={() => {
                     if (onLogout) onLogout();
                     handleNavClick("/login.html");
                   }}
-                  className="text-slate-400 hover:text-rose-600 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors"
+                  className="text-slate-400 hover:text-rose-600 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
                 >
                   Sign Out
                 </button>
               </div>
             ) : (
-              <div className="hidden md:flex items-center space-x-3">
+              <div className="hidden md:flex items-center space-x-3 whitespace-nowrap">
                 <button
                   onClick={() => handleNavClick("/login.html" as RoutePath)}
-                  className="text-navy hover:text-gold font-sans text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1"
+                  className="text-navy hover:text-gold font-sans text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1 whitespace-nowrap"
                 >
-                  <LogIn className="w-3.5 h-3.5 mt-0.5 text-[#c9a84c]" />
-                  <span>Sign In</span>
+                  <LogIn className="w-3.5 h-3.5 mt-0.5 text-[#c9a84c] shrink-0" />
+                  <span className="whitespace-nowrap">Sign In</span>
                 </button>
                 <button
                   onClick={() => handleNavClick("/membership.html" as RoutePath)}
-                  className="bg-navy text-white text-[10px] font-sans font-bold uppercase tracking-wider px-4 py-2.5 rounded-sm hover:bg-gold hover:text-navy transition-all duration-300 shadow-sm"
+                  className="bg-navy text-white text-[10px] font-sans font-bold uppercase tracking-wider px-4 py-2.5 rounded-sm hover:bg-gold hover:text-navy transition-all duration-300 shadow-sm whitespace-nowrap"
                 >
                   Become a Member
                 </button>

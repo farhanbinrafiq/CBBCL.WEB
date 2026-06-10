@@ -7,6 +7,42 @@ const BOARD_MEMBERS_KEY = "cbbcl_board_members";
 const NEWS_POSTS_KEY = "cbbcl_news_posts";
 const CURRENT_USER_KEY = "cbbcl_current_user";
 
+// Safe localStorage set utility that automatically handles and heals QuotaExceededError
+export function safeLocalSet(key: string, value: string): void {
+  try {
+    localStorage.setItem(key, value);
+  } catch (e: any) {
+    console.error(`Storage error setting ${key}:`, e);
+    // If browser localStorage quota is exceeded, attempt to prune oversized media items
+    if (
+      e.name === "QuotaExceededError" || 
+      e.code === 22 || 
+      e.code === 1014 || 
+      e.name === "NS_ERROR_DOM_QUOTA_REACHED"
+    ) {
+      try {
+        const MEDIA_KEY = "cbbcl_cms_media";
+        const mediaData = localStorage.getItem(MEDIA_KEY);
+        if (mediaData) {
+          const parsed = JSON.parse(mediaData);
+          if (Array.isArray(parsed) && parsed.length > 2) {
+            // Trim dynamic media down to the 2 newest entries to immediately reclaim space
+            const trimmed = parsed.slice(0, 2);
+            localStorage.setItem(MEDIA_KEY, JSON.stringify(trimmed));
+            console.warn("Storage quota recovered! Pruned media library to free up space.");
+            
+            // Retry writing the key
+            localStorage.setItem(key, value);
+            return;
+          }
+        }
+      } catch (err) {
+        console.error("Quota self-healing failed:", err);
+      }
+    }
+  }
+}
+
 // Default admin and mock data for initial load
 const DEFAULT_USERS: User[] = [
   {
@@ -60,52 +96,62 @@ const DEFAULT_PROFILES: Profile[] = [
 ];
 
 export function getUsers(): User[] {
-  const data = localStorage.getItem(USERS_KEY);
-  if (!data) {
-    localStorage.setItem(USERS_KEY, JSON.stringify(DEFAULT_USERS));
-    return DEFAULT_USERS;
-  }
   try {
-    return JSON.parse(data);
+    const data = localStorage.getItem(USERS_KEY);
+    if (!data) {
+      safeLocalSet(USERS_KEY, JSON.stringify(DEFAULT_USERS));
+      return DEFAULT_USERS;
+    }
+    const parsed = JSON.parse(data);
+    if (Array.isArray(parsed)) {
+      return parsed;
+    }
+    safeLocalSet(USERS_KEY, JSON.stringify(DEFAULT_USERS));
+    return DEFAULT_USERS;
   } catch (e) {
-    localStorage.setItem(USERS_KEY, JSON.stringify(DEFAULT_USERS));
     return DEFAULT_USERS;
   }
 }
 
 export function saveUsers(users: User[]): void {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  safeLocalSet(USERS_KEY, JSON.stringify(users));
 }
 
 export function getProfiles(): Profile[] {
-  const data = localStorage.getItem(PROFILES_KEY);
-  if (!data) {
-    localStorage.setItem(PROFILES_KEY, JSON.stringify(DEFAULT_PROFILES));
-    return DEFAULT_PROFILES;
-  }
   try {
-    return JSON.parse(data);
+    const data = localStorage.getItem(PROFILES_KEY);
+    if (!data) {
+      safeLocalSet(PROFILES_KEY, JSON.stringify(DEFAULT_PROFILES));
+      return DEFAULT_PROFILES;
+    }
+    const parsed = JSON.parse(data);
+    if (Array.isArray(parsed)) {
+      return parsed;
+    }
+    safeLocalSet(PROFILES_KEY, JSON.stringify(DEFAULT_PROFILES));
+    return DEFAULT_PROFILES;
   } catch (e) {
-    localStorage.setItem(PROFILES_KEY, JSON.stringify(DEFAULT_PROFILES));
     return DEFAULT_PROFILES;
   }
 }
 
 export function saveProfiles(profiles: Profile[]): void {
-  localStorage.setItem(PROFILES_KEY, JSON.stringify(profiles));
+  safeLocalSet(PROFILES_KEY, JSON.stringify(profiles));
 }
 
 export function getBoardMembers(): Director[] {
-  const data = localStorage.getItem(BOARD_MEMBERS_KEY);
-  let list: Director[];
-  if (!data) {
-    list = DIRECTORS_DATA;
-  } else {
-    try {
-      list = JSON.parse(data);
-    } catch (e) {
-      list = DIRECTORS_DATA;
+  let list: Director[] = DIRECTORS_DATA;
+  let data: string | null = null;
+  try {
+    data = localStorage.getItem(BOARD_MEMBERS_KEY);
+    if (data) {
+      const parsed = JSON.parse(data);
+      if (Array.isArray(parsed)) {
+        list = parsed;
+      }
     }
+  } catch (e) {
+    list = DIRECTORS_DATA;
   }
 
   let changed = false;
@@ -138,49 +184,64 @@ export function getBoardMembers(): Director[] {
   });
 
   if (changed || !data) {
-    localStorage.setItem(BOARD_MEMBERS_KEY, JSON.stringify(normalized));
+    safeLocalSet(BOARD_MEMBERS_KEY, JSON.stringify(normalized));
   }
   return normalized;
 }
 
 export function saveBoardMembers(members: Director[]): void {
-  localStorage.setItem(BOARD_MEMBERS_KEY, JSON.stringify(members));
+  safeLocalSet(BOARD_MEMBERS_KEY, JSON.stringify(members));
 }
 
 export function getNewsPosts(): NewsPost[] {
-  const data = localStorage.getItem(NEWS_POSTS_KEY);
-  if (!data) {
-    localStorage.setItem(NEWS_POSTS_KEY, JSON.stringify(NEWS_DATA));
-    return NEWS_DATA;
-  }
   try {
-    return JSON.parse(data);
+    const data = localStorage.getItem(NEWS_POSTS_KEY);
+    if (!data) {
+      safeLocalSet(NEWS_POSTS_KEY, JSON.stringify(NEWS_DATA));
+      return NEWS_DATA;
+    }
+    const parsed = JSON.parse(data);
+    if (Array.isArray(parsed)) {
+      return parsed;
+    }
+    safeLocalSet(NEWS_POSTS_KEY, JSON.stringify(NEWS_DATA));
+    return NEWS_DATA;
   } catch (e) {
-    localStorage.setItem(NEWS_POSTS_KEY, JSON.stringify(NEWS_DATA));
     return NEWS_DATA;
   }
 }
 
 export function saveNewsPosts(posts: NewsPost[]): void {
-  localStorage.setItem(NEWS_POSTS_KEY, JSON.stringify(posts));
+  safeLocalSet(NEWS_POSTS_KEY, JSON.stringify(posts));
 }
 
 export function getLoggedInUser(): User | null {
-  const data = localStorage.getItem(CURRENT_USER_KEY);
-  if (!data) return null;
   try {
-    return JSON.parse(data);
-  } catch (e) {
+    const data = localStorage.getItem(CURRENT_USER_KEY);
+    if (!data) return null;
+    const parsed = JSON.parse(data);
+    if (parsed && typeof parsed === "object") {
+      return parsed;
+    }
     localStorage.removeItem(CURRENT_USER_KEY);
+    return null;
+  } catch (e) {
+    try {
+      localStorage.removeItem(CURRENT_USER_KEY);
+    } catch (err) {}
     return null;
   }
 }
 
 export function setLoggedInUser(user: User | null): void {
-  if (!user) {
-    localStorage.removeItem(CURRENT_USER_KEY);
-  } else {
-    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+  try {
+    if (!user) {
+      localStorage.removeItem(CURRENT_USER_KEY);
+    } else {
+      safeLocalSet(CURRENT_USER_KEY, JSON.stringify(user));
+    }
+  } catch (e) {
+    console.error(e);
   }
 }
 
