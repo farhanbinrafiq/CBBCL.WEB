@@ -19,6 +19,57 @@
   
   --font-display: "Cormorant Garamond", serif;
   --font-sans: "Jost", sans-serif;
+  --color-navbar: var(--cbbcl-navbar-bg);
+}
+
+:root {
+  --footer-bg: #111625;
+  --footer-background: var(--footer-bg);
+  --cbbcl-navbar-bg: var(--footer-bg);
+  --navbar-bg: var(--footer-bg);
+  --cbbcl-ivory: #FAF9F6;
+}
+
+.navbar,
+header,
+nav,
+#cbbcl-header {
+  background-color: var(--cbbcl-navbar-bg) !important;
+}
+
+/* Base header layout matches footer dark navy gradient system */
+#cbbcl-header {
+  background: linear-gradient(135deg, #111625 0%, #151d33 60%, rgba(234, 88, 12, 0.06) 100%) !important;
+  border-bottom: 2px solid rgba(201, 168, 76, 0.3) !important;
+  box-shadow: 0 4px 30px rgba(234, 88, 12, 0.02), inset 0 -1px 0 rgba(255, 255, 255, 0.03) !important;
+}
+
+/* Focus selector: apply highest-priority background style and force ivory text colors carefully */
+div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1) {
+  background: linear-gradient(135deg, #111625 0%, #151d33 60%, rgba(234, 88, 12, 0.06) 100%) !important;
+  border-bottom: 2px solid rgba(201, 168, 76, 0.3) !important;
+  box-shadow: 0 4px 30px rgba(234, 88, 12, 0.02), inset 0 -1px 0 rgba(255, 255, 255, 0.03) !important;
+}
+
+div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1) :not(.text-gold):not(.hover\:text-gold:hover):not(.bg-gold):not(.bg-gold span):not(.navbar-logo):not(.navbar-logo *):not(svg):not(path):not(img):not(.cbbcl-logo-fallback):not(.cbbcl-logo-fallback *) {
+  color: var(--cbbcl-ivory) !important;
+}
+
+/* Ensure menu items transition beautifully and preserve gold highlight interactions */
+div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1) nav button:not(.text-gold) {
+  color: var(--cbbcl-ivory) !important;
+}
+
+div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1) nav button:not(.text-gold):hover {
+  color: #c9a84c !important;
+}
+
+div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1) #cbbcl-logo span {
+  color: var(--cbbcl-ivory) !important;
+}
+
+div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1) #cbbcl-logo span.text-gold {
+  color: #c9a84c !important;
 }
 
 /* Custom Scrollbar */

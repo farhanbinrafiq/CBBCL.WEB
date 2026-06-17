@@ -36,6 +36,12 @@ export default function App() {
   const [initialSection, setInitialSection] = useState<string>("");
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
+  // PWA & Service Worker state
+  const [swRegistration, setSwRegistration] = useState<ServiceWorkerRegistration | null>(null);
+  const [showUpdateBanner, setShowUpdateBanner] = useState<boolean>(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [showInstallBanner, setShowInstallBanner] = useState<boolean>(false);
+
   // Handle address bar routing from the window location if accessed directly
   useEffect(() => {
     setCurrentUser(getLoggedInUser());
@@ -87,8 +93,93 @@ export default function App() {
     window.addEventListener("popstate", handleLocationChange);
     handleLocationChange();
 
-    return () => window.removeEventListener("popstate", handleLocationChange);
+    // 1. Service Worker Registration & Version Update Listener (PWA)
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then((reg) => {
+          setSwRegistration(reg);
+          console.log("CBBCL: Service Worker active with scope:", reg.scope);
+
+          // Force check if update of service worker is waiting
+          if (reg.waiting) {
+            setShowUpdateBanner(true);
+          }
+
+          // Trigger on subsequent service worker updates
+          reg.onupdatefound = () => {
+            const installingWorker = reg.installing;
+            if (installingWorker) {
+              installingWorker.onstatechange = () => {
+                if (installingWorker.state === "installed" && navigator.serviceWorker.controller) {
+                  // New update ready for application activation
+                  setShowUpdateBanner(true);
+                }
+              };
+            }
+          };
+        })
+        .catch((err) => {
+          console.warn("CBBCL: Service worker load skipped:", err);
+        });
+
+      // Simple browser hot reload when controller gets brand new active service worker
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
+      });
+    }
+
+    // 2. Capture Browser standard PWA Install Promo event
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      // Automatically prompt install modal after 3 seconds on user visit
+      setTimeout(() => {
+        // If they did not already install it
+        if (!window.matchMedia("(display-mode: standalone)").matches) {
+          setShowInstallBanner(true);
+        }
+      }, 3000);
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
+    const handleAppInstalled = () => {
+      console.log("CBBCL app successfully installed locally!");
+      setDeferredPrompt(null);
+      setShowInstallBanner(false);
+    };
+    window.addEventListener("appinstalled", handleAppInstalled);
+
+    return () => {
+      window.removeEventListener("popstate", handleLocationChange);
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+      window.removeEventListener("appinstalled", handleAppInstalled);
+    };
   }, []);
+
+  const handleUpdateApp = () => {
+    if (swRegistration && swRegistration.waiting) {
+      // Prompt SW skipWaiting standard execution
+      swRegistration.waiting.postMessage({ type: "SKIP_WAITING" });
+    } else {
+      window.location.reload();
+    }
+  };
+
+  const handleInstallApp = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`CBBCL Install trigger option: ${outcome}`);
+    setDeferredPrompt(null);
+    setShowInstallBanner(false);
+  };
+
 
   const navigate = (path: RoutePath) => {
     // Scroll window seamlessly to top
@@ -214,7 +305,87 @@ export default function App() {
 
       {/* Dynamic Footer */}
       <Footer navigate={navigate} />
+
+      {/* Floating PWA Status Dialog Panels */}
+      <AnimatePresence>
+        {showUpdateBanner && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="fixed bottom-6 right-6 z-50 max-w-sm w-full bg-[#111625] border-2 border-gold/40 rounded-xl p-5 shadow-[0_10px_30px_rgba(0,0,0,0.5)] text-white backdrop-blur-md"
+            id="pwa-update-banner"
+          >
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-gold/10 rounded-lg text-gold flex-shrink-0">
+                <svg className="w-5 h-5 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H17L12 3" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-sm tracking-wide text-gold uppercase">System Update</h3>
+                <p className="text-xs text-slate-300 mt-1 leading-relaxed">New CBBCL update available.</p>
+                <div className="flex items-center gap-2 mt-4 justify-end">
+                  <button
+                    onClick={() => setShowUpdateBanner(false)}
+                    className="px-3 py-1.5 text-xs text-slate-400 hover:text-white transition-colors"
+                    id="pwa-update-later"
+                  >
+                    Later
+                  </button>
+                  <button
+                    onClick={handleUpdateApp}
+                    className="px-4 py-1.5 text-xs bg-gold hover:bg-gold-light text-navy font-bold rounded transition-colors shadow-sm"
+                    id="pwa-update-now"
+                  >
+                    Update Now
+                  </button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {showInstallBanner && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="fixed bottom-6 left-6 z-50 max-w-sm w-full bg-[#002262] border-2 border-gold/40 rounded-xl p-5 shadow-[0_10px_30px_rgba(0,0,0,0.5)] text-white backdrop-blur-md"
+            id="pwa-install-banner"
+          >
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-gold/10 rounded-lg text-gold flex-shrink-0">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-sm tracking-wide text-gold uppercase">Install App</h3>
+                <p className="text-xs text-slate-200 mt-1 leading-relaxed">Add CBBCL to your Home Screen for a faster, full-screen progressive experience with offline support.</p>
+                <div className="flex items-center gap-2 mt-4 justify-end">
+                  <button
+                    onClick={() => setShowInstallBanner(false)}
+                    className="px-3 py-1.5 text-xs text-slate-400 hover:text-white transition-colors"
+                    id="pwa-install-later"
+                  >
+                    Later
+                  </button>
+                  <button
+                    onClick={handleInstallApp}
+                    className="px-4 py-1.5 text-xs bg-gold hover:bg-gold-light text-navy font-bold rounded transition-colors shadow-sm"
+                    id="pwa-install-btn"
+                  >
+                    Install Now
+                  </button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
+
   );
 }
 

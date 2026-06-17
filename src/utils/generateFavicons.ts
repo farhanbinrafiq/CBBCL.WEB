@@ -14,31 +14,66 @@ export async function generateFavicons() {
     return;
   }
 
-  const targets = [
-    { name: "favicon-16x16.png", size: 16 },
-    { name: "favicon-32x32.png", size: 32 },
-    { name: "apple-touch-icon.png", size: 180 },
-    { name: "android-chrome-192x192.png", size: 192 },
-    { name: "android-chrome-512x512.png", size: 512 },
-    { name: "favicon.ico", size: 32 }
+  // Standard favicons (transparent background for clean browser tabs integration)
+  const standerFavicons = [
+    { name: "favicon-16x16.png", size: 16, solidBg: false },
+    { name: "favicon-32x32.png", size: 32, solidBg: false },
+    { name: "favicon.ico", size: 32, solidBg: false }
   ];
 
-  console.log("CBBCL branding: Generating favicon assets from master vector...");
+  // PWA & Touch screen icons (solid corporate Dark Navy #002262 background per branding guidelines)
+  const appIcons = [
+    { name: "pwaicon-72x72.png", size: 72, solidBg: true },
+    { name: "pwaicon-96x96.png", size: 96, solidBg: true },
+    { name: "pwaicon-128x128.png", size: 128, solidBg: true },
+    { name: "pwaicon-144x144.png", size: 144, solidBg: true },
+    { name: "pwaicon-152x152.png", size: 152, solidBg: true },
+    { name: "android-chrome-192x192.png", size: 192, solidBg: true },
+    { name: "pwaicon-384x384.png", size: 384, solidBg: true },
+    { name: "android-chrome-512x512.png", size: 512, solidBg: true },
+    { name: "apple-touch-icon.png", size: 180, solidBg: true }
+  ];
 
-  for (const target of targets) {
+  const allTargets = [...standerFavicons, ...appIcons];
+
+  console.log("CBBCL branding: Generating premium favicon and PWA assets from master vector...");
+
+  for (const target of allTargets) {
     const outputPath = path.join(publicDir, target.name);
     try {
-      await sharp(svgPath)
-        .resize(target.size, target.size)
+      if (target.solidBg) {
+        // Build premium app shortcut tile with official #002262 Dark Navy background and 72% logo size padding
+        const logoSize = Math.round(target.size * 0.72);
+        const logoResized = await sharp(svgPath)
+          .resize(logoSize, logoSize)
+          .png()
+          .toBuffer();
+
+        await sharp({
+          create: {
+            width: target.size,
+            height: target.size,
+            channels: 4,
+            background: "#002262"
+          }
+        })
+        .composite([{ input: logoResized, gravity: "centre" }])
         .png()
         .toFile(outputPath);
-      console.log(`CBBCL favicon generated: ${target.name} (${target.size}x${target.size})`);
+      } else {
+        // Transparent standard browser favicon
+        await sharp(svgPath)
+          .resize(target.size, target.size)
+          .png()
+          .toFile(outputPath);
+      }
+      console.log(`CBBCL asset generated: ${target.name} (${target.size}x${target.size})`);
     } catch (err) {
-      console.error(`Failed to generate ${target.name}:`, err);
+      console.error(`Failed to generate CBBCL asset ${target.name}:`, err);
     }
   }
 
-  // Also build PWA manifest file automatically
+  // Generate robust PWA Site Webmanifest
   const manifestPath = path.join(publicDir, "site.webmanifest");
   const manifestContent = {
     name: "CBBCL",
@@ -46,12 +81,43 @@ export async function generateFavicons() {
     description: "Cox's Bazar Boat Club Limited",
     start_url: "/",
     display: "standalone",
+    orientation: "any",
     background_color: "#111625",
     theme_color: "#9e7f46",
     icons: [
       {
+        src: "/pwaicon-72x72.png",
+        sizes: "72x72",
+        type: "image/png"
+      },
+      {
+        src: "/pwaicon-96x96.png",
+        sizes: "96x96",
+        type: "image/png"
+      },
+      {
+        src: "/pwaicon-128x128.png",
+        sizes: "128x128",
+        type: "image/png"
+      },
+      {
+        src: "/pwaicon-144x144.png",
+        sizes: "144x144",
+        type: "image/png"
+      },
+      {
+        src: "/pwaicon-152x152.png",
+        sizes: "152x152",
+        type: "image/png"
+      },
+      {
         src: "/android-chrome-192x192.png",
         sizes: "192x192",
+        type: "image/png"
+      },
+      {
+        src: "/pwaicon-384x384.png",
+        sizes: "384x384",
         type: "image/png"
       },
       {
@@ -69,3 +135,4 @@ export async function generateFavicons() {
     console.error("Failed to write site.webmanifest:", err);
   }
 }
+

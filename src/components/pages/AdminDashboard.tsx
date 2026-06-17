@@ -47,7 +47,7 @@ import {
   Anchor, ShieldAlert, CheckCircle, Users, FileText, LayoutGrid, Calendar, LogOut,
   UserCheck, ShieldX, Check, X, Megaphone, Trash2, Edit2, Plus, ArrowRight, Eye, ChevronRight,
   ChevronUp, ChevronDown, Move, Upload, Image as ImageIcon, BookOpen, MapPin, Contact, HardHat, Info, Copy,
-  Award, ShieldCheck, Sliders, Layers
+  Award, ShieldCheck, Sliders, Layers, Menu, ChevronLeft
 } from "lucide-react";
 
 interface AdminDashboardProps {
@@ -75,6 +75,10 @@ const AVAILABLE_ROUTES: { label: string; value: RoutePath }[] = [
 
 export default function AdminDashboard({ navigate, onLogout, initialActiveTab }: AdminDashboardProps) {
   const [activeTab, setActiveTab] = useState<AdminTab>(initialActiveTab || "members");
+
+  // Responsiveness States
+  const [isTabletSidebarCollapsed, setIsTabletSidebarCollapsed] = useState<boolean>(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
   // Local Storage States
   const [users, setUsers] = useState<User[]>([]);
@@ -1199,9 +1203,194 @@ export default function AdminDashboard({ navigate, onLogout, initialActiveTab }:
         </div>
       </section>
 
+      {/* Mobile Top Navigation Sticky bar - only visible on small screens (< md) */}
+      <section className="bg-white border-b border-slate-200 px-6 py-4 md:hidden flex items-center justify-between sticky top-[68px] z-30 shadow-sm">
+        <div className="flex items-center space-x-2.5">
+          <button
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="p-2 -ml-2 text-slate-700 hover:bg-slate-100 rounded-lg transition-colors border border-slate-200"
+            title="Open Console Navigation Menu"
+            id="admin-mobile-hamburger"
+          >
+            <Menu className="w-5 h-5 text-navy" />
+          </button>
+          <div>
+            <span className="font-sans text-[8px] uppercase tracking-wider text-gold-dark font-bold block">
+              Active Module
+            </span>
+            <span className="font-sans text-xs font-bold text-navy truncate max-w-[150px] inline-block">
+              {activeTab === "members" && "Member Verifications"}
+              {activeTab === "profiles" && "Profile Approvals"}
+              {activeTab === "applications" && "Admissions Nominations"}
+              {activeTab === "affiliation_requests" && "Reciprocal Requests"}
+              {activeTab === "home_cms" && "Home CMS"}
+              {activeTab === "footer_cms" && "Footer CMS"}
+              {activeTab === "site_content" && "Pages Content"}
+              {activeTab === "board" && "Board Hierarchy"}
+              {activeTab === "news" && "News Feed CMS"}
+              {activeTab === "affiliations" && "Reciprocal Alliances"}
+              {activeTab === "club_members" && "Members Directory"}
+              {activeTab === "media_library" && "Media Library"}
+              {activeTab === "system" && "Diagnostics"}
+            </span>
+          </div>
+        </div>
+        <div className="flex items-center space-x-2">
+          {users.filter(u => u.status === "pending").length + profiles.filter(p => p.profileStatus === "pending").length > 0 && (
+            <span className="inline-flex h-2.5 w-2.5 rounded-full bg-amber-500 animate-ping" />
+          )}
+          <span className="text-[10px] font-sans bg-navy/5 text-navy font-bold px-2 py-1 rounded border border-navy/10">
+            {users.filter(u => u.status === "pending").length + profiles.filter(p => p.profileStatus === "pending").length} Pending
+          </span>
+        </div>
+      </section>
+
+      {/* MOBILE HAMBURGER NAVIGATION DRAWER OVERLAY */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-50 md:hidden font-sans">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          {/* Drawer layout */}
+          <div className="fixed inset-y-0 left-0 w-4/5 max-w-[300px] bg-white h-full shadow-2xl flex flex-col z-50 transform transition-transform duration-300">
+            <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-navy text-white">
+              <div className="flex items-center space-x-2">
+                <Anchor className="w-5 h-5 text-gold" />
+                <span className="font-display font-light text-sm tracking-wide text-white">CBBCL Console Menu</span>
+              </div>
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="p-1 rounded-md text-white/70 hover:text-white hover:bg-white/10 transition-all"
+                id="admin-mobile-drawer-close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Scrollable menu buttons container */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-5">
+              {/* Overview & Queues */}
+              <div className="space-y-1.5">
+                <span className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block border-b pb-1">Overview & Queues</span>
+                <div className="space-y-1">
+                  <button
+                    onClick={() => { setActiveTab("members"); setIsMobileMenuOpen(false); }}
+                    className={`flex items-center justify-between w-full px-3 py-2 text-xs font-semibold rounded ${activeTab === "members" ? "bg-navy text-gold" : "text-slate-600 hover:bg-slate-50"}`}
+                  >
+                    <span className="flex items-center gap-2"><Users className="w-4 h-4 shrink-0" /> Member Verifications</span>
+                    <span className="font-mono text-[9px] bg-slate-100 text-navy px-1.5 py-0.5 rounded font-bold">{users.filter(u => u.status === "pending").length}</span>
+                  </button>
+                  <button
+                    onClick={() => { setActiveTab("profiles"); setIsMobileMenuOpen(false); }}
+                    className={`flex items-center justify-between w-full px-3 py-2 text-xs font-semibold rounded ${activeTab === "profiles" ? "bg-navy text-gold" : "text-slate-600 hover:bg-slate-50"}`}
+                  >
+                    <span className="flex items-center gap-2"><FileText className="w-4 h-4 shrink-0" /> Profile Approvals</span>
+                    <span className="font-mono text-[9px] bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded font-bold">{profiles.filter(p => p.profileStatus === "pending").length}</span>
+                  </button>
+                  <button
+                    onClick={() => { setActiveTab("applications"); setIsMobileMenuOpen(false); }}
+                    className={`flex items-center justify-between w-full px-3 py-2 text-xs font-semibold rounded ${activeTab === "applications" ? "bg-navy text-gold" : "text-slate-600 hover:bg-slate-50"}`}
+                  >
+                    <span className="flex items-center gap-2"><Award className="w-4 h-4 text-gold-dark shrink-0" /> Admissions</span>
+                    <span className="font-mono text-[9px] bg-amber-50 text-gold-dark px-1.5 py-0.5 rounded font-bold">{applications.filter(a => a.status === "pending" || a.status === "under_verification").length}</span>
+                  </button>
+                  <button
+                    onClick={() => { setActiveTab("affiliation_requests"); setIsMobileMenuOpen(false); }}
+                    className={`flex items-center justify-between w-full px-3 py-2 text-xs font-semibold rounded ${activeTab === "affiliation_requests" ? "bg-navy text-gold" : "text-slate-600 hover:bg-slate-50"}`}
+                  >
+                    <span className="flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-gold-dark shrink-0" /> Affiliation Requests</span>
+                    <span className="font-mono text-[9px] bg-amber-50 text-gold-dark px-1.5 py-0.5 rounded font-bold">{affiliationRequests.filter(r => r.status === "pending").length}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Content Management */}
+              <div className="space-y-1.5">
+                <span className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block border-b pb-1">Content Management</span>
+                <div className="space-y-1">
+                  <button
+                    onClick={() => { setActiveTab("home_cms"); setIsMobileMenuOpen(false); }}
+                    className={`flex items-center gap-2.5 w-full px-3 py-2 text-xs font-semibold rounded ${activeTab === "home_cms" ? "bg-navy text-gold" : "text-slate-600 hover:bg-slate-50"}`}
+                  >
+                    <Layers className="w-4 h-4 text-gold" /> <span>Home Page CMS</span>
+                  </button>
+                  <button
+                    onClick={() => { setActiveTab("footer_cms"); setIsMobileMenuOpen(false); }}
+                    className={`flex items-center gap-2.5 w-full px-3 py-2 text-xs font-semibold rounded ${activeTab === "footer_cms" ? "bg-navy text-gold" : "text-slate-600 hover:bg-slate-50"}`}
+                  >
+                    <FileText className="w-4 h-4 text-gold" /> <span>Dynamic Footer CMS</span>
+                  </button>
+                  <button
+                    onClick={() => { setActiveTab("site_content"); setIsMobileMenuOpen(false); }}
+                    className={`flex items-center gap-2.5 w-full px-3 py-2 text-xs font-semibold rounded ${activeTab === "site_content" ? "bg-navy text-gold" : "text-slate-600 hover:bg-slate-50"}`}
+                  >
+                    <BookOpen className="w-4 h-4" /> <span>Pages Content CMS</span>
+                  </button>
+                  <button
+                    onClick={() => { setActiveTab("board"); setIsMobileMenuOpen(false); }}
+                    className={`flex items-center gap-2.5 w-full px-3 py-2 text-xs font-semibold rounded ${activeTab === "board" ? "bg-navy text-gold" : "text-slate-600 hover:bg-slate-50"}`}
+                  >
+                    <LayoutGrid className="w-4 h-4" /> <span>Board Hierarchy</span>
+                  </button>
+                  <button
+                    onClick={() => { setActiveTab("news"); setIsMobileMenuOpen(false); }}
+                    className={`flex items-center gap-2.5 w-full px-3 py-2 text-xs font-semibold rounded ${activeTab === "news" ? "bg-navy text-gold" : "text-slate-600 hover:bg-slate-50"}`}
+                  >
+                    <Megaphone className="w-4 h-4" /> <span>News & Gazette</span>
+                  </button>
+                  <button
+                    onClick={() => { setActiveTab("affiliations"); setIsMobileMenuOpen(false); }}
+                    className={`flex items-center gap-2.5 w-full px-3 py-2 text-xs font-semibold rounded ${activeTab === "affiliations" ? "bg-navy text-gold" : "text-slate-600 hover:bg-slate-50"}`}
+                  >
+                    <Anchor className="w-4 h-4" /> <span>Reciprocal Alliances</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* People & Media */}
+              <div className="space-y-1.5">
+                <span className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block border-b pb-1">Directory & Libraries</span>
+                <div className="space-y-1">
+                  <button
+                    onClick={() => { setActiveTab("club_members"); setIsMobileMenuOpen(false); }}
+                    className={`flex items-center gap-2.5 w-full px-3 py-2 text-xs font-semibold rounded ${activeTab === "club_members" ? "bg-navy text-gold" : "text-slate-600 hover:bg-slate-50"}`}
+                  >
+                    <UserCheck className="w-4 h-4" /> <span>Club Members</span>
+                  </button>
+                  <button
+                    onClick={() => { setActiveTab("media_library"); setIsMobileMenuOpen(false); }}
+                    className={`flex items-center gap-2.5 w-full px-3 py-2 text-xs font-semibold rounded ${activeTab === "media_library" ? "bg-navy text-gold" : "text-slate-600 hover:bg-slate-50"}`}
+                  >
+                    <ImageIcon className="w-4 h-4" /> <span>Media Library</span>
+                  </button>
+                  <button
+                    onClick={() => { setActiveTab("system"); setIsMobileMenuOpen(false); }}
+                    className={`flex items-center gap-2.5 w-full px-3 py-2 text-xs font-semibold rounded ${activeTab === "system" ? "bg-navy text-gold" : "text-slate-600 hover:bg-slate-50"}`}
+                  >
+                    <HardHat className="w-4 h-4" /> <span>System Diagnostics</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 border-t border-slate-100 bg-slate-50">
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); handleLogOutAction(); }}
+                className="flex items-center justify-center gap-2 w-full py-2.5 bg-red-600 text-white font-semibold text-xs rounded shadow-xs active:bg-red-700 transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Disconnect Console</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Layout Area - Sidebar-driven Grid */}
       <section className="max-w-7xl mx-auto px-6 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
           
           {/* LEFT COLUMN: Restructured Navigation Menu divided into sections */}
           <aside className="lg:col-span-3 bg-white border border-slate-200 p-5 rounded-sm shadow-sm space-y-6">

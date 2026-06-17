@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { RoutePath, User } from "../types";
 import { Menu, X, ChevronDown, Compass, Award, LifeBuoy, FileText, Anchor, LogIn, UserCheck } from "lucide-react";
 import { getNavCMS } from "../utils/cmsStorage";
@@ -21,6 +21,11 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
   const [isScrolled, setIsScrolled] = useState(false);
   const [navCms, setNavCms] = useState(() => getNavCMS());
 
+  const headerRef = useRef<HTMLElement>(null);
+  const [headerBottom, setHeaderBottom] = useState(78);
+
+  const isHome = currentPath === "/" || currentPath === "/index.html";
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -29,6 +34,37 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
     setNavCms(getNavCMS());
     return () => window.removeEventListener("scroll", handleScroll);
   }, [currentPath]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const measureHeader = () => {
+      if (headerRef.current) {
+        setHeaderBottom(headerRef.current.getBoundingClientRect().bottom);
+      }
+    };
+    
+    measureHeader();
+    
+    window.addEventListener("scroll", measureHeader, { passive: true });
+    window.addEventListener("resize", measureHeader);
+
+    let resizeObserver: ResizeObserver | null = null;
+    if (headerRef.current && typeof ResizeObserver !== "undefined") {
+      resizeObserver = new ResizeObserver(() => {
+        measureHeader();
+      });
+      resizeObserver.observe(headerRef.current);
+    }
+
+    return () => {
+      window.removeEventListener("scroll", measureHeader);
+      window.removeEventListener("resize", measureHeader);
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
+    };
+  }, [isOpen, isScrolled]);
 
   const menuItems = navCms.menuItems;
   const currentLogo = navCms.navbarLogo || navCms.logo || cbbclLogo;
@@ -71,11 +107,14 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
 
       {/* Main Navigation */}
       <header
+        ref={headerRef}
         id="cbbcl-header"
         className={`sticky top-0 z-50 w-full transition-all duration-300 border-b ${
+          isHome ? "is-home-header" : ""
+        } ${
           isScrolled
-            ? "bg-white shadow-md py-3 border-slate-200"
-            : "bg-white/95 backdrop-blur-sm py-4 border-slate-100"
+            ? "shadow-md py-3 border-white/[0.08]"
+            : "py-4 border-white/[0.05]"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
@@ -83,10 +122,10 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
           <div
             id="cbbcl-logo"
             onClick={() => handleNavClick("/" as RoutePath)}
-            className="navbar-logo flex items-center space-x-3 cursor-pointer group"
+            className="navbar-logo flex items-center space-x-3 cursor-pointer group shrink-0"
           >
             {/* Real img from PRD */}
-            <div className="relative h-[38px] sm:h-[46px] lg:h-[52px] flex items-center">
+            <div className="relative h-[38px] sm:h-[46px] lg:h-[52px] flex items-center shrink-0">
               {isDefaultLogo ? (
                 <LogoSvg
                   className="h-full w-auto max-w-full block"
@@ -109,7 +148,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                   <Anchor className="w-5 h-5 animate-pulse" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-display text-[15px] font-bold text-navy tracking-tight uppercase leading-tight">
+                  <span className="font-display text-[15px] font-bold text-slate-100 tracking-tight uppercase leading-tight">
                     C.B.B.C.L.
                   </span>
                   <span className="text-[8px] font-sans text-gold font-semibold uppercase tracking-widest leading-none">
@@ -149,21 +188,21 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                     className={`flex items-center space-x-1 px-1.5 xl:px-3 py-1 font-sans text-[10px] xl:text-[11px] font-semibold uppercase tracking-wider xl:tracking-widest whitespace-nowrap transition-colors ${
                       isActive
                         ? "text-gold border-b border-gold"
-                        : "text-navy hover:text-gold"
+                        : "text-slate-300 hover:text-gold"
                     }`}
                   >
                     <span>{item.label}</span>
-                    {item.dropdown && <ChevronDown className="w-3 h-3 transition-transform duration-200 group-hover:rotate-180 text-gold-dark/70" />}
+                    {item.dropdown && <ChevronDown className="w-3 h-3 transition-transform duration-200 group-hover:rotate-180 text-gold" />}
                   </button>
 
                   {/* Dropdown element */}
                   {item.dropdown && activeDropdown === item.label && (
-                    <div className="absolute top-full left-0 mt-1 w-64 bg-white border border-slate-100 shadow-xl rounded-sm py-2 z-50 animate-fadeIn">
+                    <div className="absolute top-full left-0 mt-1 w-64 bg-[#111625] border border-white/[0.08] shadow-xl rounded-sm py-2 z-50 animate-fadeIn">
                       {item.dropdown.map((subItem, index) => (
                         <button
                           key={index}
                           onClick={() => handleNavClick(item.path, subItem.sub)}
-                          className="w-full text-left px-5 py-2 hover:bg-slate-50 text-slate-700 hover:text-gold font-sans text-xs font-medium transition-colors border-b border-slate-50 last:border-0"
+                          className="w-full text-left px-5 py-2 hover:bg-white/[0.03] text-slate-300 hover:text-gold font-sans text-xs font-medium transition-colors border-b border-white/[0.05] last:border-0"
                         >
                           {subItem.label}
                         </button>
@@ -190,7 +229,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
               <div className="hidden md:flex items-center space-x-3 whitespace-nowrap">
                 <button
                   onClick={() => handleNavClick(currentUser.role === "admin" ? "/admin-dashboard.html" : "/dashboard.html")}
-                  className="bg-navy text-gold text-[10px] font-sans font-bold uppercase tracking-widest px-4 py-2 border border-gold hover:bg-gold hover:text-navy transition-all duration-300 rounded-xs flex items-center space-x-1 text-center whitespace-nowrap shrink-0"
+                  className="bg-[#111625] text-gold text-[10px] font-sans font-bold uppercase tracking-widest px-4 py-2 border border-gold hover:bg-gold hover:text-navy transition-all duration-300 rounded-xs flex items-center space-x-1 text-center whitespace-nowrap shrink-0"
                 >
                   <UserCheck className="w-3.5 h-3.5" />
                   <span className="whitespace-nowrap">{currentUser.role === "admin" ? "Admin Terminal" : "My Console"}</span>
@@ -200,7 +239,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                     if (onLogout) onLogout();
                     handleNavClick("/login.html");
                   }}
-                  className="text-slate-400 hover:text-rose-600 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
+                  className="text-slate-400 hover:text-rose-450 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
                 >
                   Sign Out
                 </button>
@@ -209,14 +248,14 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
               <div className="hidden md:flex items-center space-x-3 whitespace-nowrap">
                 <button
                   onClick={() => handleNavClick("/login.html" as RoutePath)}
-                  className="text-navy hover:text-gold font-sans text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1 whitespace-nowrap"
+                  className="text-slate-200 hover:text-gold font-sans text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1 whitespace-nowrap"
                 >
-                  <LogIn className="w-3.5 h-3.5 mt-0.5 text-[#c9a84c] shrink-0" />
+                  <LogIn className="w-3.5 h-3.5 mt-0.5 text-gold shrink-0" />
                   <span className="whitespace-nowrap">Sign In</span>
                 </button>
                 <button
                   onClick={() => handleNavClick("/membership.html" as RoutePath)}
-                  className="bg-navy text-white text-[10px] font-sans font-bold uppercase tracking-wider px-4 py-2.5 rounded-sm hover:bg-gold hover:text-navy transition-all duration-300 shadow-sm whitespace-nowrap"
+                  className="bg-gold text-navy text-[10px] font-sans font-bold uppercase tracking-wider px-4 py-2.5 rounded-sm hover:bg-gold-light transition-all duration-300 shadow-sm whitespace-nowrap"
                 >
                   Become a Member
                 </button>
@@ -225,7 +264,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
 
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden text-navy hover:text-gold p-1"
+              className="lg:hidden text-slate-200 hover:text-gold p-1"
               aria-label="Toggle Menu"
             >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -235,7 +274,13 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
 
         {/* Mobile Navigation Drawer */}
         {isOpen && (
-          <div className="lg:hidden fixed inset-0 top-[90px] z-40 bg-white/98 flex flex-col overflow-y-auto px-6 py-6 space-y-4 shadow-inner">
+          <div
+            style={{
+              top: `${headerBottom}px`,
+              height: `calc(100vh - ${headerBottom}px)`
+            }}
+            className="lg:hidden fixed left-0 right-0 z-40 bg-[#111625] border-t border-white/[0.08] flex flex-col overflow-y-auto px-6 py-6 space-y-4 shadow-inner pb-12"
+          >
             {menuItems.map((item) => {
               const isActive =
                 currentPath === item.path ||
@@ -243,11 +288,11 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
 
               return (
                 <div key={item.label} className="flex flex-col space-y-1">
-                  <div className="flex justify-between items-center border-b border-slate-100 pb-2">
+                  <div className="flex justify-between items-center border-b border-white/[0.08] pb-2">
                     <button
                       onClick={() => handleNavClick(item.path)}
                       className={`text-left text-sm font-sans font-medium uppercase tracking-wider ${
-                        isActive ? "text-gold" : "text-navy"
+                        isActive ? "text-gold" : "text-slate-100"
                       }`}
                     >
                       {item.label}
@@ -269,12 +314,12 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                   </div>
 
                   {item.dropdown && activeDropdown === item.label && (
-                    <div className="pl-4 border-l-2 border-gold/30 flex flex-col space-y-2 py-2 bg-slate-50/50 rounded-r-md">
+                    <div className="pl-4 border-l-2 border-gold/30 flex flex-col space-y-2 py-2 bg-white/[0.02] rounded-r-md">
                       {item.dropdown.map((subItem, index) => (
                         <button
                           key={index}
                           onClick={() => handleNavClick(item.path, subItem.sub)}
-                          className="text-left text-xs font-sans text-slate-600 hover:text-gold py-1"
+                          className="text-left text-xs font-sans text-slate-300 hover:text-gold py-1"
                         >
                           {subItem.label}
                         </button>
@@ -285,10 +330,10 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
               );
             })}
             {currentUser ? (
-              <div className="flex flex-col space-y-3 pt-4 border-t border-slate-100">
+              <div className="flex flex-col space-y-3 pt-4 border-t border-white/[0.08]">
                 <button
                   onClick={() => handleNavClick(currentUser.role === "admin" ? "/admin-dashboard.html" : "/dashboard.html")}
-                  className="bg-navy text-gold text-xs font-bold uppercase tracking-wider py-2.5 rounded-sm text-center transition-colors border border-gold"
+                  className="bg-transparent text-gold text-xs font-bold uppercase tracking-wider py-2.5 rounded-sm text-center transition-colors border border-gold hover:bg-gold hover:text-navy"
                 >
                   {currentUser.role === "admin" ? "Admin Terminal" : "My Console"}
                 </button>
@@ -297,22 +342,22 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                     if (onLogout) onLogout();
                     handleNavClick("/login.html");
                   }}
-                  className="bg-rose-50 text-rose-600 hover:bg-rose-100 text-xs font-bold uppercase tracking-wider py-2.5 rounded-sm text-center transition-colors"
+                  className="bg-red-500/10 text-red-450 hover:bg-red-500/20 text-xs font-bold uppercase tracking-wider py-2.5 rounded-sm text-center transition-colors"
                 >
                   Sign Out
                 </button>
               </div>
             ) : (
-              <div className="flex flex-col space-y-3 pt-4 border-t border-slate-100">
+              <div className="flex flex-col space-y-3 pt-4 border-t border-white/[0.08]">
                 <button
                   onClick={() => handleNavClick("/login.html" as RoutePath)}
-                  className="bg-slate-50 border text-navy text-xs font-semibold uppercase tracking-wider py-2.5 rounded-xs text-center transition-all hover:bg-slate-100"
+                  className="bg-white/[0.03] border border-white/[0.1] text-slate-100 text-xs font-semibold uppercase tracking-wider py-2.5 rounded-xs text-center transition-all hover:bg-white/[0.06]"
                 >
                   Sign In to Registry
                 </button>
                 <button
                   onClick={() => handleNavClick("/membership.html" as RoutePath)}
-                  className="bg-navy text-white text-xs font-semibold uppercase tracking-wider py-2.5 rounded-sm text-center shadow hover:bg-gold hover:text-navy transition-all"
+                  className="bg-gold text-navy text-xs font-semibold uppercase tracking-wider py-2.5 rounded-sm text-center shadow hover:bg-gold-light transition-all"
                 >
                   Become a Member
                 </button>
