@@ -121,7 +121,7 @@ const DEFAULT_HOME_LAYOUT: HomeCMSLayoutData = {
   sections: {
     hero: {
       enabled: true,
-      title: "COX'S BAZAR BOAT CLUB",
+      title: "COX'S BAZAR BOAT CLUB LTD.",
       subtitle: "A Prestigious Socio-Cultural & Nautical Sanctuary Duly Chartered Under The Companies Act, 1994",
       image: "",
       overlayEnabled: true,
@@ -212,6 +212,12 @@ export function getHomeLayoutCMS(): HomeCMSLayoutData {
       // Deep merge sections to survive schema upgrades
       const order = Array.isArray(parsed.order) ? parsed.order : DEFAULT_HOME_LAYOUT.order;
       const s = parsed.sections || {};
+      
+      // Upgrade default title to brand standards
+      if (s.hero && s.hero.title === "COX'S BAZAR BOAT CLUB") {
+        s.hero.title = "COX'S BAZAR BOAT CLUB LTD.";
+      }
+
       const sections = {
         hero: { ...DEFAULT_HOME_LAYOUT.sections.hero, ...(s.hero || {}) },
         stats: { ...DEFAULT_HOME_LAYOUT.sections.stats, ...(s.stats || {}) },

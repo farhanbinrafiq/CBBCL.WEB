@@ -84,7 +84,7 @@ const DEFAULT_MEDIA: MediaItem[] = [
 
 const DEFAULT_PAGE_CONTENT: PageCMSContent = {
   home: {
-    heroTitle: "COX'S BAZAR BOAT CLUB",
+    heroTitle: "COX'S BAZAR BOAT CLUB LTD.",
     heroSubtitle: "A Prestigious Socio-Cultural & Nautical Sanctuary Duly Chartered Under The Companies Act, 1994",
     heroCover: cruiseHero,
     welcomeTitle: "Anchor of Camrades & Coastal Stewardship",
@@ -162,8 +162,12 @@ export function getPageContent(): PageCMSContent {
     const page = JSON.parse(data);
     if (page && typeof page === "object") {
       // Deep merge to ensure newly added keys are present
+      const home = { ...DEFAULT_PAGE_CONTENT.home, ...(page.home || {}) };
+      if (home.heroTitle === "COX'S BAZAR BOAT CLUB") {
+        home.heroTitle = "COX'S BAZAR BOAT CLUB LTD.";
+      }
       return {
-        home: { ...DEFAULT_PAGE_CONTENT.home, ...(page.home || {}) },
+        home,
         about: { ...DEFAULT_PAGE_CONTENT.about, ...(page.about || {}) },
         membership: { ...DEFAULT_PAGE_CONTENT.membership, ...(page.membership || {}) },
         contact: { ...DEFAULT_PAGE_CONTENT.contact, ...(page.contact || {}) }
