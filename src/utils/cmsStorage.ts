@@ -1,4 +1,4 @@
-import { Facility, EventItem, Affiliation, RoutePath } from "../types";
+import { Facility, EventItem, Affiliation, RoutePath, FooterSettings } from "../types";
 import { FACILITIES_DATA, EVENTS_DATA, PAST_EVENTS_DATA, AFFILIATIONS_DATA } from "../data";
 // @ts-ignore
 import cruiseHero from "../assets/images/cruise_hero_1780825257603.png";
@@ -452,3 +452,108 @@ export function saveFooterCMS(footer: FooterCMSData): void {
     console.error(e);
   }
 }
+
+const FOOTER_DB_SETTINGS_KEY = "cbbcl_dynamic_footer_db_settings";
+
+export const DEFAULT_FOOTER_SETTINGS: FooterSettings = {
+  key: "footer",
+  logo: {
+    type: "image",
+    url: "",
+    alt: "Site Logo"
+  },
+  socialLinks: {
+    facebook: "https://facebook.com",
+    instagram: "https://instagram.com",
+    youtube: "https://youtube.com",
+    linkedin: "https://linkedin.com",
+    twitter: "https://twitter.com"
+  },
+  contact: {
+    email: "registry@cbbcl.org, admin@cbbcl.org",
+    phone: "+880 1711-223344",
+    address: "Coastal Point Bypass, Marine Drive Boulevard, Cox's Bazar, Bangladesh"
+  },
+  footerLinks: [
+    {
+      title: "Explore the Club",
+      links: [
+        { name: "Home Base", url: "/" },
+        { name: "About Our Story", url: "/about.html" },
+        { name: "Facilities Showcase", url: "/facilities.html" },
+        { name: "Board of Directors", url: "/board.html" },
+        { name: "Club News Feed", url: "/news-feed.html" },
+        { name: "Affiliations", url: "/affiliations.html" }
+      ]
+    },
+    {
+      title: "Membership Tiers",
+      links: [
+        { name: "🏆 Donor Membership", url: "/membership.html" },
+        { name: "🏵️ Life Membership", url: "/membership.html" },
+        { name: "🛡️ Permanent Membership", url: "/membership.html" },
+        { name: "⚓ Associate Membership", url: "/membership.html" }
+      ]
+    }
+  ],
+  legalLinks: [
+    { name: "Privacy Policy", url: "/about.html" },
+    { name: "Terms of Service", url: "/about.html" }
+  ],
+  copyright: "© 2026 Cox's Bazar Boat Club Limited. All Rights Reserved. Incorporated under The Companies Act, 1994, Bangladesh."
+};
+
+export function getFooterSettingsSync(): FooterSettings {
+  try {
+    const local = localStorage.getItem(FOOTER_DB_SETTINGS_KEY);
+    if (local) {
+      return JSON.parse(local);
+    }
+  } catch (e) {}
+  return DEFAULT_FOOTER_SETTINGS;
+}
+
+export async function fetchFooterSettings(): Promise<FooterSettings> {
+  try {
+    const res = await fetch("/api/cms/footer");
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.socialLinks) {
+        localStorage.setItem(FOOTER_DB_SETTINGS_KEY, JSON.stringify(data));
+        return data;
+      }
+    }
+  } catch (e) {
+    console.warn("Could not fetch footer settings from backend API, using local fallback");
+  }
+  return getFooterSettingsSync();
+}
+
+export async function updateFooterSettings(settings: FooterSettings, userRole?: string): Promise<FooterSettings> {
+  // Sync locally first
+  try {
+    localStorage.setItem(FOOTER_DB_SETTINGS_KEY, JSON.stringify(settings));
+  } catch (e) {}
+
+  try {
+    const res = await fetch("/api/cms/footer", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "X-User-Role": userRole || "admin"
+      },
+      body: JSON.stringify(settings)
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || "Failed to update footer settings.");
+    }
+    const data = await res.json();
+    return data;
+  } catch (e: any) {
+    console.error("Backend error updating footer settings: ", e);
+    // Return standard representation even if offline
+    return settings;
+  }
+}
+

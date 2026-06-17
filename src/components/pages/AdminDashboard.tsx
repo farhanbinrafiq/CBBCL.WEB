@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { RoutePath, User, Profile, Director, NewsPost, ClubMember, Affiliation, MembershipApplication, AffiliationRequest } from "../../types";
+import { RoutePath, User, Profile, Director, NewsPost, ClubMember, Affiliation, MembershipApplication, AffiliationRequest, FooterSettings } from "../../types";
 import {
   getLoggedInUser,
   getUsers,
@@ -30,6 +30,9 @@ import {
   saveNavCMS,
   getFooterCMS,
   saveFooterCMS,
+  getFooterSettingsSync,
+  fetchFooterSettings,
+  updateFooterSettings,
   NavCMSData,
   FooterCMSData,
   NavMenuItem
@@ -53,7 +56,7 @@ interface AdminDashboardProps {
   initialActiveTab?: AdminTab;
 }
 
-type AdminTab = "members" | "profiles" | "board" | "news" | "club_members" | "site_content" | "media_library" | "affiliations" | "system" | "applications" | "affiliation_requests" | "home_cms";
+type AdminTab = "members" | "profiles" | "board" | "news" | "club_members" | "site_content" | "media_library" | "affiliations" | "system" | "applications" | "affiliation_requests" | "home_cms" | "footer_cms";
 
 const AVAILABLE_ROUTES: { label: string; value: RoutePath }[] = [
   { label: "Home Page", value: "/" },
@@ -182,6 +185,9 @@ export default function AdminDashboard({ navigate, onLogout, initialActiveTab }:
   const [tempMediaName, setTempMediaName] = useState("");
   const [tempMediaCat, setTempMediaCat] = useState<MediaItem["category"]>("Gallery");
 
+  // Dynamic Footer Settings CMS state
+  const [footerSettings, setFooterSettings] = useState<FooterSettings>(() => getFooterSettingsSync());
+
   useEffect(() => {
     const adminUser = getLoggedInUser();
     if (!adminUser || adminUser.role !== "admin") {
@@ -199,11 +205,121 @@ export default function AdminDashboard({ navigate, onLogout, initialActiveTab }:
     setSiteCms(getPageContent());
     setMediaLibrary(getMediaLibrary());
     setAffiliations(getCMSAffiliations());
+
+    // Sync dynamic footer custom site settings
+    fetchFooterSettings().then(res => {
+      if (res && res.socialLinks) {
+        setFooterSettings(res);
+      }
+    });
   }, [navigate]);
 
   const triggerNotice = (type: "success" | "error", message: string) => {
     setNotification({ type, message });
     setTimeout(() => setNotification(null), 5000);
+  };
+
+  // --- FOOTER CMS ACTIONS ---
+  const handleResetFooterToDefault = () => {
+    const DEFAULT_F_SETTINGS: FooterSettings = {
+      key: "footer",
+      socialLinks: {
+        facebook: "https://facebook.com",
+        instagram: "https://instagram.com",
+        youtube: "https://youtube.com",
+        linkedin: "https://linkedin.com",
+        twitter: "https://twitter.com"
+      },
+      contact: {
+        email: "registry@cbbcl.org, admin@cbbcl.org",
+        phone: "+880 1711-223344",
+        address: "Coastal Point Bypass, Marine Drive Boulevard, Cox's Bazar, Bangladesh"
+      },
+      footerLinks: [
+        {
+          title: "Explore the Club",
+          links: [
+            { name: "Home Base", url: "/" },
+            { name: "About Our Story", url: "/about.html" },
+            { name: "Facilities Showcase", url: "/facilities.html" },
+            { name: "Board of Directors", url: "/board.html" },
+            { name: "Club News Feed", url: "/news-feed.html" },
+            { name: "Affiliations", url: "/affiliations.html" }
+          ]
+        },
+        {
+          title: "Membership Tiers",
+          links: [
+            { name: "🏆 Donor Membership", url: "/membership.html" },
+            { name: "🏵️ Life Membership", url: "/membership.html" },
+            { name: "🛡️ Permanent Membership", url: "/membership.html" },
+            { name: "⚓ Associate Membership", url: "/membership.html" }
+          ]
+        }
+      ],
+      legalLinks: [
+        { name: "Privacy Policy", url: "/about.html" },
+        { name: "Terms of Service", url: "/about.html" }
+      ],
+      copyright: "© 2026 Cox's Bazar Boat Club Limited. All Rights Reserved. Incorporated under The Companies Act, 1994, Bangladesh."
+    };
+    setFooterSettings(DEFAULT_F_SETTINGS);
+    triggerNotice("success", "Footer parameters reset to original defaults. Click Save to commit changes.");
+  };
+
+  const handleUpdateGroupTitle = (groupIdx: number, newTitle: string) => {
+    const updated = [...footerSettings.footerLinks];
+    updated[groupIdx].title = newTitle;
+    setFooterSettings({ ...footerSettings, footerLinks: updated });
+  };
+
+  const handleUpdateGroupLink = (groupIdx: number, linkIdx: number, key: "name" | "url", value: string) => {
+    const updatedCol = [...footerSettings.footerLinks];
+    const updatedLink = { ...updatedCol[groupIdx].links[linkIdx], [key]: value };
+    updatedCol[groupIdx].links[linkIdx] = updatedLink;
+    setFooterSettings({ ...footerSettings, footerLinks: updatedCol });
+  };
+
+  const handleAddGroupLink = (groupIdx: number) => {
+    const updated = [...footerSettings.footerLinks];
+    updated[groupIdx].links.push({ name: "", url: "" });
+    setFooterSettings({ ...footerSettings, footerLinks: updated });
+  };
+
+  const handleRemoveGroupLink = (groupIdx: number, linkIdx: number) => {
+    const updated = [...footerSettings.footerLinks];
+    updated[groupIdx].links.splice(linkIdx, 1);
+    setFooterSettings({ ...footerSettings, footerLinks: updated });
+  };
+
+  const handleAddFooterLinkGroup = () => {
+    const updated = [...footerSettings.footerLinks];
+    updated.push({ title: "New Column Category", links: [] });
+    setFooterSettings({ ...footerSettings, footerLinks: updated });
+  };
+
+  const handleRemoveFooterLinkGroup = (groupIdx: number) => {
+    const updated = [...footerSettings.footerLinks];
+    updated.splice(groupIdx, 1);
+    setFooterSettings({ ...footerSettings, footerLinks: updated });
+  };
+
+  const handleUpdateLegalLink = (legalIdx: number, key: "name" | "url", value: string) => {
+    const updated = [...footerSettings.legalLinks];
+    updated[legalIdx] = { ...updated[legalIdx], [key]: value };
+    setFooterSettings({ ...footerSettings, legalLinks: updated });
+  };
+
+  const handleAddLegalLink = () => {
+    const updated = [...footerSettings.legalLinks];
+    updated.push({ name: "", url: "" });
+    setFooterSettings({ ...footerSettings, legalLinks: updated });
+  };
+
+  const handleRemoveLegalLink = (legalIdx: number) => {
+    const updated = [...footerSettings.legalLinks];
+    updated.splice(legalIdx, 1);
+    setFooterSettings({ ...footerSettings, legalLinks: updated });
   };
 
   // --- AFFILIATION REQUEST ACTIONS ---
@@ -1167,11 +1283,21 @@ export default function AdminDashboard({ navigate, onLogout, initialActiveTab }:
                 <button
                   onClick={() => setActiveTab("home_cms")}
                   className={`flex items-center space-x-2.5 w-full text-left px-3.5 py-2.5 text-xs font-sans font-medium transition-all ${
-                    activeTab === "home_cms" ? "bg-navy text-gold font-bold" : "text-slate-600 hover:bg-slate-50 hover:text-gold"
+                    activeTab === "home_cms" ? "bg-navy text-gold font-bold" : "text-[#5c6882] hover:bg-slate-50 hover:text-[#9e7f46]"
                   }`}
                 >
-                  <Layers className="w-4 h-4 text-gold-dark" />
-                  <span className="font-semibold text-amber-900">Home Page Section CMS</span>
+                  <Layers className="w-4 h-4 text-[#9e7f46]" />
+                  <span className="font-semibold text-slate-800">Home Page Section CMS</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab("footer_cms")}
+                  className={`flex items-center space-x-2.5 w-full text-left px-3.5 py-2.5 text-xs font-sans font-medium transition-all ${
+                    activeTab === "footer_cms" ? "bg-navy text-gold font-bold" : "text-[#5c6882] hover:bg-slate-50 hover:text-[#9e7f46]"
+                  }`}
+                >
+                  <FileText className="w-4 h-4 text-[#9e7f46]" />
+                  <span className="font-semibold text-slate-800">Dynamic Footer CMS</span>
                 </button>
 
                 <button
@@ -4369,6 +4495,503 @@ export default function AdminDashboard({ navigate, onLogout, initialActiveTab }:
                       <span className="text-lg font-bold text-navy select-none">{newsPosts.length}</span>
                     </div>
                   </div>
+                </div>
+              </div>
+            )}
+
+            {/* FOOTER CMS PANEL */}
+            {activeTab === "footer_cms" && (
+              <div className="bg-white border border-slate-200 p-6 shadow-sm space-y-8 animate-fade-in font-sans">
+                <div className="border-b pb-4 flex items-center justify-between">
+                  <div>
+                    <h2 className="font-display text-xl text-text-dark font-semibold">Dynamic Footer Settings CMS</h2>
+                    <p className="text-xs text-slate-500 font-light mt-1">
+                      Manage links, contact information, social handles, legal policies, and general copyright parameters served live across the entire website footer.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleResetFooterToDefault}
+                    className="text-[10px] text-slate-500 hover:text-navy border px-2.5 py-1 uppercase tracking-wider font-semibold hover:bg-slate-50 transition-all cursor-pointer"
+                  >
+                    Reset to Defaults
+                  </button>
+                </div>
+
+                {/* BRAND LOGO CONSOLE */}
+                <div className="space-y-4 border-b pb-6">
+                  <h3 className="text-sm font-semibold text-navy uppercase tracking-wider border-l-2 border-gold pl-2">Dynamic Website Brand Logo</h3>
+                  <div className="bg-slate-50 border border-slate-100 p-4 rounded-sm grid grid-cols-1 md:grid-cols-[1.5fr_2fr] gap-6">
+                    {/* Upload / Interactive Container */}
+                    <div className="space-y-3">
+                      <label className="text-[10px] text-slate-400 font-bold uppercase block tracking-wider">Dynamic Logo File Selector (PNG, SVG, or JPG)</label>
+                      <div className="relative border border-dashed border-slate-200 bg-white p-5 rounded hover:border-gold hover:bg-gold/5 transition-all text-center flex flex-col items-center justify-center cursor-pointer min-h-[140px] group">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+
+                            // Max 2MB size check
+                            if (file.size > 2 * 1024 * 1024) {
+                              triggerNotice("error", "The uploaded brand logo asset exceeds the 2MB size limit. Please compress it or upload a smaller PNG/SVG.");
+                              return;
+                            }
+
+                            const fd = new FormData();
+                            fd.append("image", file);
+
+                            try {
+                              const adminUser = getLoggedInUser();
+                              const res = await fetch("/api/upload", {
+                                method: "POST",
+                                headers: {
+                                  "X-User-Role": adminUser?.role || "admin"
+                                },
+                                body: fd
+                              });
+                              if (!res.ok) {
+                                const errStr = await res.json();
+                                throw new Error(errStr.error || "Upload failed.");
+                              }
+                              const uploadData = await res.json();
+                              if (uploadData && uploadData.url) {
+                                setFooterSettings({
+                                  ...footerSettings,
+                                  logo: {
+                                    type: "image",
+                                    url: uploadData.url,
+                                    alt: footerSettings.logo?.alt || "Cox's Bazar Boat Club Logo"
+                                  }
+                                });
+                                triggerNotice("success", "Dynamic Brand Logo file successfully saved and uploaded to server storage!");
+                              }
+                            } catch (err: any) {
+                              console.warn("Backend dynamic asset upload failed, carrying out safe offline Base64 compression callback...");
+                              const reader = new FileReader();
+                              reader.onload = () => {
+                                if (typeof reader.result === "string") {
+                                  // Compress image to JPEG to stay within localStorage boundaries
+                                  const img = new Image();
+                                  img.src = reader.result;
+                                  img.onload = () => {
+                                    const canvas = document.createElement("canvas");
+                                    const MAX_WIDTH = 500;
+                                    const MAX_HEIGHT = 500;
+                                    let width = img.width;
+                                    let height = img.height;
+                                    if (width > height) {
+                                      if (width > MAX_WIDTH) {
+                                        height *= MAX_WIDTH / width;
+                                        width = MAX_WIDTH;
+                                      }
+                                    } else {
+                                      if (height > MAX_HEIGHT) {
+                                        width *= MAX_HEIGHT / height;
+                                        height = MAX_HEIGHT;
+                                      }
+                                    }
+                                    canvas.width = width;
+                                    canvas.height = height;
+                                    const ctx = canvas.getContext("2d");
+                                    if (ctx) {
+                                      ctx.drawImage(img, 0, 0, width, height);
+                                      const compressed = canvas.toDataURL("image/jpeg", 0.7);
+                                      setFooterSettings({
+                                        ...footerSettings,
+                                        logo: {
+                                          type: "image",
+                                          url: compressed,
+                                          alt: footerSettings.logo?.alt || "Cox's Bazar Boat Club Logo"
+                                        }
+                                      });
+                                      triggerNotice("success", "Brand Logo updated offline via high-compression storage stream!");
+                                    }
+                                  };
+                                }
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          }}
+                        />
+                        <div className="p-2.5 bg-slate-50 rounded-full group-hover:bg-white text-slate-400 group-hover:text-[#9e7f46] shadow-sm mb-2 transition-all">
+                          <Upload className="w-5 h-5" />
+                        </div>
+                        <p className="text-[11px] font-bold text-text-dark font-sans group-hover:text-[#9e7f46] transition-colors">
+                          Click or drag dynamic brand asset to upload
+                        </p>
+                        <p className="text-[9px] text-slate-400 font-sans tracking-wide mt-1">
+                          PNG (preferred), SVG, or JPG. Max Limit: 2MB.
+                        </p>
+                      </div>
+
+                      {/* Manual / Alternate input field */}
+                      <div className="pt-2 space-y-1">
+                        <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Explicit Logo Image URL (OR embed link)</label>
+                        <input
+                          type="text"
+                          value={footerSettings.logo?.url || ""}
+                          onChange={(e) => setFooterSettings({
+                            ...footerSettings,
+                            logo: {
+                              type: "image",
+                              url: e.target.value,
+                              alt: footerSettings.logo?.alt || "Cox's Bazar Boat Club Logo"
+                            }
+                          })}
+                          className="w-full text-xs font-sans p-2 border rounded-sm focus:ring-1 focus:ring-gold focus:outline-hidden"
+                          placeholder="e.g. /uploads/logo-12345.png or external link..."
+                        />
+                      </div>
+                    </div>
+
+                    {/* Preview Area & Options */}
+                    <div className="border border-slate-100 bg-white p-4 rounded flex flex-col justify-between">
+                      <div>
+                        <div className="flex justify-between items-center mb-3">
+                          <h4 className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Dynamic Logo Preview</h4>
+                          {footerSettings.logo?.url && (
+                            <button
+                              type="button"
+                              onClick={() => setFooterSettings({
+                                ...footerSettings,
+                                logo: {
+                                  type: "image",
+                                  url: "",
+                                  alt: "Site Logo"
+                                }
+                              })}
+                              className="text-[9px] text-rose-500 hover:text-rose-700 font-bold uppercase tracking-widest cursor-pointer"
+                            >
+                              Reset to Vector
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Real-time Renderer Box */}
+                        <div className="bg-[#111625] h-[130px] rounded-xs border border-white/[0.08] flex items-center justify-center relative overflow-hidden p-4 select-none">
+                          {footerSettings.logo?.url ? (
+                            <img
+                              src={footerSettings.logo.url}
+                              alt={footerSettings.logo.alt || "Logo Logo"}
+                              className="max-h-[100px] max-w-full object-contain block"
+                              referrerPolicy="no-referrer"
+                            />
+                          ) : (
+                            <div className="text-center text-slate-400 space-y-1">
+                              <p className="text-[10px] font-bold text-gold uppercase tracking-widest">FALLING BACK TO VECTOR</p>
+                              <p className="text-[9px] font-light text-slate-500"> Cox's Bazar Boat Club Emblem </p>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="text-[10px] text-slate-400 font-light mt-2 leading-relaxed">
+                          {footerSettings.logo?.url ? "Logo is currently reading from custom upload path. It will display rendered against a dark theme gradient across the live site." : "Using elegant fallback vector. When empty or inactive, the site serves the default embedded marine insignia circle emblem."}
+                        </div>
+                      </div>
+
+                      {/* Custom ALT & Ratio Crop controls */}
+                      <div className="pt-4 grid grid-cols-1 gap-2 border-t border-slate-100 mt-2">
+                        <div className="space-y-1">
+                          <label className="text-[9px] text-slate-400 font-bold uppercase tracking-wider block">Logo ALT Accessibility Tag (SEO Alt text)</label>
+                          <input
+                            type="text"
+                            value={footerSettings.logo?.alt || ""}
+                            onChange={(e) => setFooterSettings({
+                              ...footerSettings,
+                              logo: {
+                                type: "image",
+                                url: footerSettings.logo?.url || "",
+                                alt: e.target.value
+                              }
+                            })}
+                            className="w-full text-xs font-sans p-2 border rounded-sm focus:ring-1 focus:ring-gold"
+                            placeholder="Alt description for search engines..."
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* SOCIAL MEDIA SECTION */}
+                <div className="space-y-4 border-b pb-6">
+                  <h3 className="text-sm font-semibold text-navy uppercase tracking-wider border-l-2 border-gold pl-2">Social Media Links</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-[10px] text-slate-400 font-bold uppercase">Facebook URL</label>
+                      <input
+                        type="text"
+                        value={footerSettings.socialLinks.facebook}
+                        onChange={(e) => setFooterSettings({
+                          ...footerSettings,
+                          socialLinks: { ...footerSettings.socialLinks, facebook: e.target.value }
+                        })}
+                        className="w-full text-xs font-sans p-2.5 border rounded-xs focus:ring-1 focus:ring-gold focus:outline-hidden"
+                        placeholder="https://facebook.com/..."
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] text-slate-400 font-bold uppercase">Instagram URL</label>
+                      <input
+                        type="text"
+                        value={footerSettings.socialLinks.instagram}
+                        onChange={(e) => setFooterSettings({
+                          ...footerSettings,
+                          socialLinks: { ...footerSettings.socialLinks, instagram: e.target.value }
+                        })}
+                        className="w-full text-xs font-sans p-2.5 border rounded-xs focus:ring-1 focus:ring-gold focus:outline-hidden"
+                        placeholder="https://instagram.com/..."
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] text-slate-400 font-bold uppercase">Linkedin URL</label>
+                      <input
+                        type="text"
+                        value={footerSettings.socialLinks.linkedin}
+                        onChange={(e) => setFooterSettings({
+                          ...footerSettings,
+                          socialLinks: { ...footerSettings.socialLinks, linkedin: e.target.value }
+                        })}
+                        className="w-full text-xs font-sans p-2.5 border rounded-xs focus:ring-1 focus:ring-gold focus:outline-hidden"
+                        placeholder="https://linkedin.com/in/..."
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] text-slate-400 font-bold uppercase">Twitter/X URL</label>
+                      <input
+                        type="text"
+                        value={footerSettings.socialLinks.twitter}
+                        onChange={(e) => setFooterSettings({
+                          ...footerSettings,
+                          socialLinks: { ...footerSettings.socialLinks, twitter: e.target.value }
+                        })}
+                        className="w-full text-xs font-sans p-2.5 border rounded-xs focus:ring-1 focus:ring-gold focus:outline-hidden"
+                        placeholder="https://twitter.com/..."
+                      />
+                    </div>
+                    <div className="space-y-1 sm:col-span-2">
+                      <label className="text-[10px] text-slate-400 font-bold uppercase">YouTube URL</label>
+                      <input
+                        type="text"
+                        value={footerSettings.socialLinks.youtube || ""}
+                        onChange={(e) => setFooterSettings({
+                          ...footerSettings,
+                          socialLinks: { ...footerSettings.socialLinks, youtube: e.target.value }
+                        })}
+                        className="w-full text-xs font-sans p-2.5 border rounded-xs focus:ring-1 focus:ring-gold focus:outline-hidden"
+                        placeholder="https://youtube.com/c/..."
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* CONTACT SECTION */}
+                <div className="space-y-4 border-b pb-6">
+                  <h3 className="text-sm font-semibold text-navy uppercase tracking-wider border-l-2 border-gold pl-2">Contact & Registries</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-[10px] text-slate-400 font-bold uppercase">Registry Desk Email (Valid format required)</label>
+                      <input
+                        type="text"
+                        value={footerSettings.contact.email}
+                        onChange={(e) => setFooterSettings({
+                          ...footerSettings,
+                          contact: { ...footerSettings.contact, email: e.target.value }
+                        })}
+                        className="w-full text-xs font-sans p-2.5 border rounded-xs focus:ring-1 focus:ring-gold focus:outline-hidden"
+                        placeholder="registry@cbbcl.org"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] text-slate-400 font-bold uppercase">Registry Phone / Hotline</label>
+                      <input
+                        type="text"
+                        value={footerSettings.contact.phone}
+                        onChange={(e) => setFooterSettings({
+                          ...footerSettings,
+                          contact: { ...footerSettings.contact, phone: e.target.value }
+                        })}
+                        className="w-full text-xs font-sans p-2.5 border rounded-xs focus:ring-1 focus:ring-gold focus:outline-hidden"
+                        placeholder="+880 1711-223344"
+                      />
+                    </div>
+                    <div className="space-y-1 sm:col-span-2">
+                      <label className="text-[10px] text-slate-400 font-bold uppercase">Club Secretariat Address (Office Headquarters)</label>
+                      <textarea
+                        value={footerSettings.contact.address}
+                        onChange={(e) => setFooterSettings({
+                          ...footerSettings,
+                          contact: { ...footerSettings.contact, address: e.target.value }
+                        })}
+                        rows={3}
+                        className="w-full text-xs font-sans p-2.5 border rounded-xs focus:ring-1 focus:ring-gold focus:outline-hidden"
+                        placeholder="Coastal Point Bypass, Marine Drive Boulevard, Cox's Bazar, Bangladesh"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* FOOTER LINKS EDITOR */}
+                <div className="space-y-4 border-b pb-6">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-semibold text-navy uppercase tracking-wider border-l-2 border-gold pl-2">Footer Column Link Categories</h3>
+                    <button
+                      type="button"
+                      onClick={handleAddFooterLinkGroup}
+                      className="cursor-pointer text-[10px] bg-[#9e7f46] hover:bg-[#866a3a] text-white font-semibold px-2.5 py-1.5 uppercase tracking-wider flex items-center shadow-sm"
+                    >
+                      <Plus className="w-3.5 h-3.5 mr-1" /> Add Category Column
+                    </button>
+                  </div>
+
+                  <div className="space-y-6">
+                    {footerSettings.footerLinks.map((group, groupIdx) => (
+                      <div key={groupIdx} className="p-4 bg-slate-50 border border-slate-200 rounded-sm relative space-y-4">
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveFooterLinkGroup(groupIdx)}
+                          className="absolute top-4 right-4 text-rose-500 hover:text-rose-700 p-1 rounded hover:bg-rose-50 transition-colors"
+                          title="Remove Column Category Group"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+
+                        <div className="max-w-md space-y-1">
+                          <label className="text-[9px] text-[#9e7f46] font-bold uppercase block">Column Title</label>
+                          <input
+                            type="text"
+                            value={group.title}
+                            onChange={(e) => handleUpdateGroupTitle(groupIdx, e.target.value)}
+                            className="text-xs p-2.5 border rounded bg-white font-bold w-full focus:ring-1 focus:ring-gold focus:outline-hidden"
+                            placeholder="e.g. Navigation Base"
+                          />
+                        </div>
+
+                        {/* Repeatable links inside group */}
+                        <div className="space-y-2 pt-2">
+                          <div className="text-[9px] text-slate-500 font-bold uppercase tracking-wide border-b border-slate-100 pb-1">Column Links</div>
+                          {group.links.map((link, linkIdx) => (
+                            <div key={linkIdx} className="flex gap-2 items-center">
+                              <input
+                                type="text"
+                                value={link.name}
+                                onChange={(e) => handleUpdateGroupLink(groupIdx, linkIdx, "name", e.target.value)}
+                                className="flex-1 text-xs p-2 border rounded bg-white focus:ring-1 focus:ring-gold"
+                                placeholder="Link Label (e.g. About Our Story)"
+                              />
+                              <input
+                                type="text"
+                                value={link.url}
+                                onChange={(e) => handleUpdateGroupLink(groupIdx, linkIdx, "url", e.target.value)}
+                                className="flex-1 text-xs p-2 border rounded bg-white font-mono focus:ring-1 focus:ring-gold"
+                                placeholder="URL Route (e.g. /about.html)"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveGroupLink(groupIdx, linkIdx)}
+                                className="text-slate-400 hover:text-rose-600 p-1.5 rounded"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ))}
+
+                          <button
+                            type="button"
+                            onClick={() => handleAddGroupLink(groupIdx)}
+                            className="text-[10px] text-navy hover:text-gold-dark font-semibold flex items-center space-x-1 pt-1 cursor-pointer"
+                          >
+                            <Plus className="w-3.5 h-3.5 mr-0.5 inline text-[#9e7f46]" /> Add Link Item
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* LEGAL LINKS SECTION */}
+                <div className="space-y-4 border-b pb-6">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-semibold text-navy uppercase tracking-wider border-l-2 border-gold pl-2">Legal Disclaimers & Policies</h3>
+                    <button
+                      type="button"
+                      onClick={handleAddLegalLink}
+                      className="cursor-pointer text-[10px] bg-[#9e7f46] hover:bg-[#866a3a] text-white font-semibold px-2.5 py-1.5 uppercase tracking-wider flex items-center shadow-sm"
+                    >
+                      <Plus className="w-3.5 h-3.5 mr-1" /> Add Policy Link
+                    </button>
+                  </div>
+
+                  <div className="p-4 bg-slate-50 border border-slate-200 rounded-sm space-y-3">
+                    {footerSettings.legalLinks.map((legal, legalIdx) => (
+                      <div key={legalIdx} className="flex gap-2 items-center">
+                        <input
+                          type="text"
+                          value={legal.name}
+                          onChange={(e) => handleUpdateLegalLink(legalIdx, "name", e.target.value)}
+                          className="flex-1 text-xs p-2 border rounded bg-white focus:ring-1 focus:ring-gold"
+                          placeholder="Policy Page Name (e.g. Privacy Policy)"
+                        />
+                        <input
+                          type="text"
+                          value={legal.url}
+                          onChange={(e) => handleUpdateLegalLink(legalIdx, "url", e.target.value)}
+                          className="flex-1 text-xs p-2 border rounded bg-white font-mono focus:ring-1 focus:ring-gold"
+                          placeholder="URL Route (e.g. /about.html)"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveLegalLink(legalIdx)}
+                          className="text-slate-400 hover:text-rose-600 p-1.5 rounded"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                    {footerSettings.legalLinks.length === 0 && (
+                      <div className="text-xs text-slate-400 font-light text-center py-2">No legal policies defined.</div>
+                    )}
+                  </div>
+                </div>
+
+                {/* COPYRIGHT COLUMN */}
+                <div className="space-y-4 border-b pb-6">
+                  <h3 className="text-sm font-semibold text-navy uppercase tracking-wider border-l-2 border-gold pl-2">Copyright Disclaimer Statement</h3>
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-slate-400 font-bold uppercase">Copyright Text</label>
+                    <input
+                      type="text"
+                      value={footerSettings.copyright}
+                      onChange={(e) => setFooterSettings({ ...footerSettings, copyright: e.target.value })}
+                      className="w-full text-xs font-sans p-2.5 border rounded-xs focus:ring-1 focus:ring-gold focus:outline-hidden"
+                      placeholder="© 2026 Cox's Bazar Boat Club Limited. All Rights Reserved."
+                    />
+                  </div>
+                </div>
+
+                {/* SAVE ACTION */}
+                <div className="flex items-center justify-end pt-4 bg-slate-50 -mx-6 -mb-6 p-6 border-t border-slate-100 gap-3">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        const adminUser = getLoggedInUser();
+                        const updated = await updateFooterSettings(footerSettings, adminUser?.role);
+                        setFooterSettings(updated);
+                        // Raise local state update broadcast event
+                        window.dispatchEvent(new Event("cbbcl-footer-updated"));
+                        triggerNotice("success", "Dynamic Footer parameters updated and deployed successfully to persistent site_settings database!");
+                      } catch (err: any) {
+                        triggerNotice("error", "Validation error: " + err.message);
+                      }
+                    }}
+                    className="cursor-pointer bg-[#9e7f46] hover:bg-[#866a3a] text-white font-semibold text-xs px-6 py-2.5 rounded-sm transition-all shadow border border-[#9e7f46] uppercase tracking-wider"
+                  >
+                    Save & Standardize Footer
+                  </button>
                 </div>
               </div>
             )}

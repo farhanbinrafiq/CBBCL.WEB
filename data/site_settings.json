@@ -1,0 +1,49 @@
+{
+  "footer": {
+    "key": "footer",
+    "logo": {
+      "type": "image",
+      "url": "",
+      "alt": "Site Logo"
+    },
+    "socialLinks": {
+      "facebook": "https://facebook.com",
+      "instagram": "https://instagram.com",
+      "youtube": "https://youtube.com",
+      "linkedin": "https://linkedin.com",
+      "twitter": "https://twitter.com"
+    },
+    "contact": {
+      "email": "registry@cbbcl.org, admin@cbbcl.org",
+      "phone": "+880 1711-223344",
+      "address": "Coastal Point Bypass, Marine Drive Boulevard, Cox's Bazar, Bangladesh"
+    },
+    "footerLinks": [
+      {
+        "title": "Explore the Club",
+        "links": [
+          { "name": "Home Base", "url": "/" },
+          { "name": "About Our Story", "url": "/about.html" },
+          { "name": "Facilities Showcase", "url": "/facilities.html" },
+          { "name": "Board of Directors", "url": "/board.html" },
+          { "name": "Club News Feed", "url": "/news-feed.html" },
+          { "name": "Affiliations", "url": "/affiliations.html" }
+        ]
+      },
+      {
+        "title": "Membership Tiers",
+        "links": [
+          { "name": "🏆 Donor Membership", "url": "/membership.html" },
+          { "name": "🏵️ Life Membership", "url": "/membership.html" },
+          { "name": "🛡️ Permanent Membership", "url": "/membership.html" },
+          { "name": "⚓ Associate Membership", "url": "/membership.html" }
+        ]
+      }
+    ],
+    "legalLinks": [
+      { "name": "Privacy Policy", "url": "/about.html" },
+      { "name": "Terms of Service", "url": "/about.html" }
+    ],
+    "copyright": "© 2026 Cox's Bazar Boat Club Limited. All Rights Reserved. Incorporated under The Companies Act, 1994, Bangladesh."
+  }
+}

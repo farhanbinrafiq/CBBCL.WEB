@@ -178,5 +178,47 @@ export interface EZBookingReservation {
   submittedAt: string;
 }
 
+export interface FooterLinkItem {
+  name: string;
+  url: string;
+}
+
+export interface FooterLinkGroup {
+  title: string;
+  links: FooterLinkItem[];
+}
+
+export interface LegalLinkItem {
+  name: string;
+  url: string;
+}
+
+export interface FooterLogoSettings {
+  type: string;
+  url: string;
+  alt: string;
+}
+
+export interface FooterSettings {
+  key: string;
+  logo?: FooterLogoSettings;
+  socialLinks: {
+    facebook: string;
+    instagram: string;
+    youtube: string;
+    linkedin: string;
+    twitter: string;
+  };
+  contact: {
+    email: string;
+    phone: string;
+    address: string;
+  };
+  footerLinks: FooterLinkGroup[];
+  legalLinks: LegalLinkItem[];
+  copyright: string;
+}
+
+
 
 
