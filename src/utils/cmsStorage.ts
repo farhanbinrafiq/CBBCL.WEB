@@ -385,7 +385,7 @@ const DEFAULT_FOOTER: FooterCMSData = {
   phone: "+880 1711-223344 (Registry Desk)",
   copyright: "© 2026 Cox's Bazar Boat Club Limited. All Rights Reserved. Incorporated under The Companies Act, 1994, Bangladesh.",
   socials: {
-    facebook: "https://facebook.com",
+    facebook: "https://www.facebook.com/CoxsBazarBoatClubLtd",
     twitter: "https://twitter.com",
     linkedin: "https://linkedin.com",
     instagram: "https://instagram.com"
@@ -467,7 +467,7 @@ export const DEFAULT_FOOTER_SETTINGS: FooterSettings = {
     alt: "Site Logo"
   },
   socialLinks: {
-    facebook: "https://facebook.com",
+    facebook: "https://www.facebook.com/CoxsBazarBoatClubLtd",
     instagram: "https://instagram.com",
     youtube: "https://youtube.com",
     linkedin: "https://linkedin.com",

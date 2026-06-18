@@ -78,7 +78,6 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
     };
   }, [isOpen, isScrolled]);
 
-  const menuItems = navCms.menuItems;
   const currentLogo = navCms.navbarLogo || navCms.logo || cbbclLogo;
   const isDefaultLogo =
     currentLogo === cbbclLogo ||
@@ -86,6 +85,89 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
     navCms.navbarLogo === "" ||
     navCms.navbarLogo.includes("logo.png") ||
     navCms.navbarLogo.includes("Logo");
+
+  const checkIsActive = (itemPath: string) => {
+    const profileId = (currentPath.startsWith("/profile/") && currentPath.endsWith(".html"))
+      ? currentPath.slice(9, -5)
+      : null;
+    
+    const isOnBoard = profileId
+      ? (getBoardMembers().some(d => d.id === profileId) || DIRECTORS_DATA.some(d => d.id === profileId))
+      : false;
+
+    return (
+      currentPath === itemPath ||
+      (itemPath === "/" && currentPath === "/index.html") ||
+      (itemPath === "/board.html" && (currentPath.startsWith("/board/") || (profileId && isOnBoard))) ||
+      (itemPath === "/members.html" && (currentPath.startsWith("/members/") || (profileId && !isOnBoard)))
+    );
+  };
+
+  const getOrderedMenuItems = () => {
+    const rawItems = navCms.menuItems || [];
+    
+    const findItem = (label: string) => {
+      return rawItems.find(item => 
+        item.label.toLowerCase() === label.toLowerCase() || 
+        (label === "Home" && (item.path === "/" || item.path === "/index.html"))
+      );
+    };
+
+    const homeItem = findItem("Home") || { label: "Home", path: "/" as RoutePath };
+    const facilitiesItem = findItem("Facilities") || { label: "Facilities", path: "/facilities.html" as RoutePath };
+    const membershipItem = findItem("Membership") || { label: "Membership", path: "/membership.html" as RoutePath };
+    const boardItem = findItem("Board of Directors") || { label: "Board of Directors", path: "/board.html" as RoutePath };
+    const membersItem = findItem("Club Members") || { label: "Club Members", path: "/members.html" as RoutePath };
+    const eventsItem = findItem("Events") || { label: "Events", path: "/events.html" as RoutePath };
+    const newsItem = findItem("News Feed") || { label: "News Feed", path: "/news-feed.html" as RoutePath };
+    const affiliationsItem = findItem("Affiliations") || { label: "Affiliations", path: "/affiliations.html" as RoutePath };
+    const contactItem = findItem("Contact") || { label: "Contact", path: "/contact.html" as RoutePath };
+    const aboutItem = findItem("About") || { label: "About", path: "/about.html" as RoutePath };
+    const governanceItem = findItem("Governance");
+
+    let aboutDropdown = aboutItem.dropdown ? [...aboutItem.dropdown] : [];
+    if (governanceItem) {
+      if (!aboutDropdown.some(sub => sub.sub === "governance" || sub.label === "Governance & Constitution")) {
+        aboutDropdown.push({ label: "Governance & Constitution", sub: "", path: "/governance.html" as RoutePath });
+      }
+      if (governanceItem.dropdown) {
+        governanceItem.dropdown.forEach(gSub => {
+          if (!aboutDropdown.some(sub => sub.label === gSub.label)) {
+            aboutDropdown.push({
+              label: gSub.label,
+              sub: gSub.sub,
+              path: "/governance.html" as RoutePath
+            });
+          }
+        });
+      }
+    }
+
+    const modifiedAbout = {
+      ...aboutItem,
+      dropdown: aboutDropdown
+    };
+
+    return {
+      left: [
+        homeItem,
+        facilitiesItem,
+        membershipItem,
+        boardItem,
+        membersItem,
+        eventsItem
+      ],
+      right: [
+        newsItem,
+        affiliationsItem,
+        contactItem,
+        modifiedAbout
+      ]
+    };
+  };
+
+  const orderedNav = getOrderedMenuItems();
+  const orderedList = [...orderedNav.left, ...orderedNav.right];
 
   const handleNavClick = (path: RoutePath, sub?: string) => {
     navigate(path);
@@ -133,54 +215,48 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
           {/* Desktop Left Group: maps to Column 1 of our custom CSS grid layout */}
           {isDesktop ? (
             <nav className="nav-left">
-              {menuItems.slice(0, 6).map((item) => {
-                const profileId = (currentPath.startsWith("/profile/") && currentPath.endsWith(".html"))
-                  ? currentPath.slice(9, -5)
-                  : null;
-                
-                const isOnBoard = profileId
-                  ? (getBoardMembers().some(d => d.id === profileId) || DIRECTORS_DATA.some(d => d.id === profileId))
-                  : false;
-
-                const isActive =
-                  currentPath === item.path ||
-                  (item.path === "/" && currentPath === "/index.html") ||
-                  (item.path === "/board.html" && (currentPath.startsWith("/board/") || (profileId && isOnBoard))) ||
-                  (item.path === "/members.html" && (currentPath.startsWith("/members/") || (profileId && !isOnBoard)));
+              {orderedNav.left.map((item, idx) => {
+                const isActive = checkIsActive(item.path);
 
                 return (
-                  <div
-                    key={item.label}
-                    className="relative group py-2"
-                    onMouseEnter={() => setActiveDropdown(item.label)}
-                    onMouseLeave={() => setActiveDropdown(null)}
-                  >
-                    <button
-                      onClick={() => handleNavClick(item.path)}
-                      className={`flex items-center space-x-1 px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] xl:text-[10px] 2xl:text-[11px] font-semibold uppercase tracking-wide xl:tracking-wider 2xl:tracking-widest whitespace-nowrap border-b border-transparent transition-all ${ /* LAYOUT FIX */
-                        isActive
-                          ? "text-gold !border-gold"
-                          : "text-white hover:text-gold hover:border-gold"
-                      }`}
-                    >
-                      <span>{item.label}</span>
-                      {item.dropdown && <ChevronDown className="w-3 h-3 transition-transform duration-200 group-hover:rotate-180 text-gold" />}
-                    </button>
-
-                    {/* Dropdown element */}
-                    {item.dropdown && activeDropdown === item.label && (
-                      <div className="absolute top-full left-0 mt-1 w-64 bg-[#1a2744] border border-white/[0.08] shadow-xl rounded-sm py-2 z-50 animate-fadeIn">
-                        {item.dropdown.map((subItem, index) => (
-                          <button
-                            key={index}
-                            onClick={() => handleNavClick(item.path, subItem.sub)}
-                            className="w-full text-left px-5 py-2 hover:bg-white/[0.03] text-white hover:text-gold font-sans text-xs font-medium transition-colors border-b border-white/[0.05] last:border-0"
-                          >
-                            {subItem.label}
-                          </button>
-                        ))}
-                      </div>
+                  <div key={item.label} className="flex items-center">
+                    {idx > 0 && (
+                      <span className="text-[10px] xl:text-[10px] 2xl:text-[11px] text-white/30 font-semibold px-1 lg:px-1.5 select-none">
+                        &gt;
+                      </span>
                     )}
+                    <div
+                      className="relative group py-2"
+                      onMouseEnter={() => setActiveDropdown(item.label)}
+                      onMouseLeave={() => setActiveDropdown(null)}
+                    >
+                      <button
+                        onClick={() => handleNavClick(item.path)}
+                        className={`flex items-center space-x-1 px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] xl:text-[10px] 2xl:text-[11px] font-semibold uppercase tracking-wide xl:tracking-wider 2xl:tracking-widest whitespace-nowrap border-b border-transparent transition-all ${ /* LAYOUT FIX */
+                          isActive
+                            ? "text-gold !border-gold"
+                            : "text-white hover:text-gold hover:border-gold"
+                        }`}
+                      >
+                        <span>{item.label}</span>
+                        {item.dropdown && <ChevronDown className="w-3 h-3 transition-transform duration-200 group-hover:rotate-180 text-gold" />}
+                      </button>
+
+                      {/* Dropdown element */}
+                      {item.dropdown && activeDropdown === item.label && (
+                        <div className="absolute top-full left-0 mt-1 w-64 bg-[#1a2744] border border-white/[0.08] shadow-xl rounded-sm py-2 z-50 animate-fadeIn">
+                          {item.dropdown.map((subItem, index) => (
+                            <button
+                              key={index}
+                              onClick={() => handleNavClick(subItem.path || item.path, subItem.sub)}
+                              className="w-full text-left px-5 py-2 hover:bg-white/[0.03] text-white hover:text-gold font-sans text-xs font-medium transition-colors border-b border-white/[0.05] last:border-0"
+                            >
+                              {subItem.label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 );
               })}
@@ -232,95 +308,100 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
           {/* Right Side Block: maps to Column 3 of our custom CSS grid layout */}
           <div className="nav-right relative lg:static">
             {isDesktop ? (
-              <div className="flex items-center gap-3 xl:gap-4 2xl:gap-6">
+              <div className="flex items-center gap-0">
                 {/* Desktop Right Navigation Links */}
                 <nav className="flex items-center">
-                  {menuItems.slice(6, 11).map((item) => {
-                    const profileId = (currentPath.startsWith("/profile/") && currentPath.endsWith(".html"))
-                      ? currentPath.slice(9, -5)
-                      : null;
-                    
-                    const isOnBoard = profileId
-                      ? (getBoardMembers().some(d => d.id === profileId) || DIRECTORS_DATA.some(d => d.id === profileId))
-                      : false;
-
-                    const isActive =
-                      currentPath === item.path ||
-                      (item.path === "/" && currentPath === "/index.html") ||
-                      (item.path === "/board.html" && (currentPath.startsWith("/board/") || (profileId && isOnBoard))) ||
-                      (item.path === "/members.html" && (currentPath.startsWith("/members/") || (profileId && !isOnBoard)));
+                  {orderedNav.right.map((item, idx) => {
+                    const isActive = checkIsActive(item.path);
 
                     return (
-                      <div
-                        key={item.label}
-                        className="relative group py-2"
-                        onMouseEnter={() => setActiveDropdown(item.label)}
-                        onMouseLeave={() => setActiveDropdown(null)}
-                      >
-                        <button
-                          onClick={() => handleNavClick(item.path)}
-                          className={`flex items-center space-x-1 px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] xl:text-[10px] 2xl:text-[11px] font-semibold uppercase tracking-wide xl:tracking-wider 2xl:tracking-widest whitespace-nowrap border-b border-transparent transition-all ${ /* LAYOUT FIX */
-                            isActive
-                              ? "text-gold !border-gold"
-                              : "text-white hover:text-gold hover:border-gold"
-                          }`}
-                        >
-                          <span>{item.label}</span>
-                          {item.dropdown && <ChevronDown className="w-3 h-3 transition-transform duration-200 group-hover:rotate-180 text-gold" />}
-                        </button>
-
-                        {/* Dropdown element */}
-                        {item.dropdown && activeDropdown === item.label && (
-                          <div className="absolute top-full left-0 mt-1 w-64 bg-[#1a2744] border border-white/[0.08] shadow-xl rounded-sm py-2 z-50 animate-fadeIn">
-                            {item.dropdown.map((subItem, index) => (
-                              <button
-                                key={index}
-                                onClick={() => handleNavClick(item.path, subItem.sub)}
-                                className="w-full text-left px-5 py-2 hover:bg-white/[0.03] text-white hover:text-gold font-sans text-xs font-medium transition-colors border-b border-white/[0.05] last:border-0"
-                              >
-                                {subItem.label}
-                              </button>
-                            ))}
-                          </div>
+                      <div key={item.label} className="flex items-center">
+                        {idx > 0 && (
+                          <span className="text-[10px] xl:text-[10px] 2xl:text-[11px] text-white/30 font-semibold px-1 lg:px-1.5 select-none">
+                            &gt;
+                          </span>
                         )}
+                        <div
+                          className="relative group py-2"
+                          onMouseEnter={() => setActiveDropdown(item.label)}
+                          onMouseLeave={() => setActiveDropdown(null)}
+                        >
+                          <button
+                            onClick={() => handleNavClick(item.path)}
+                            className={`flex items-center space-x-1 px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] xl:text-[10px] 2xl:text-[11px] font-semibold uppercase tracking-wide xl:tracking-wider 2xl:tracking-widest whitespace-nowrap border-b border-transparent transition-all ${ /* LAYOUT FIX */
+                              isActive
+                                ? "text-gold !border-gold"
+                                : "text-white hover:text-gold hover:border-gold"
+                            }`}
+                          >
+                            <span>{item.label}</span>
+                            {item.dropdown && <ChevronDown className="w-3 h-3 transition-transform duration-200 group-hover:rotate-180 text-gold" />}
+                          </button>
+
+                          {/* Dropdown element */}
+                          {item.dropdown && activeDropdown === item.label && (
+                            <div className="absolute top-full left-0 mt-1 w-64 bg-[#1a2744] border border-white/[0.08] shadow-xl rounded-sm py-2 z-50 animate-fadeIn">
+                              {item.dropdown.map((subItem, index) => (
+                                <button
+                                  key={index}
+                                  onClick={() => handleNavClick(subItem.path || item.path, subItem.sub)}
+                                  className="w-full text-left px-5 py-2 hover:bg-white/[0.03] text-white hover:text-gold font-sans text-xs font-medium transition-colors border-b border-white/[0.05] last:border-0"
+                                >
+                                  {subItem.label}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     );
                   })}
                 </nav>
 
+                {/* Separator before Auth buttons on desktop */}
+                <span className="text-[10px] xl:text-[10px] 2xl:text-[11px] text-white/30 font-semibold px-1 lg:px-1.5 select-none font-sans">
+                  &gt;
+                </span>
+
                 {/* CTA Member Button for Desktop */}
-                <div className="flex items-center gap-3 whitespace-nowrap shrink-0 lg:pr-0">
+                <div className="flex items-center whitespace-nowrap shrink-0 lg:pr-0">
                   {currentUser ? (
-                    <div className="flex items-center space-x-2 lg:space-x-3 whitespace-nowrap">
+                    <div className="flex items-center whitespace-nowrap">
                       <button
                         onClick={() => handleNavClick(currentUser.role === "admin" ? "/admin-dashboard.html" : "/dashboard.html")}
-                        className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold py-1 px-1 xl:px-1 2xl:px-2 transition-colors text-[10px] font-sans font-bold uppercase tracking-widest flex items-center space-x-1 text-center whitespace-nowrap shrink-0" /* LAYOUT FIX */
+                        className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold py-1 px-1 xl:px-1 2xl:px-2 transition-colors text-[10px] xl:text-[10px] 2xl:text-[11px] font-sans font-bold uppercase tracking-widest flex items-center space-x-1 text-center whitespace-nowrap shrink-0" /* LAYOUT FIX */
                       >
                         <UserCheck className="w-3.5 h-3.5" />
                         <span className="whitespace-nowrap">{currentUser.role === "admin" ? "Admin Terminal" : "My Console"}</span>
                       </button>
+                      <span className="text-[10px] xl:text-[10px] 2xl:text-[11px] text-white/30 font-semibold px-1 lg:px-1.5 select-none">
+                        &gt;
+                      </span>
                       <button
                         onClick={() => {
                           if (onLogout) onLogout();
                           handleNavClick("/login.html");
                         }}
-                        className="text-slate-200 hover:text-rose-450 px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap" /* LAYOUT FIX */
+                        className="text-slate-200 hover:text-rose-455 px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] xl:text-[10px] 2xl:text-[11px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap" /* LAYOUT FIX */
                       >
                         Sign Out
                       </button>
                     </div>
                   ) : (
-                    <div className="flex items-center space-x-2 lg:space-x-3 whitespace-nowrap">
+                    <div className="flex items-center whitespace-nowrap">
                       <button
                         onClick={() => handleNavClick("/login.html" as RoutePath)}
-                        className="text-white hover:text-gold px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1 whitespace-nowrap transition-colors" /* LAYOUT FIX */
+                        className="text-white hover:text-gold px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] xl:text-[10px] 2xl:text-[11px] font-bold uppercase tracking-wider flex items-center space-x-1 whitespace-nowrap transition-colors" /* LAYOUT FIX */
                       >
                         <LogIn className="w-3.5 h-3.5 mt-0.5 text-gold shrink-0" />
                         <span className="whitespace-nowrap">Sign In</span>
                       </button>
+                      <span className="text-[10px] xl:text-[10px] 2xl:text-[11px] text-white/30 font-semibold px-1 lg:px-1.5 select-none">
+                        &gt;
+                      </span>
                       <button
                         onClick={() => handleNavClick("/membership.html" as RoutePath)}
-                        className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold-light px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap" /* LAYOUT FIX */
+                        className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold-light px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] xl:text-[10px] 2xl:text-[11px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap" /* LAYOUT FIX */
                       >
                         Become a Member
                       </button>
@@ -350,10 +431,8 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
             }}
             className="fixed left-0 right-0 z-40 bg-[#1a2744] border-t border-white/[0.08] flex flex-col overflow-y-auto px-6 py-6 space-y-4 shadow-inner pb-12"
           >
-            {menuItems.map((item) => {
-              const isActive =
-                currentPath === item.path ||
-                (item.path === "/" && currentPath === "/index.html");
+            {orderedList.map((item) => {
+              const isActive = checkIsActive(item.path);
 
               return (
                 <div key={item.label} className="flex flex-col space-y-1">
@@ -387,7 +466,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                       {item.dropdown.map((subItem, index) => (
                         <button
                           key={index}
-                          onClick={() => handleNavClick(item.path, subItem.sub)}
+                          onClick={() => handleNavClick(subItem.path || item.path, subItem.sub)}
                           className="text-left text-xs font-sans text-slate-300 hover:text-gold py-1"
                         >
                           {subItem.label}
@@ -411,7 +490,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                     if (onLogout) onLogout();
                     handleNavClick("/login.html");
                   }}
-                  className="bg-red-500/10 text-red-450 hover:bg-red-500/20 text-xs font-bold uppercase tracking-wider py-2.5 rounded-sm text-center transition-colors"
+                  className="bg-red-500/10 text-red-100 hover:bg-red-500/20 text-xs font-bold uppercase tracking-wider py-2.5 rounded-sm text-center transition-colors"
                 >
                   Sign Out
                 </button>
