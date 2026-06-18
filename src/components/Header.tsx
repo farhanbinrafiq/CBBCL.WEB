@@ -21,12 +21,12 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
   const [isScrolled, setIsScrolled] = useState(false);
   const [navCms, setNavCms] = useState(() => getNavCMS());
   const [isDesktop, setIsDesktop] = useState(() => {
-    return typeof window !== "undefined" ? window.innerWidth >= 1024 : true;
+    return typeof window !== "undefined" ? window.innerWidth >= 1280 : true;
   });
 
   useEffect(() => {
     const handleResize = () => {
-      setIsDesktop(window.innerWidth >= 1024);
+      setIsDesktop(window.innerWidth >= 1280);
     };
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -129,10 +129,10 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
             : "py-4"
         }`}
       >
-        <div className="container navbar relative flex items-center justify-between w-full">
-          {/* Desktop Left Navigation Links (6 items) */}
-          {isDesktop && (
-            <nav className="flex items-center gap-3 2xl:gap-6 whitespace-nowrap shrink-0 nav-left">
+        <div className="container navbar relative flex xl:flex-nowrap items-center justify-between w-full"> {/* LAYOUT FIX */}
+          {/* Desktop Left Group: maps to Column 1 of our custom CSS grid layout */}
+          {isDesktop ? (
+            <nav className="nav-left">
               {menuItems.slice(0, 6).map((item) => {
                 const profileId = (currentPath.startsWith("/profile/") && currentPath.endsWith(".html"))
                   ? currentPath.slice(9, -5)
@@ -157,10 +157,10 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                   >
                     <button
                       onClick={() => handleNavClick(item.path)}
-                      className={`flex items-center space-x-1 px-1 xl:px-1.5 2xl:px-3 py-1 font-sans text-[10px] xl:text-[11px] font-semibold uppercase tracking-wide xl:tracking-wider 2xl:tracking-widest whitespace-nowrap transition-colors ${
+                      className={`flex items-center space-x-1 px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] xl:text-[10px] 2xl:text-[11px] font-semibold uppercase tracking-wide xl:tracking-wider 2xl:tracking-widest whitespace-nowrap border-b border-transparent transition-all ${ /* LAYOUT FIX */
                         isActive
-                          ? "text-gold border-b border-gold"
-                          : "text-white hover:text-gold"
+                          ? "text-gold !border-gold"
+                          : "text-white hover:text-gold hover:border-gold"
                       }`}
                     >
                       <span>{item.label}</span>
@@ -185,6 +185,9 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                 );
               })}
             </nav>
+          ) : (
+            /* Mirroring spacer container to occupy Column 1 on mobile/tablet elements for absolute symmetry */
+            <div className="nav-left pointer-events-none" />
           )}
 
           {/* Centered Website Logo */}
@@ -193,7 +196,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
             onClick={() => handleNavClick("/" as RoutePath)}
             className="navbar-logo flex items-center justify-center cursor-pointer group shrink-0 z-10"
           >
-            <div className="relative h-[44px] sm:h-[53px] lg:h-[62px] aspect-[3000/2500] flex items-center shrink-0">
+            <div className="relative h-[56px] sm:h-[68px] lg:h-[82px] aspect-[3000/2500] flex items-center shrink-0"> {/* LAYOUT FIX */}
               {isDefaultLogo ? (
                 <LogoSvg className="h-full w-full block" />
               ) : (
@@ -226,12 +229,12 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
             </div>
           </div>
 
-          {/* Right Side Block */}
-          <div className="nav-right shrink-0 relative lg:static">
+          {/* Right Side Block: maps to Column 3 of our custom CSS grid layout */}
+          <div className="nav-right relative lg:static">
             {isDesktop ? (
-              <div className="flex items-center gap-3 2xl:gap-6">
+              <div className="flex items-center gap-3 xl:gap-4 2xl:gap-6">
                 {/* Desktop Right Navigation Links */}
-                <nav className="flex items-center gap-3 2xl:gap-6 whitespace-nowrap shrink-0">
+                <nav className="flex items-center">
                   {menuItems.slice(6, 11).map((item) => {
                     const profileId = (currentPath.startsWith("/profile/") && currentPath.endsWith(".html"))
                       ? currentPath.slice(9, -5)
@@ -256,10 +259,10 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                       >
                         <button
                           onClick={() => handleNavClick(item.path)}
-                          className={`flex items-center space-x-1 px-1 xl:px-1.5 2xl:px-3 py-1 font-sans text-[10px] xl:text-[11px] font-semibold uppercase tracking-wide xl:tracking-wider 2xl:tracking-widest whitespace-nowrap transition-colors ${
+                          className={`flex items-center space-x-1 px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] xl:text-[10px] 2xl:text-[11px] font-semibold uppercase tracking-wide xl:tracking-wider 2xl:tracking-widest whitespace-nowrap border-b border-transparent transition-all ${ /* LAYOUT FIX */
                             isActive
-                              ? "text-gold border-b border-gold"
-                              : "text-white hover:text-gold"
+                              ? "text-gold !border-gold"
+                              : "text-white hover:text-gold hover:border-gold"
                           }`}
                         >
                           <span>{item.label}</span>
@@ -291,7 +294,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                     <div className="flex items-center space-x-2 lg:space-x-3 whitespace-nowrap">
                       <button
                         onClick={() => handleNavClick(currentUser.role === "admin" ? "/admin-dashboard.html" : "/dashboard.html")}
-                        className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold py-1 px-1 lg:px-1.5 2xl:px-3 transition-colors text-[10px] font-sans font-bold uppercase tracking-widest flex items-center space-x-1 text-center whitespace-nowrap shrink-0"
+                        className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold py-1 px-1 xl:px-1 2xl:px-2 transition-colors text-[10px] font-sans font-bold uppercase tracking-widest flex items-center space-x-1 text-center whitespace-nowrap shrink-0" /* LAYOUT FIX */
                       >
                         <UserCheck className="w-3.5 h-3.5" />
                         <span className="whitespace-nowrap">{currentUser.role === "admin" ? "Admin Terminal" : "My Console"}</span>
@@ -301,7 +304,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                           if (onLogout) onLogout();
                           handleNavClick("/login.html");
                         }}
-                        className="text-slate-200 hover:text-rose-400 px-1 lg:px-1.5 2xl:px-3 py-1 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
+                        className="text-slate-200 hover:text-rose-450 px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap" /* LAYOUT FIX */
                       >
                         Sign Out
                       </button>
@@ -310,14 +313,14 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                     <div className="flex items-center space-x-2 lg:space-x-3 whitespace-nowrap">
                       <button
                         onClick={() => handleNavClick("/login.html" as RoutePath)}
-                        className="text-white hover:text-gold px-1 lg:px-1.5 2xl:px-3 py-1 font-sans text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1 whitespace-nowrap transition-colors"
+                        className="text-white hover:text-gold px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1 whitespace-nowrap transition-colors" /* LAYOUT FIX */
                       >
                         <LogIn className="w-3.5 h-3.5 mt-0.5 text-gold shrink-0" />
                         <span className="whitespace-nowrap">Sign In</span>
                       </button>
                       <button
                         onClick={() => handleNavClick("/membership.html" as RoutePath)}
-                        className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold-light px-1 lg:px-1.5 2xl:px-3 py-1 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
+                        className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold-light px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap" /* LAYOUT FIX */
                       >
                         Become a Member
                       </button>
