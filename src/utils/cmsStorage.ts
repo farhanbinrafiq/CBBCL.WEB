@@ -387,7 +387,7 @@ const DEFAULT_FOOTER: FooterCMSData = {
   socials: {
     facebook: "https://www.facebook.com/CoxsBazarBoatClubLtd",
     twitter: "https://twitter.com",
-    linkedin: "https://linkedin.com",
+    linkedin: "https://www.linkedin.com/company/cbbcl/",
     instagram: "https://instagram.com"
   }
 };
@@ -470,7 +470,7 @@ export const DEFAULT_FOOTER_SETTINGS: FooterSettings = {
     facebook: "https://www.facebook.com/CoxsBazarBoatClubLtd",
     instagram: "https://instagram.com",
     youtube: "https://youtube.com",
-    linkedin: "https://linkedin.com",
+    linkedin: "https://www.linkedin.com/company/cbbcl/",
     twitter: "https://twitter.com"
   },
   contact: {
@@ -511,7 +511,16 @@ export function getFooterSettingsSync(): FooterSettings {
   try {
     const local = localStorage.getItem(FOOTER_DB_SETTINGS_KEY);
     if (local) {
-      return JSON.parse(local);
+      const parsed = JSON.parse(local);
+      if (parsed && parsed.socialLinks) {
+        if (parsed.socialLinks.linkedin === "https://linkedin.com" || parsed.socialLinks.linkedin === "https://linkedin.com/") {
+          parsed.socialLinks.linkedin = "https://www.linkedin.com/company/cbbcl/";
+        }
+        if (parsed.socialLinks.facebook === "https://facebook.com" || parsed.socialLinks.facebook === "https://facebook.com/") {
+          parsed.socialLinks.facebook = "https://www.facebook.com/CoxsBazarBoatClubLtd";
+        }
+      }
+      return parsed;
     }
   } catch (e) {}
   return DEFAULT_FOOTER_SETTINGS;
@@ -523,6 +532,12 @@ export async function fetchFooterSettings(): Promise<FooterSettings> {
     if (res.ok) {
       const data = await res.json();
       if (data && data.socialLinks) {
+        if (data.socialLinks.linkedin === "https://linkedin.com" || data.socialLinks.linkedin === "https://linkedin.com/") {
+          data.socialLinks.linkedin = "https://www.linkedin.com/company/cbbcl/";
+        }
+        if (data.socialLinks.facebook === "https://facebook.com" || data.socialLinks.facebook === "https://facebook.com/") {
+          data.socialLinks.facebook = "https://www.facebook.com/CoxsBazarBoatClubLtd";
+        }
         localStorage.setItem(FOOTER_DB_SETTINGS_KEY, JSON.stringify(data));
         return data;
       }

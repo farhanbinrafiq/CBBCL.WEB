@@ -59,7 +59,7 @@ function getSiteSettings() {
         facebook: "https://www.facebook.com/CoxsBazarBoatClubLtd",
         instagram: "https://instagram.com",
         youtube: "https://youtube.com",
-        linkedin: "https://linkedin.com",
+        linkedin: "https://www.linkedin.com/company/cbbcl/",
         twitter: "https://twitter.com"
       },
       contact: {
