@@ -43,7 +43,6 @@ nav {
   background-color: transparent !important;
 }
 
-/* Base header layout matches footer dark navy gradient system */
 #cbbcl-header {
   position: sticky !important;
   top: 0 !important;
@@ -61,7 +60,6 @@ nav {
   border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
 
-/* Focus selector: apply highest-priority background style and force white text colors carefully */
 div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1) {
   position: sticky !important;
   top: 0 !important;
@@ -73,12 +71,11 @@ div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1
   overflow-y: visible !important;
 }
 
-/* Layering overlays for the Exact Hero Section Color System */
 #cbbcl-footer::before {
   content: "" !important;
   position: absolute !important;
   inset: 0 !important;
-  background-color: rgba(26, 39, 68, 0.8) !important; /* bg-navy/80 overlay */
+  background-color: rgba(26, 39, 68, 0.8) !important;
   mix-blend-mode: multiply !important;
   z-index: 1 !important;
   pointer-events: none !important;
@@ -88,12 +85,11 @@ div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1
   content: "" !important;
   position: absolute !important;
   inset: 0 !important;
-  background-image: linear-gradient(to top, #1a2744, transparent, rgba(26, 39, 68, 0.5)) !important; /* from-navy -> via-transparent -> to-navy/50 */
+  background-image: linear-gradient(to top, #1a2744, transparent, rgba(26, 39, 68, 0.5)) !important;
   z-index: 2 !important;
   pointer-events: none !important;
 }
 
-/* Content layer positioning above background pseudo-elements */
 #cbbcl-footer > div.container {
   position: relative !important;
   z-index: 10 !important;
@@ -103,7 +99,6 @@ div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1
   color: #ffffff !important;
 }
 
-/* Enforce pure white default state for all nav items across viewpoints */
 #cbbcl-header nav button,
 #cbbcl-header nav a,
 #cbbcl-header .nav-left button,
@@ -112,12 +107,10 @@ div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1
   color: #ffffff !important;
 }
 
-/* Ensure menu items transition beautifully and preserve gold highlight interactions */
 div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1) nav button:not(.text-gold) {
   color: #ffffff !important;
 }
 
-/* Enforce gold color on hover for buttons, anchors, and any nested spans/elements */
 #cbbcl-header nav button:hover,
 #cbbcl-header nav a:hover,
 #cbbcl-header .nav-left button:hover,
@@ -158,7 +151,6 @@ div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1
   background: #a8873a;
 }
 
-/* Page base settings */
 body {
   font-family: "Jost", sans-serif;
   background-color: #faf8f3;
@@ -167,25 +159,13 @@ body {
   overflow-x: hidden !important;
 }
 
-/* FORCE SINGLE-LINE NAVIGATION (NO LAYOUT BREAKS) */
-nav, .navbar, .main-nav {
-  white-space: nowrap;
-}
+/* ─── NAVBAR LAYOUT ──────────────────────────────────────────────────────────
+   3-column CSS grid: [left nav] [logo] [right nav]
+   NO flex-wrap anywhere — single row enforced at all times on desktop.
+   ─────────────────────────────────────────────────────────────────────────── */
 
-.navbar ul li,
-.navbar a {
-  white-space: nowrap;
-  display: inline-flex;
-  align-items: center;
-}
-
-.navbar .dropdown {
-  white-space: nowrap;
-}
-
-/* Symmetrical Unified Grid & Layout Systems */
 .container {
-  max-width: 1200px !important;
+  max-width: 1400px !important;
   margin: 0 auto !important;
   padding-left: 16px !important;
   padding-right: 16px !important;
@@ -198,44 +178,40 @@ nav, .navbar, .main-nav {
   }
 }
 
-/* Enforce same grid layout logic across all screen sizes (mobile, tablet, desktop) */
 .navbar {
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) !important;
   align-items: center !important;
   width: 100% !important;
-  gap: 12px !important; /* Safety gap between left, center, and right zones */
+  gap: 8px !important;
   overflow-x: visible !important;
   overflow-y: visible !important;
 }
 
 @media (min-width: 1280px) {
   .navbar {
-    gap: 24px !important; /* Larger separation gap on desktop */
+    gap: 16px !important;
   }
 }
 
+/* ── Left nav: hidden on mobile, single-row flex on desktop ── */
 .nav-left {
   grid-column: 1 !important;
   justify-self: start !important;
-  display: none !important; /* hidden by default */
+  display: none !important;
 }
 
 @media (min-width: 1280px) {
   .nav-left {
     display: flex !important;
     align-items: center !important;
-    flex-wrap: wrap !important; /* Safe wrap inside left zone bounds only */
-    gap: 8px 12px !important;
+    flex-wrap: nowrap !important;  /* FIX: was "wrap" — caused two-row layout */
+    gap: 0 !important;
+    overflow: visible !important;
   }
 }
 
-@media (min-width: 1440px) {
-  .nav-left {
-    gap: 8px 24px !important;
-  }
-}
-
+/* ── Logo: center column, never shrinks ── */
 .navbar-logo {
   grid-column: 2 !important;
   justify-self: center !important;
@@ -244,30 +220,40 @@ nav, .navbar, .main-nav {
   z-index: 20 !important;
 }
 
+/* ── Right nav: single-row flex, right-aligned ── */
 .nav-right {
   grid-column: 3 !important;
   justify-self: end !important;
   display: flex !important;
   align-items: center !important;
   justify-content: flex-end !important;
-  flex-wrap: wrap !important; /* Safe wrap inside right zone bounds only */
-  gap: 8px 12px !important;
+  flex-wrap: nowrap !important;  /* FIX: was "wrap" — caused two-row layout */
+  gap: 0 !important;
   width: 100% !important;
-}
-
-@media (min-width: 1280px) {
-  .nav-right {
-    justify-content: flex-end !important;
-    gap: 8px 24px !important;
-  }
+  overflow: visible !important;
 }
 
 .nav-right nav {
   display: flex !important;
-  flex-wrap: wrap !important; /* Allow links inside right nav block to wrap as needed */
+  flex-wrap: nowrap !important;  /* FIX: was "wrap" — caused two-row layout */
   align-items: center !important;
   justify-content: flex-end !important;
-  gap: 4px 12px !important;
+  gap: 0 !important;
+}
+
+/* ── Logo size: large and readable ── */
+/* FIX: removed the overly-specific selector that was locking the logo to 133px
+   in a way that broke the grid. Now controlled cleanly here. */
+#cbbcl-logo > div {
+  height: 82px !important;
+  width: auto !important;
+}
+
+#cbbcl-logo svg,
+#cbbcl-logo img {
+  height: 100% !important;
+  width: auto !important;
+  display: block !important;
 }
 
 .footer-logo {
@@ -276,7 +262,6 @@ nav, .navbar, .main-nav {
   align-items: center !important;
 }
 
-/* Ensure absolute transparency of all persistent backgrounds behind navigation text items only */
 #cbbcl-header .nav-left button,
 #cbbcl-header .nav-right nav button,
 #cbbcl-header nav button,
@@ -285,9 +270,9 @@ nav, .navbar, .main-nav {
   background-image: none !important;
   border-radius: 0 !important;
   box-shadow: none !important;
+  white-space: nowrap !important;
 }
 
-/* Override background of individual dropdown items inside dropdown container to preserve background for them */
 #cbbcl-header .absolute.top-full,
 #cbbcl-header .absolute.top-full button {
   background-color: #1a2744 !important;
@@ -295,21 +280,3 @@ nav, .navbar, .main-nav {
 #cbbcl-header .absolute.top-full button:hover {
   background-color: rgba(255, 255, 255, 0.03) !important;
 }
-
-/* Focus element styling for selected Logo SVG matching user's exact specification */
-div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1) > div:nth-of-type(1) > div#cbbcl-logo:nth-of-type(1) > div:nth-of-type(1) > svg#Layer_1:nth-of-type(1) {
-  height: 133px !important;
-  width: 155.3906px !important;
-  padding-right: 0px !important;
-  margin-right: 0px !important;
-  margin-left: 0px !important;
-}
-
-/* Ensure the parent container supports this exact layout scale seamlessly */
-div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1) > div:nth-of-type(1) > div#cbbcl-logo:nth-of-type(1) > div:nth-of-type(1) {
-  height: 133px !important;
-  width: 155.3906px !important;
-}
-
-
-
