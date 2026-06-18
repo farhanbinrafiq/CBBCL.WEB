@@ -45,7 +45,9 @@ nav {
 
 /* Base header layout matches footer dark navy gradient system */
 #cbbcl-header {
-  position: relative !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 100 !important;
   background: #1a2744 !important;
   border-bottom: 2px solid rgba(212, 175, 55, 0.3) !important;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2) !important;
@@ -61,7 +63,9 @@ nav {
 
 /* Focus selector: apply highest-priority background style and force white text colors carefully */
 div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1) {
-  position: relative !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 100 !important;
   background: #1a2744 !important;
   border-bottom: 2px solid rgba(212, 175, 55, 0.3) !important;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2) !important;

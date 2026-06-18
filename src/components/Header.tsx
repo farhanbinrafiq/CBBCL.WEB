@@ -20,6 +20,18 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [navCms, setNavCms] = useState(() => getNavCMS());
+  const [isDesktop, setIsDesktop] = useState(() => {
+    return typeof window !== "undefined" ? window.innerWidth >= 1024 : true;
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const headerRef = useRef<HTMLElement>(null);
   const [headerBottom, setHeaderBottom] = useState(78);
@@ -119,104 +131,9 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
       >
         <div className="container navbar relative flex items-center justify-between w-full">
           {/* Desktop Left Navigation Links (6 items) */}
-          <nav className="hidden lg:flex items-center gap-3 2xl:gap-6 whitespace-nowrap shrink-0 nav-left">
-            {menuItems.slice(0, 6).map((item) => {
-              const profileId = (currentPath.startsWith("/profile/") && currentPath.endsWith(".html"))
-                ? currentPath.slice(9, -5)
-                : null;
-              
-              const isOnBoard = profileId
-                ? (getBoardMembers().some(d => d.id === profileId) || DIRECTORS_DATA.some(d => d.id === profileId))
-                : false;
-
-              const isActive =
-                currentPath === item.path ||
-                (item.path === "/" && currentPath === "/index.html") ||
-                (item.path === "/board.html" && (currentPath.startsWith("/board/") || (profileId && isOnBoard))) ||
-                (item.path === "/members.html" && (currentPath.startsWith("/members/") || (profileId && !isOnBoard)));
-
-              return (
-                <div
-                  key={item.label}
-                  className="relative group py-2"
-                  onMouseEnter={() => setActiveDropdown(item.label)}
-                  onMouseLeave={() => setActiveDropdown(null)}
-                >
-                  <button
-                    onClick={() => handleNavClick(item.path)}
-                    className={`flex items-center space-x-1 px-1 xl:px-1.5 2xl:px-3 py-1 font-sans text-[10px] xl:text-[11px] font-semibold uppercase tracking-wide xl:tracking-wider 2xl:tracking-widest whitespace-nowrap transition-colors ${
-                      isActive
-                        ? "text-gold border-b border-gold"
-                        : "text-white hover:text-gold"
-                    }`}
-                  >
-                    <span>{item.label}</span>
-                    {item.dropdown && <ChevronDown className="w-3 h-3 transition-transform duration-200 group-hover:rotate-180 text-gold" />}
-                  </button>
-
-                  {/* Dropdown element */}
-                  {item.dropdown && activeDropdown === item.label && (
-                    <div className="absolute top-full left-0 mt-1 w-64 bg-[#1a2744] border border-white/[0.08] shadow-xl rounded-sm py-2 z-50 animate-fadeIn">
-                      {item.dropdown.map((subItem, index) => (
-                        <button
-                          key={index}
-                          onClick={() => handleNavClick(item.path, subItem.sub)}
-                          className="w-full text-left px-5 py-2 hover:bg-white/[0.03] text-white hover:text-gold font-sans text-xs font-medium transition-colors border-b border-white/[0.05] last:border-0"
-                        >
-                          {subItem.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </nav>
-
-          {/* Centered Website Logo */}
-          <div
-            id="cbbcl-logo"
-            onClick={() => handleNavClick("/" as RoutePath)}
-            className="navbar-logo flex items-center justify-center cursor-pointer group shrink-0 z-10"
-          >
-            <div className="relative h-[44px] sm:h-[53px] lg:h-[62px] aspect-[3000/2500] flex items-center shrink-0">
-              {isDefaultLogo ? (
-                <LogoSvg className="h-full w-full block" />
-              ) : (
-                <img
-                  src={currentLogo}
-                  alt="Cox's Bazar Boat Club Limited"
-                  className="object-contain h-full w-full block"
-                  referrerPolicy="no-referrer"
-                  style={{ imageRendering: "auto" }}
-                  onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                    const fallback = e.currentTarget.parentElement?.querySelector(".cbbcl-logo-fallback");
-                    if (fallback) fallback.classList.remove("hidden");
-                  }}
-                />
-              )}
-              <div className="cbbcl-logo-fallback hidden flex items-center space-x-2">
-                <div className="bg-navy text-gold p-1.5 rounded-full border border-gold">
-                  <Anchor className="w-5 h-5 animate-pulse" />
-                </div>
-                <div className="flex flex-col flex-shrink-0">
-                  <span className="font-display text-[15px] font-bold text-slate-100 tracking-tight uppercase leading-tight">
-                    C.B.B.C.L.
-                  </span>
-                  <span className="text-[8px] font-sans text-gold font-semibold uppercase tracking-widest leading-none">
-                    Cox's Bazar Boat Club
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Side Block: Desktop items, Action/Auth buttons, and Mobile Hamburger */}
-          <div className="nav-right shrink-0 relative lg:static">
-            {/* Desktop Right Navigation Links (5 items: Club Members, Events, News Feed, Affiliations, Contact) */}
-            <nav className="hidden lg:flex items-center gap-3 2xl:gap-6 whitespace-nowrap shrink-0">
-              {menuItems.slice(6, 11).map((item) => {
+          {isDesktop && (
+            <nav className="flex items-center gap-3 2xl:gap-6 whitespace-nowrap shrink-0 nav-left">
+              {menuItems.slice(0, 6).map((item) => {
                 const profileId = (currentPath.startsWith("/profile/") && currentPath.endsWith(".html"))
                   ? currentPath.slice(9, -5)
                   : null;
@@ -268,70 +185,167 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                 );
               })}
             </nav>
+          )}
 
-            {/* CTA Member Button & Mobile Toggle */}
-            <div
-              className="flex items-center gap-3 whitespace-nowrap shrink-0 lg:pr-0"
-              style={{
-                width: "auto",
-              }}
-            >
-              {currentUser ? (
-                <div className="hidden lg:flex items-center space-x-2 lg:space-x-3 whitespace-nowrap">
-                  <button
-                    onClick={() => handleNavClick(currentUser.role === "admin" ? "/admin-dashboard.html" : "/dashboard.html")}
-                    className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold py-1 px-1 lg:px-1.5 2xl:px-3 transition-colors text-[10px] font-sans font-bold uppercase tracking-widest flex items-center space-x-1 text-center whitespace-nowrap shrink-0"
-                  >
-                    <UserCheck className="w-3.5 h-3.5" />
-                    <span className="whitespace-nowrap">{currentUser.role === "admin" ? "Admin Terminal" : "My Console"}</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      if (onLogout) onLogout();
-                      handleNavClick("/login.html");
-                    }}
-                    className="text-slate-200 hover:text-rose-400 px-1 lg:px-1.5 2xl:px-3 py-1 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
-                  >
-                    Sign Out
-                  </button>
-                </div>
+          {/* Centered Website Logo */}
+          <div
+            id="cbbcl-logo"
+            onClick={() => handleNavClick("/" as RoutePath)}
+            className="navbar-logo flex items-center justify-center cursor-pointer group shrink-0 z-10"
+          >
+            <div className="relative h-[44px] sm:h-[53px] lg:h-[62px] aspect-[3000/2500] flex items-center shrink-0">
+              {isDefaultLogo ? (
+                <LogoSvg className="h-full w-full block" />
               ) : (
-                <div className="hidden lg:flex items-center space-x-2 lg:space-x-3 whitespace-nowrap">
-                  <button
-                    onClick={() => handleNavClick("/login.html" as RoutePath)}
-                    className="text-white hover:text-gold px-1 lg:px-1.5 2xl:px-3 py-1 font-sans text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1 whitespace-nowrap transition-colors"
-                  >
-                    <LogIn className="w-3.5 h-3.5 mt-0.5 text-gold shrink-0" />
-                    <span className="whitespace-nowrap">Sign In</span>
-                  </button>
-                  <button
-                    onClick={() => handleNavClick("/membership.html" as RoutePath)}
-                    className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold-light px-1 lg:px-1.5 2xl:px-3 py-1 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
-                  >
-                    Become a Member
-                  </button>
-                </div>
+                <img
+                  src={currentLogo}
+                  alt="Cox's Bazar Boat Club Limited"
+                  className="object-contain h-full w-full block"
+                  referrerPolicy="no-referrer"
+                  style={{ imageRendering: "auto" }}
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                    const fallback = e.currentTarget.parentElement?.querySelector(".cbbcl-logo-fallback");
+                    if (fallback) fallback.classList.remove("hidden");
+                  }}
+                />
               )}
+              <div className="cbbcl-logo-fallback hidden flex items-center space-x-2">
+                <div className="bg-navy text-gold p-1.5 rounded-full border border-gold">
+                  <Anchor className="w-5 h-5 animate-pulse" />
+                </div>
+                <div className="flex flex-col flex-shrink-0">
+                  <span className="font-display text-[15px] font-bold text-slate-100 tracking-tight uppercase leading-tight">
+                    C.B.B.C.L.
+                  </span>
+                  <span className="text-[8px] font-sans text-gold font-semibold uppercase tracking-widest leading-none">
+                    Cox's Bazar Boat Club
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
 
+          {/* Right Side Block */}
+          <div className="nav-right shrink-0 relative lg:static">
+            {isDesktop ? (
+              <div className="flex items-center gap-3 2xl:gap-6">
+                {/* Desktop Right Navigation Links */}
+                <nav className="flex items-center gap-3 2xl:gap-6 whitespace-nowrap shrink-0">
+                  {menuItems.slice(6, 11).map((item) => {
+                    const profileId = (currentPath.startsWith("/profile/") && currentPath.endsWith(".html"))
+                      ? currentPath.slice(9, -5)
+                      : null;
+                    
+                    const isOnBoard = profileId
+                      ? (getBoardMembers().some(d => d.id === profileId) || DIRECTORS_DATA.some(d => d.id === profileId))
+                      : false;
+
+                    const isActive =
+                      currentPath === item.path ||
+                      (item.path === "/" && currentPath === "/index.html") ||
+                      (item.path === "/board.html" && (currentPath.startsWith("/board/") || (profileId && isOnBoard))) ||
+                      (item.path === "/members.html" && (currentPath.startsWith("/members/") || (profileId && !isOnBoard)));
+
+                    return (
+                      <div
+                        key={item.label}
+                        className="relative group py-2"
+                        onMouseEnter={() => setActiveDropdown(item.label)}
+                        onMouseLeave={() => setActiveDropdown(null)}
+                      >
+                        <button
+                          onClick={() => handleNavClick(item.path)}
+                          className={`flex items-center space-x-1 px-1 xl:px-1.5 2xl:px-3 py-1 font-sans text-[10px] xl:text-[11px] font-semibold uppercase tracking-wide xl:tracking-wider 2xl:tracking-widest whitespace-nowrap transition-colors ${
+                            isActive
+                              ? "text-gold border-b border-gold"
+                              : "text-white hover:text-gold"
+                          }`}
+                        >
+                          <span>{item.label}</span>
+                          {item.dropdown && <ChevronDown className="w-3 h-3 transition-transform duration-200 group-hover:rotate-180 text-gold" />}
+                        </button>
+
+                        {/* Dropdown element */}
+                        {item.dropdown && activeDropdown === item.label && (
+                          <div className="absolute top-full left-0 mt-1 w-64 bg-[#1a2744] border border-white/[0.08] shadow-xl rounded-sm py-2 z-50 animate-fadeIn">
+                            {item.dropdown.map((subItem, index) => (
+                              <button
+                                key={index}
+                                onClick={() => handleNavClick(item.path, subItem.sub)}
+                                className="w-full text-left px-5 py-2 hover:bg-white/[0.03] text-white hover:text-gold font-sans text-xs font-medium transition-colors border-b border-white/[0.05] last:border-0"
+                              >
+                                {subItem.label}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </nav>
+
+                {/* CTA Member Button for Desktop */}
+                <div className="flex items-center gap-3 whitespace-nowrap shrink-0 lg:pr-0">
+                  {currentUser ? (
+                    <div className="flex items-center space-x-2 lg:space-x-3 whitespace-nowrap">
+                      <button
+                        onClick={() => handleNavClick(currentUser.role === "admin" ? "/admin-dashboard.html" : "/dashboard.html")}
+                        className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold py-1 px-1 lg:px-1.5 2xl:px-3 transition-colors text-[10px] font-sans font-bold uppercase tracking-widest flex items-center space-x-1 text-center whitespace-nowrap shrink-0"
+                      >
+                        <UserCheck className="w-3.5 h-3.5" />
+                        <span className="whitespace-nowrap">{currentUser.role === "admin" ? "Admin Terminal" : "My Console"}</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (onLogout) onLogout();
+                          handleNavClick("/login.html");
+                        }}
+                        className="text-slate-200 hover:text-rose-400 px-1 lg:px-1.5 2xl:px-3 py-1 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center space-x-2 lg:space-x-3 whitespace-nowrap">
+                      <button
+                        onClick={() => handleNavClick("/login.html" as RoutePath)}
+                        className="text-white hover:text-gold px-1 lg:px-1.5 2xl:px-3 py-1 font-sans text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1 whitespace-nowrap transition-colors"
+                      >
+                        <LogIn className="w-3.5 h-3.5 mt-0.5 text-gold shrink-0" />
+                        <span className="whitespace-nowrap">Sign In</span>
+                      </button>
+                      <button
+                        onClick={() => handleNavClick("/membership.html" as RoutePath)}
+                        className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold-light px-1 lg:px-1.5 2xl:px-3 py-1 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
+                      >
+                        Become a Member
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              /* Mobile/Tablet: Render ONLY the Hamburger button trigger - no desktop elements are mounted in the DOM */
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="lg:hidden text-slate-200 hover:text-gold p-1"
+                className="text-slate-200 hover:text-gold p-1"
                 aria-label="Toggle Menu"
               >
                 {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
-            </div>
+            )}
           </div>
         </div>
 
         {/* Mobile Navigation Drawer */}
-        {isOpen && (
+        {!isDesktop && isOpen && (
           <div
             style={{
               top: `${headerBottom}px`,
               height: `calc(100vh - ${headerBottom}px)`
             }}
-            className="lg:hidden fixed left-0 right-0 z-40 bg-[#1a2744] border-t border-white/[0.08] flex flex-col overflow-y-auto px-6 py-6 space-y-4 shadow-inner pb-12"
+            className="fixed left-0 right-0 z-40 bg-[#1a2744] border-t border-white/[0.08] flex flex-col overflow-y-auto px-6 py-6 space-y-4 shadow-inner pb-12"
           >
             {menuItems.map((item) => {
               const isActive =
