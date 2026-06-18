@@ -211,13 +211,14 @@ body {
   }
 }
 
-/* ── Logo: center column, never shrinks ── */
+/* ── Logo: center column, never shrinks, has side padding so it won't overlap text ── */
 .navbar-logo {
   grid-column: 2 !important;
   justify-self: center !important;
   align-self: center !important;
   flex-shrink: 0 !important;
   z-index: 20 !important;
+  padding: 0 20px !important;  /* keeps logo from touching adjacent nav text */
 }
 
 /* ── Right nav: single-row flex, right-aligned ── */
@@ -241,12 +242,11 @@ body {
   gap: 0 !important;
 }
 
-/* ── Logo size: large and readable ── */
-/* FIX: removed the overly-specific selector that was locking the logo to 133px
-   in a way that broke the grid. Now controlled cleanly here. */
+/* ── Logo size: large, readable, and clear of surrounding text ── */
 #cbbcl-logo > div {
-  height: 82px !important;
+  height: 90px !important;
   width: auto !important;
+  min-width: 90px !important;
 }
 
 #cbbcl-logo svg,
