@@ -32,9 +32,12 @@
 
 .navbar,
 header,
-nav,
 #cbbcl-header {
   background-color: var(--cbbcl-navbar-bg) !important;
+}
+
+nav {
+  background-color: transparent !important;
 }
 
 /* Base header layout matches footer dark navy gradient system */

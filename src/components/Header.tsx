@@ -119,59 +119,61 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative flex lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-4 items-center justify-between w-full">
           {/* Desktop Left Navigation Links (6 items) */}
-          <nav className="hidden lg:flex items-center space-x-0.5 xl:space-x-1.5 whitespace-nowrap shrink-0">
-            {menuItems.slice(0, 6).map((item) => {
-              const profileId = (currentPath.startsWith("/profile/") && currentPath.endsWith(".html"))
-                ? currentPath.slice(9, -5)
-                : null;
-              
-              const isOnBoard = profileId
-                ? (getBoardMembers().some(d => d.id === profileId) || DIRECTORS_DATA.some(d => d.id === profileId))
-                : false;
+          <div className="hidden lg:flex items-center justify-end w-full">
+            <nav className="flex items-center space-x-0.5 xl:space-x-1.5 whitespace-nowrap shrink-0">
+              {menuItems.slice(0, 6).map((item) => {
+                const profileId = (currentPath.startsWith("/profile/") && currentPath.endsWith(".html"))
+                  ? currentPath.slice(9, -5)
+                  : null;
+                
+                const isOnBoard = profileId
+                  ? (getBoardMembers().some(d => d.id === profileId) || DIRECTORS_DATA.some(d => d.id === profileId))
+                  : false;
 
-              const isActive =
-                currentPath === item.path ||
-                (item.path === "/" && currentPath === "/index.html") ||
-                (item.path === "/board.html" && (currentPath.startsWith("/board/") || (profileId && isOnBoard))) ||
-                (item.path === "/members.html" && (currentPath.startsWith("/members/") || (profileId && !isOnBoard)));
+                const isActive =
+                  currentPath === item.path ||
+                  (item.path === "/" && currentPath === "/index.html") ||
+                  (item.path === "/board.html" && (currentPath.startsWith("/board/") || (profileId && isOnBoard))) ||
+                  (item.path === "/members.html" && (currentPath.startsWith("/members/") || (profileId && !isOnBoard)));
 
-              return (
-                <div
-                  key={item.label}
-                  className="relative group py-2"
-                  onMouseEnter={() => setActiveDropdown(item.label)}
-                  onMouseLeave={() => setActiveDropdown(null)}
-                >
-                  <button
-                    onClick={() => handleNavClick(item.path)}
-                    className={`flex items-center space-x-1 px-1.5 xl:px-3 py-1 font-sans text-[10px] xl:text-[11px] font-semibold uppercase tracking-wider xl:tracking-widest whitespace-nowrap transition-colors ${
-                      isActive
-                        ? "text-gold border-b border-gold"
-                        : "text-slate-300 hover:text-gold"
-                    }`}
+                return (
+                  <div
+                    key={item.label}
+                    className="relative group py-2"
+                    onMouseEnter={() => setActiveDropdown(item.label)}
+                    onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <span>{item.label}</span>
-                    {item.dropdown && <ChevronDown className="w-3 h-3 transition-transform duration-200 group-hover:rotate-180 text-gold" />}
-                  </button>
+                    <button
+                      onClick={() => handleNavClick(item.path)}
+                      className={`flex items-center space-x-1 px-1.5 xl:px-3 py-1 font-sans text-[10px] xl:text-[11px] font-semibold uppercase tracking-wider xl:tracking-widest whitespace-nowrap transition-colors ${
+                        isActive
+                          ? "text-gold border-b border-gold"
+                          : "text-slate-300 hover:text-gold"
+                      }`}
+                    >
+                      <span>{item.label}</span>
+                      {item.dropdown && <ChevronDown className="w-3 h-3 transition-transform duration-200 group-hover:rotate-180 text-gold" />}
+                    </button>
 
-                  {/* Dropdown element */}
-                  {item.dropdown && activeDropdown === item.label && (
-                    <div className="absolute top-full left-0 mt-1 w-64 bg-[#111625] border border-white/[0.08] shadow-xl rounded-sm py-2 z-50 animate-fadeIn">
-                      {item.dropdown.map((subItem, index) => (
-                        <button
-                          key={index}
-                          onClick={() => handleNavClick(item.path, subItem.sub)}
-                          className="w-full text-left px-5 py-2 hover:bg-white/[0.03] text-slate-300 hover:text-gold font-sans text-xs font-medium transition-colors border-b border-white/[0.05] last:border-0"
-                        >
-                          {subItem.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </nav>
+                    {/* Dropdown element */}
+                    {item.dropdown && activeDropdown === item.label && (
+                      <div className="absolute top-full left-0 mt-1 w-64 bg-[#111625] border border-white/[0.08] shadow-xl rounded-sm py-2 z-50 animate-fadeIn">
+                        {item.dropdown.map((subItem, index) => (
+                          <button
+                            key={index}
+                            onClick={() => handleNavClick(item.path, subItem.sub)}
+                            className="w-full text-left px-5 py-2 hover:bg-white/[0.03] text-slate-300 hover:text-gold font-sans text-xs font-medium transition-colors border-b border-white/[0.05] last:border-0"
+                          >
+                            {subItem.label}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </nav>
+          </div>
 
           {/* Centered Website Logo */}
           <div
@@ -213,7 +215,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
           </div>
 
           {/* Right Side Block: Desktop items, Action/Auth buttons, and Mobile Hamburger */}
-          <div className="flex items-center justify-end space-x-4 lg:space-x-1 xl:space-x-2 shrink-0 lg:w-full">
+          <div className="flex items-center justify-end lg:justify-start space-x-4 lg:space-x-4 xl:space-x-6 shrink-0 lg:w-full">
             {/* Desktop Right Navigation Links (5 items: Club Members, Events, News Feed, Affiliations, Contact) */}
             <nav className="hidden lg:flex items-center space-x-0.5 xl:space-x-1.5 whitespace-nowrap shrink-0">
               {menuItems.slice(6, 11).map((item) => {
