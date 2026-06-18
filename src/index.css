@@ -23,17 +23,20 @@
 }
 
 :root {
-  --footer-bg: #111625;
+  --footer-bg: #1a2744;
   --footer-background: var(--footer-bg);
   --cbbcl-navbar-bg: var(--footer-bg);
   --navbar-bg: var(--footer-bg);
   --cbbcl-ivory: #FAF9F6;
 }
 
-.navbar,
 header,
 #cbbcl-header {
   background-color: var(--cbbcl-navbar-bg) !important;
+}
+
+.navbar {
+  background-color: transparent !important;
 }
 
 nav {
@@ -42,37 +45,98 @@ nav {
 
 /* Base header layout matches footer dark navy gradient system */
 #cbbcl-header {
-  background: linear-gradient(135deg, #111625 0%, #151d33 60%, rgba(234, 88, 12, 0.06) 100%) !important;
-  border-bottom: 2px solid rgba(201, 168, 76, 0.3) !important;
-  box-shadow: 0 4px 30px rgba(234, 88, 12, 0.02), inset 0 -1px 0 rgba(255, 255, 255, 0.03) !important;
+  position: relative !important;
+  background: #1a2744 !important;
+  border-bottom: 2px solid rgba(212, 175, 55, 0.3) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2) !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
 }
 
-/* Focus selector: apply highest-priority background style and force ivory text colors carefully */
+#cbbcl-topbar {
+  position: relative !important;
+  background-color: #1a2744 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Focus selector: apply highest-priority background style and force white text colors carefully */
 div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1) {
-  background: linear-gradient(135deg, #111625 0%, #151d33 60%, rgba(234, 88, 12, 0.06) 100%) !important;
-  border-bottom: 2px solid rgba(201, 168, 76, 0.3) !important;
-  box-shadow: 0 4px 30px rgba(234, 88, 12, 0.02), inset 0 -1px 0 rgba(255, 255, 255, 0.03) !important;
+  position: relative !important;
+  background: #1a2744 !important;
+  border-bottom: 2px solid rgba(212, 175, 55, 0.3) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2) !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
+
+/* Layering overlays for the Exact Hero Section Color System */
+#cbbcl-footer::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background-color: rgba(26, 39, 68, 0.8) !important; /* bg-navy/80 overlay */
+  mix-blend-mode: multiply !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+}
+
+#cbbcl-footer::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background-image: linear-gradient(to top, #1a2744, transparent, rgba(26, 39, 68, 0.5)) !important; /* from-navy -> via-transparent -> to-navy/50 */
+  z-index: 2 !important;
+  pointer-events: none !important;
+}
+
+/* Content layer positioning above background pseudo-elements */
+#cbbcl-footer > div.container {
+  position: relative !important;
+  z-index: 10 !important;
 }
 
 div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1) :not(.text-gold):not(.hover\:text-gold:hover):not(.bg-gold):not(.bg-gold span):not(.navbar-logo):not(.navbar-logo *):not(svg):not(path):not(img):not(.cbbcl-logo-fallback):not(.cbbcl-logo-fallback *) {
-  color: var(--cbbcl-ivory) !important;
+  color: #ffffff !important;
+}
+
+/* Enforce pure white default state for all nav items across viewpoints */
+#cbbcl-header nav button,
+#cbbcl-header nav a,
+#cbbcl-header .nav-left button,
+#cbbcl-header .nav-right nav button,
+#cbbcl-header .nav-right button {
+  color: #ffffff !important;
 }
 
 /* Ensure menu items transition beautifully and preserve gold highlight interactions */
 div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1) nav button:not(.text-gold) {
-  color: var(--cbbcl-ivory) !important;
+  color: #ffffff !important;
+}
+
+/* Enforce gold color on hover for buttons, anchors, and any nested spans/elements */
+#cbbcl-header nav button:hover,
+#cbbcl-header nav a:hover,
+#cbbcl-header .nav-left button:hover,
+#cbbcl-header .nav-right nav button:hover,
+#cbbcl-header .nav-right button:hover,
+#cbbcl-header nav button:hover *,
+#cbbcl-header nav a:hover *,
+#cbbcl-header .nav-left button:hover *,
+#cbbcl-header .nav-right nav button:hover *,
+#cbbcl-header .nav-right button:hover * {
+  color: #d4af37 !important;
 }
 
 div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1) nav button:not(.text-gold):hover {
-  color: #c9a84c !important;
+  color: #d4af37 !important;
 }
 
 div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1) #cbbcl-logo span {
-  color: var(--cbbcl-ivory) !important;
+  color: #ffffff !important;
 }
 
 div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1) #cbbcl-logo span.text-gold {
-  color: #c9a84c !important;
+  color: #d4af37 !important;
 }
 
 /* Custom Scrollbar */
@@ -96,6 +160,7 @@ body {
   background-color: #faf8f3;
   color: #4a5568;
   line-height: 1.85;
+  overflow-x: hidden !important;
 }
 
 /* FORCE SINGLE-LINE NAVIGATION (NO LAYOUT BREAKS) */
@@ -118,38 +183,87 @@ nav, .navbar, .main-nav {
 .container {
   max-width: 1200px !important;
   margin: 0 auto !important;
-  padding-left: 24px !important;
-  padding-right: 24px !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
+  .container {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+}
+
+/* Enforce same grid layout logic across all screen sizes (mobile, tablet, desktop) */
+.navbar {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) !important;
+  align-items: center !important;
+  width: 100% !important;
+  gap: 12px !important; /* Safety gap between left, center, and right zones */
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
+
+@media (min-width: 1280px) {
   .navbar {
-    display: grid !important;
-    grid-template-columns: 1fr auto 1fr !important;
-    align-items: center !important;
-    justify-content: space-between !important;
+    gap: 24px !important; /* Larger separation gap on desktop */
   }
+}
 
+.nav-left {
+  grid-column: 1 !important;
+  justify-self: start !important;
+  display: none !important; /* hidden by default */
+}
+
+@media (min-width: 1280px) {
   .nav-left {
-    grid-column: 1 !important;
-    justify-self: end !important;
     display: flex !important;
     align-items: center !important;
-    gap: 24px !important;
+    flex-wrap: wrap !important; /* Safe wrap inside left zone bounds only */
+    gap: 8px 12px !important;
   }
+}
 
-  .navbar-logo {
-    grid-column: 2 !important;
-    justify-self: center !important;
+@media (min-width: 1440px) {
+  .nav-left {
+    gap: 8px 24px !important;
   }
+}
 
+.navbar-logo {
+  grid-column: 2 !important;
+  justify-self: center !important;
+  align-self: center !important;
+  flex-shrink: 0 !important;
+  z-index: 20 !important;
+}
+
+.nav-right {
+  grid-column: 3 !important;
+  justify-self: end !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  flex-wrap: wrap !important; /* Safe wrap inside right zone bounds only */
+  gap: 8px 12px !important;
+  width: 100% !important;
+}
+
+@media (min-width: 1280px) {
   .nav-right {
-    grid-column: 3 !important;
-    justify-self: start !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 24px !important;
+    justify-content: flex-end !important;
+    gap: 8px 24px !important;
   }
+}
+
+.nav-right nav {
+  display: flex !important;
+  flex-wrap: wrap !important; /* Allow links inside right nav block to wrap as needed */
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 4px 12px !important;
 }
 
 .footer-logo {
@@ -158,11 +272,9 @@ nav, .navbar, .main-nav {
   align-items: center !important;
 }
 
-/* Ensure absolute transparency of all persistent backgrounds behind any navigation items */
-#cbbcl-header button,
-#cbbcl-header a,
+/* Ensure absolute transparency of all persistent backgrounds behind navigation text items only */
 #cbbcl-header .nav-left button,
-#cbbcl-header .nav-right button,
+#cbbcl-header .nav-right nav button,
 #cbbcl-header nav button,
 #cbbcl-header nav a {
   background-color: transparent !important;
@@ -174,10 +286,26 @@ nav, .navbar, .main-nav {
 /* Override background of individual dropdown items inside dropdown container to preserve background for them */
 #cbbcl-header .absolute.top-full,
 #cbbcl-header .absolute.top-full button {
-  background-color: #111625 !important;
+  background-color: #1a2744 !important;
 }
 #cbbcl-header .absolute.top-full button:hover {
   background-color: rgba(255, 255, 255, 0.03) !important;
 }
+
+/* Focus element styling for selected Logo SVG matching user's exact specification */
+div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1) > div:nth-of-type(1) > div#cbbcl-logo:nth-of-type(1) > div:nth-of-type(1) > svg#Layer_1:nth-of-type(1) {
+  height: 133px !important;
+  width: 155.3906px !important;
+  padding-right: 0px !important;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+}
+
+/* Ensure the parent container supports this exact layout scale seamlessly */
+div#root:nth-of-type(1) > div:nth-of-type(1) > header#cbbcl-header:nth-of-type(1) > div:nth-of-type(1) > div#cbbcl-logo:nth-of-type(1) > div:nth-of-type(1) {
+  height: 133px !important;
+  width: 155.3906px !important;
+}
+
 
 

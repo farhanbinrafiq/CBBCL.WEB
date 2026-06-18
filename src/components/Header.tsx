@@ -109,17 +109,17 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
       <header
         ref={headerRef}
         id="cbbcl-header"
-        className={`sticky top-0 z-50 w-full transition-all duration-300 border-b ${
+        className={`sticky top-0 z-50 w-full transition-all duration-300 ${
           isHome ? "is-home-header" : ""
         } ${
           isScrolled
-            ? "shadow-md py-3 border-white/[0.08]"
-            : "py-4 border-white/[0.05]"
+            ? "py-3"
+            : "py-4"
         }`}
       >
         <div className="container navbar relative flex items-center justify-between w-full">
           {/* Desktop Left Navigation Links (6 items) */}
-          <nav className="hidden lg:nav-left">
+          <nav className="hidden lg:flex items-center gap-3 2xl:gap-6 whitespace-nowrap shrink-0 nav-left">
             {menuItems.slice(0, 6).map((item) => {
               const profileId = (currentPath.startsWith("/profile/") && currentPath.endsWith(".html"))
                 ? currentPath.slice(9, -5)
@@ -144,10 +144,10 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                 >
                   <button
                     onClick={() => handleNavClick(item.path)}
-                    className={`flex items-center space-x-1 px-1.5 xl:px-3 py-1 font-sans text-[10px] xl:text-[11px] font-semibold uppercase tracking-wider xl:tracking-widest whitespace-nowrap transition-colors ${
+                    className={`flex items-center space-x-1 px-1 xl:px-1.5 2xl:px-3 py-1 font-sans text-[10px] xl:text-[11px] font-semibold uppercase tracking-wide xl:tracking-wider 2xl:tracking-widest whitespace-nowrap transition-colors ${
                       isActive
                         ? "text-gold border-b border-gold"
-                        : "text-slate-300 hover:text-gold"
+                        : "text-white hover:text-gold"
                     }`}
                   >
                     <span>{item.label}</span>
@@ -156,12 +156,12 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
 
                   {/* Dropdown element */}
                   {item.dropdown && activeDropdown === item.label && (
-                    <div className="absolute top-full left-0 mt-1 w-64 bg-[#111625] border border-white/[0.08] shadow-xl rounded-sm py-2 z-50 animate-fadeIn">
+                    <div className="absolute top-full left-0 mt-1 w-64 bg-[#1a2744] border border-white/[0.08] shadow-xl rounded-sm py-2 z-50 animate-fadeIn">
                       {item.dropdown.map((subItem, index) => (
                         <button
                           key={index}
                           onClick={() => handleNavClick(item.path, subItem.sub)}
-                          className="w-full text-left px-5 py-2 hover:bg-white/[0.03] text-slate-300 hover:text-gold font-sans text-xs font-medium transition-colors border-b border-white/[0.05] last:border-0"
+                          className="w-full text-left px-5 py-2 hover:bg-white/[0.03] text-white hover:text-gold font-sans text-xs font-medium transition-colors border-b border-white/[0.05] last:border-0"
                         >
                           {subItem.label}
                         </button>
@@ -177,7 +177,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
           <div
             id="cbbcl-logo"
             onClick={() => handleNavClick("/" as RoutePath)}
-            className="navbar-logo flex items-center justify-center cursor-pointer group shrink-0 absolute left-1/2 -translate-x-1/2 lg:relative lg:left-0 lg:translate-x-0 lg:mx-auto z-10"
+            className="navbar-logo flex items-center justify-center cursor-pointer group shrink-0 z-10"
           >
             <div className="relative h-[44px] sm:h-[53px] lg:h-[62px] aspect-[3000/2500] flex items-center shrink-0">
               {isDefaultLogo ? (
@@ -213,9 +213,9 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
           </div>
 
           {/* Right Side Block: Desktop items, Action/Auth buttons, and Mobile Hamburger */}
-          <div className="flex items-center justify-end lg:nav-right shrink-0 relative lg:static">
+          <div className="nav-right shrink-0 relative lg:static">
             {/* Desktop Right Navigation Links (5 items: Club Members, Events, News Feed, Affiliations, Contact) */}
-            <nav className="hidden lg:flex items-center gap-6 whitespace-nowrap shrink-0">
+            <nav className="hidden lg:flex items-center gap-3 2xl:gap-6 whitespace-nowrap shrink-0">
               {menuItems.slice(6, 11).map((item) => {
                 const profileId = (currentPath.startsWith("/profile/") && currentPath.endsWith(".html"))
                   ? currentPath.slice(9, -5)
@@ -240,10 +240,10 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                   >
                     <button
                       onClick={() => handleNavClick(item.path)}
-                      className={`flex items-center space-x-1 px-1.5 xl:px-3 py-1 font-sans text-[10px] xl:text-[11px] font-semibold uppercase tracking-wider xl:tracking-widest whitespace-nowrap transition-colors ${
+                      className={`flex items-center space-x-1 px-1 xl:px-1.5 2xl:px-3 py-1 font-sans text-[10px] xl:text-[11px] font-semibold uppercase tracking-wide xl:tracking-wider 2xl:tracking-widest whitespace-nowrap transition-colors ${
                         isActive
                           ? "text-gold border-b border-gold"
-                          : "text-slate-300 hover:text-gold"
+                          : "text-white hover:text-gold"
                       }`}
                     >
                       <span>{item.label}</span>
@@ -252,12 +252,12 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
 
                     {/* Dropdown element */}
                     {item.dropdown && activeDropdown === item.label && (
-                      <div className="absolute top-full left-0 mt-1 w-64 bg-[#111625] border border-white/[0.08] shadow-xl rounded-sm py-2 z-50 animate-fadeIn">
+                      <div className="absolute top-full left-0 mt-1 w-64 bg-[#1a2744] border border-white/[0.08] shadow-xl rounded-sm py-2 z-50 animate-fadeIn">
                         {item.dropdown.map((subItem, index) => (
                           <button
                             key={index}
                             onClick={() => handleNavClick(item.path, subItem.sub)}
-                            className="w-full text-left px-5 py-2 hover:bg-white/[0.03] text-slate-300 hover:text-gold font-sans text-xs font-medium transition-colors border-b border-white/[0.05] last:border-0"
+                            className="w-full text-left px-5 py-2 hover:bg-white/[0.03] text-white hover:text-gold font-sans text-xs font-medium transition-colors border-b border-white/[0.05] last:border-0"
                           >
                             {subItem.label}
                           </button>
@@ -271,17 +271,16 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
 
             {/* CTA Member Button & Mobile Toggle */}
             <div
-              className="flex items-center space-x-3 whitespace-nowrap shrink-0 lg:pr-0"
+              className="flex items-center gap-3 whitespace-nowrap shrink-0 lg:pr-0"
               style={{
                 width: "auto",
-                minWidth: "max-content",
               }}
             >
               {currentUser ? (
-                <div className="hidden md:flex items-center space-x-3 whitespace-nowrap">
+                <div className="hidden lg:flex items-center space-x-2 lg:space-x-3 whitespace-nowrap">
                   <button
                     onClick={() => handleNavClick(currentUser.role === "admin" ? "/admin-dashboard.html" : "/dashboard.html")}
-                    className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold py-1 px-1.5 xl:px-3 transition-colors text-[10px] font-sans font-bold uppercase tracking-widest flex items-center space-x-1 text-center whitespace-nowrap shrink-0"
+                    className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold py-1 px-1 lg:px-1.5 2xl:px-3 transition-colors text-[10px] font-sans font-bold uppercase tracking-widest flex items-center space-x-1 text-center whitespace-nowrap shrink-0"
                   >
                     <UserCheck className="w-3.5 h-3.5" />
                     <span className="whitespace-nowrap">{currentUser.role === "admin" ? "Admin Terminal" : "My Console"}</span>
@@ -291,23 +290,23 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                       if (onLogout) onLogout();
                       handleNavClick("/login.html");
                     }}
-                    className="text-slate-400 hover:text-rose-450 px-1.5 xl:px-3 py-1 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
+                    className="text-slate-200 hover:text-rose-400 px-1 lg:px-1.5 2xl:px-3 py-1 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
                   >
                     Sign Out
                   </button>
                 </div>
               ) : (
-                <div className="hidden md:flex items-center space-x-3 whitespace-nowrap">
+                <div className="hidden lg:flex items-center space-x-2 lg:space-x-3 whitespace-nowrap">
                   <button
                     onClick={() => handleNavClick("/login.html" as RoutePath)}
-                    className="text-slate-200 hover:text-gold px-1.5 xl:px-3 py-1 font-sans text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1 whitespace-nowrap transition-colors"
+                    className="text-white hover:text-gold px-1 lg:px-1.5 2xl:px-3 py-1 font-sans text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1 whitespace-nowrap transition-colors"
                   >
                     <LogIn className="w-3.5 h-3.5 mt-0.5 text-gold shrink-0" />
                     <span className="whitespace-nowrap">Sign In</span>
                   </button>
                   <button
                     onClick={() => handleNavClick("/membership.html" as RoutePath)}
-                    className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold-light px-1.5 xl:px-3 py-1 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
+                    className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold-light px-1 lg:px-1.5 2xl:px-3 py-1 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
                   >
                     Become a Member
                   </button>
@@ -332,7 +331,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
               top: `${headerBottom}px`,
               height: `calc(100vh - ${headerBottom}px)`
             }}
-            className="lg:hidden fixed left-0 right-0 z-40 bg-[#111625] border-t border-white/[0.08] flex flex-col overflow-y-auto px-6 py-6 space-y-4 shadow-inner pb-12"
+            className="lg:hidden fixed left-0 right-0 z-40 bg-[#1a2744] border-t border-white/[0.08] flex flex-col overflow-y-auto px-6 py-6 space-y-4 shadow-inner pb-12"
           >
             {menuItems.map((item) => {
               const isActive =
@@ -367,7 +366,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                   </div>
 
                   {item.dropdown && activeDropdown === item.label && (
-                    <div className="pl-4 border-l-2 border-gold/30 flex flex-col space-y-2 py-2 bg-white/[0.02] rounded-r-md">
+                    <div className="pl-4 border-l-2 border-gold/30 flex flex-col space-y-2 py-2 bg-transparent rounded-r-md">
                       {item.dropdown.map((subItem, index) => (
                         <button
                           key={index}
