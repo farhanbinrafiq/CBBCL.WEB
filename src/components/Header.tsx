@@ -118,47 +118,6 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
-          {/* Logo Section */}
-          <div
-            id="cbbcl-logo"
-            onClick={() => handleNavClick("/" as RoutePath)}
-            className="navbar-logo flex items-center space-x-3 cursor-pointer group shrink-0"
-          >
-            {/* Real img from PRD */}
-            <div className="relative h-[38px] sm:h-[46px] lg:h-[52px] flex items-center shrink-0">
-              {isDefaultLogo ? (
-                <LogoSvg
-                  className="h-full w-auto max-w-full block"
-                />
-              ) : (
-                <img
-                  src={currentLogo}
-                  alt="Cox's Bazar Boat Club Limited Logo"
-                  className="object-contain h-full w-auto block"
-                  style={{ imageRendering: "auto" }}
-                  onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                    const fallback = e.currentTarget.parentElement?.querySelector(".cbbcl-logo-fallback");
-                    if (fallback) fallback.classList.remove("hidden");
-                  }}
-                />
-              )}
-              <div className="cbbcl-logo-fallback hidden flex items-center space-x-2">
-                <div className="bg-navy text-gold p-1.5 rounded-full border border-gold">
-                  <Anchor className="w-5 h-5 animate-pulse" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-display text-[15px] font-bold text-slate-100 tracking-tight uppercase leading-tight">
-                    C.B.B.C.L.
-                  </span>
-                  <span className="text-[8px] font-sans text-gold font-semibold uppercase tracking-widest leading-none">
-                    Cox's Bazar Boat Club
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center space-x-0.5 xl:space-x-1.5 whitespace-nowrap shrink-0">
             {menuItems.map((item) => {
@@ -269,6 +228,45 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
             >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
+          </div>
+
+          {/* Logo Section on the Right */}
+          <div
+            id="cbbcl-logo"
+            onClick={() => handleNavClick("/" as RoutePath)}
+            className="navbar-logo flex items-center cursor-pointer group shrink-0 ml-2 sm:ml-4 lg:ml-6"
+          >
+            <div className="relative h-[38px] sm:h-[46px] lg:h-[52px] aspect-[3000/2500] flex items-center shrink-0">
+              {isDefaultLogo ? (
+                <LogoSvg className="h-full w-full block" />
+              ) : (
+                <img
+                  src={currentLogo}
+                  alt="Cox's Bazar Boat Club Limited"
+                  className="object-contain h-full w-full block"
+                  referrerPolicy="no-referrer"
+                  style={{ imageRendering: "auto" }}
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                    const fallback = e.currentTarget.parentElement?.querySelector(".cbbcl-logo-fallback");
+                    if (fallback) fallback.classList.remove("hidden");
+                  }}
+                />
+              )}
+              <div className="cbbcl-logo-fallback hidden flex items-center space-x-2">
+                <div className="bg-navy text-gold p-1.5 rounded-full border border-gold">
+                  <Anchor className="w-5 h-5 animate-pulse" />
+                </div>
+                <div className="flex flex-col flex-shrink-0">
+                  <span className="font-display text-[15px] font-bold text-slate-100 tracking-tight uppercase leading-tight">
+                    C.B.B.C.L.
+                  </span>
+                  <span className="text-[8px] font-sans text-gold font-semibold uppercase tracking-widest leading-none">
+                    Cox's Bazar Boat Club
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
