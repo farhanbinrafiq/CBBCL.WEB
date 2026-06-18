@@ -215,7 +215,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
           {/* Right Side Block: Desktop items, Action/Auth buttons, and Mobile Hamburger */}
           <div className="flex items-center justify-end lg:nav-right shrink-0 relative lg:static">
             {/* Desktop Right Navigation Links (5 items: Club Members, Events, News Feed, Affiliations, Contact) */}
-            <nav className="hidden lg:flex items-center space-x-0.5 xl:space-x-1.5 whitespace-nowrap shrink-0">
+            <nav className="hidden lg:flex items-center gap-6 whitespace-nowrap shrink-0">
               {menuItems.slice(6, 11).map((item) => {
                 const profileId = (currentPath.startsWith("/profile/") && currentPath.endsWith(".html"))
                   ? currentPath.slice(9, -5)
