@@ -114,4 +114,70 @@ nav, .navbar, .main-nav {
   white-space: nowrap;
 }
 
+/* Symmetrical Unified Grid & Layout Systems */
+.container {
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+
+@media (min-width: 1024px) {
+  .navbar {
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+
+  .nav-left {
+    grid-column: 1 !important;
+    justify-self: end !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 24px !important;
+  }
+
+  .navbar-logo {
+    grid-column: 2 !important;
+    justify-self: center !important;
+  }
+
+  .nav-right {
+    grid-column: 3 !important;
+    justify-self: start !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 24px !important;
+  }
+}
+
+.footer-logo {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+/* Ensure absolute transparency of all persistent backgrounds behind any navigation items */
+#cbbcl-header button,
+#cbbcl-header a,
+#cbbcl-header .nav-left button,
+#cbbcl-header .nav-right button,
+#cbbcl-header nav button,
+#cbbcl-header nav a {
+  background-color: transparent !important;
+  background-image: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Override background of individual dropdown items inside dropdown container to preserve background for them */
+#cbbcl-header .absolute.top-full,
+#cbbcl-header .absolute.top-full button {
+  background-color: #111625 !important;
+}
+#cbbcl-header .absolute.top-full button:hover {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
 

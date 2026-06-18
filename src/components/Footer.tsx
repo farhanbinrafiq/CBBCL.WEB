@@ -30,7 +30,7 @@ export default function Footer({ navigate }: FooterProps) {
 
   return (
     <footer id="cbbcl-footer" className="bg-[#111625] text-slate-300 font-sans pt-16 pb-12 overflow-hidden select-none">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="container">
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1.6fr_1.2fr] gap-12 lg:gap-8 xl:gap-14 items-center">
 
@@ -75,7 +75,7 @@ export default function Footer({ navigate }: FooterProps) {
           </div>
 
           {/* CENTER — EMBEDDED SVG LOGO */}
-          <div className="order-1 lg:order-2 flex flex-col justify-center items-center py-6 lg:py-0 w-full">
+          <div className="footer-logo order-1 lg:order-2 flex flex-col justify-center items-center py-6 lg:py-0 w-full">
             <div className="w-[240px] h-[240px] sm:w-[300px] sm:h-[300px] lg:w-[380px] lg:h-[380px]">
               <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 3000 2500" width="100%" height="100%">
                 <defs>
