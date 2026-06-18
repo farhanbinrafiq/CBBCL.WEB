@@ -117,10 +117,10 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
             : "py-4 border-white/[0.05]"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
-          {/* Desktop Navigation Links */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative flex lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-4 items-center justify-between w-full">
+          {/* Desktop Left Navigation Links (7 items) */}
           <nav className="hidden lg:flex items-center space-x-0.5 xl:space-x-1.5 whitespace-nowrap shrink-0">
-            {menuItems.map((item) => {
+            {menuItems.slice(0, 7).map((item) => {
               const profileId = (currentPath.startsWith("/profile/") && currentPath.endsWith(".html"))
                 ? currentPath.slice(9, -5)
                 : null;
@@ -173,68 +173,11 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
             })}
           </nav>
 
-          {/* CTA Member Button & Mobile Toggle */}
-          <div
-            className="flex items-center space-x-4 shrink-0"
-            style={{
-              width: "auto",
-              minWidth: "max-content",
-              paddingRight: "40px",
-              paddingLeft: "0px",
-              paddingBottom: "0px"
-            }}
-          >
-            {currentUser ? (
-              <div className="hidden md:flex items-center space-x-3 whitespace-nowrap">
-                <button
-                  onClick={() => handleNavClick(currentUser.role === "admin" ? "/admin-dashboard.html" : "/dashboard.html")}
-                  className="bg-[#111625] text-gold text-[10px] font-sans font-bold uppercase tracking-widest px-4 py-2 border border-gold hover:bg-gold hover:text-navy transition-all duration-300 rounded-xs flex items-center space-x-1 text-center whitespace-nowrap shrink-0"
-                >
-                  <UserCheck className="w-3.5 h-3.5" />
-                  <span className="whitespace-nowrap">{currentUser.role === "admin" ? "Admin Terminal" : "My Console"}</span>
-                </button>
-                <button
-                  onClick={() => {
-                    if (onLogout) onLogout();
-                    handleNavClick("/login.html");
-                  }}
-                  className="text-slate-400 hover:text-rose-450 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
-                >
-                  Sign Out
-                </button>
-              </div>
-            ) : (
-              <div className="hidden md:flex items-center space-x-3 whitespace-nowrap">
-                <button
-                  onClick={() => handleNavClick("/login.html" as RoutePath)}
-                  className="text-slate-200 hover:text-gold font-sans text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1 whitespace-nowrap"
-                >
-                  <LogIn className="w-3.5 h-3.5 mt-0.5 text-gold shrink-0" />
-                  <span className="whitespace-nowrap">Sign In</span>
-                </button>
-                <button
-                  onClick={() => handleNavClick("/membership.html" as RoutePath)}
-                  className="bg-gold text-navy text-[10px] font-sans font-bold uppercase tracking-wider px-4 py-2.5 rounded-sm hover:bg-gold-light transition-all duration-300 shadow-sm whitespace-nowrap"
-                >
-                  Become a Member
-                </button>
-              </div>
-            )}
-
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden text-slate-200 hover:text-gold p-1"
-              aria-label="Toggle Menu"
-            >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
-
-          {/* Logo Section on the Right */}
+          {/* Centered Website Logo */}
           <div
             id="cbbcl-logo"
             onClick={() => handleNavClick("/" as RoutePath)}
-            className="navbar-logo flex items-center cursor-pointer group shrink-0 ml-2 sm:ml-4 lg:ml-6"
+            className="navbar-logo flex items-center justify-center cursor-pointer group shrink-0 absolute left-1/2 -translate-x-1/2 lg:relative lg:left-0 lg:translate-x-0 lg:mx-auto z-10"
           >
             <div className="relative h-[38px] sm:h-[46px] lg:h-[52px] aspect-[3000/2500] flex items-center shrink-0">
               {isDefaultLogo ? (
@@ -266,6 +209,118 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                   </span>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Right Side Block: Desktop items 8-11, Action/Auth buttons, and Mobile Hamburger */}
+          <div className="flex items-center justify-end space-x-4 lg:space-x-1 xl:space-x-2 shrink-0 lg:w-full">
+            {/* Desktop Right Navigation Links (4 items: Events, News Feed, Affiliations, Contact) */}
+            <nav className="hidden lg:flex items-center space-x-0.5 xl:space-x-1.5 whitespace-nowrap shrink-0">
+              {menuItems.slice(7, 11).map((item) => {
+                const profileId = (currentPath.startsWith("/profile/") && currentPath.endsWith(".html"))
+                  ? currentPath.slice(9, -5)
+                  : null;
+                
+                const isOnBoard = profileId
+                  ? (getBoardMembers().some(d => d.id === profileId) || DIRECTORS_DATA.some(d => d.id === profileId))
+                  : false;
+
+                const isActive =
+                  currentPath === item.path ||
+                  (item.path === "/" && currentPath === "/index.html") ||
+                  (item.path === "/board.html" && (currentPath.startsWith("/board/") || (profileId && isOnBoard))) ||
+                  (item.path === "/members.html" && (currentPath.startsWith("/members/") || (profileId && !isOnBoard)));
+
+                return (
+                  <div
+                    key={item.label}
+                    className="relative group py-2"
+                    onMouseEnter={() => setActiveDropdown(item.label)}
+                    onMouseLeave={() => setActiveDropdown(null)}
+                  >
+                    <button
+                      onClick={() => handleNavClick(item.path)}
+                      className={`flex items-center space-x-1 px-1.5 xl:px-3 py-1 font-sans text-[10px] xl:text-[11px] font-semibold uppercase tracking-wider xl:tracking-widest whitespace-nowrap transition-colors ${
+                        isActive
+                          ? "text-gold border-b border-gold"
+                          : "text-slate-300 hover:text-gold"
+                      }`}
+                    >
+                      <span>{item.label}</span>
+                      {item.dropdown && <ChevronDown className="w-3 h-3 transition-transform duration-200 group-hover:rotate-180 text-gold" />}
+                    </button>
+
+                    {/* Dropdown element */}
+                    {item.dropdown && activeDropdown === item.label && (
+                      <div className="absolute top-full left-0 mt-1 w-64 bg-[#111625] border border-white/[0.08] shadow-xl rounded-sm py-2 z-50 animate-fadeIn">
+                        {item.dropdown.map((subItem, index) => (
+                          <button
+                            key={index}
+                            onClick={() => handleNavClick(item.path, subItem.sub)}
+                            className="w-full text-left px-5 py-2 hover:bg-white/[0.03] text-slate-300 hover:text-gold font-sans text-xs font-medium transition-colors border-b border-white/[0.05] last:border-0"
+                          >
+                            {subItem.label}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </nav>
+
+            {/* CTA Member Button & Mobile Toggle */}
+            <div
+              className="flex items-center space-x-3 whitespace-nowrap shrink-0 lg:pr-0"
+              style={{
+                width: "auto",
+                minWidth: "max-content",
+              }}
+            >
+              {currentUser ? (
+                <div className="hidden md:flex items-center space-x-3 whitespace-nowrap">
+                  <button
+                    onClick={() => handleNavClick(currentUser.role === "admin" ? "/admin-dashboard.html" : "/dashboard.html")}
+                    className="bg-[#111625] text-gold text-[10px] font-sans font-bold uppercase tracking-widest px-4 py-2 border border-gold hover:bg-gold hover:text-navy transition-all duration-300 rounded-xs flex items-center space-x-1 text-center whitespace-nowrap shrink-0"
+                  >
+                    <UserCheck className="w-3.5 h-3.5" />
+                    <span className="whitespace-nowrap">{currentUser.role === "admin" ? "Admin Terminal" : "My Console"}</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (onLogout) onLogout();
+                      handleNavClick("/login.html");
+                    }}
+                    className="text-slate-400 hover:text-rose-450 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              ) : (
+                <div className="hidden md:flex items-center space-x-3 whitespace-nowrap">
+                  <button
+                    onClick={() => handleNavClick("/login.html" as RoutePath)}
+                    className="text-slate-200 hover:text-gold font-sans text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1 whitespace-nowrap"
+                  >
+                    <LogIn className="w-3.5 h-3.5 mt-0.5 text-gold shrink-0" />
+                    <span className="whitespace-nowrap">Sign In</span>
+                  </button>
+                  <button
+                    onClick={() => handleNavClick("/membership.html" as RoutePath)}
+                    className="bg-gold text-navy text-[10px] font-sans font-bold uppercase tracking-wider px-4 py-2.5 rounded-sm hover:bg-gold-light transition-all duration-300 shadow-sm whitespace-nowrap"
+                  >
+                    Become a Member
+                  </button>
+                </div>
+              )}
+
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="lg:hidden text-slate-200 hover:text-gold p-1"
+                aria-label="Toggle Menu"
+              >
+                {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
             </div>
           </div>
         </div>
