@@ -118,9 +118,9 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative flex lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-4 items-center justify-between w-full">
-          {/* Desktop Left Navigation Links (7 items) */}
+          {/* Desktop Left Navigation Links (6 items) */}
           <nav className="hidden lg:flex items-center space-x-0.5 xl:space-x-1.5 whitespace-nowrap shrink-0">
-            {menuItems.slice(0, 7).map((item) => {
+            {menuItems.slice(0, 6).map((item) => {
               const profileId = (currentPath.startsWith("/profile/") && currentPath.endsWith(".html"))
                 ? currentPath.slice(9, -5)
                 : null;
@@ -179,7 +179,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
             onClick={() => handleNavClick("/" as RoutePath)}
             className="navbar-logo flex items-center justify-center cursor-pointer group shrink-0 absolute left-1/2 -translate-x-1/2 lg:relative lg:left-0 lg:translate-x-0 lg:mx-auto z-10"
           >
-            <div className="relative h-[38px] sm:h-[46px] lg:h-[52px] aspect-[3000/2500] flex items-center shrink-0">
+            <div className="relative h-[44px] sm:h-[53px] lg:h-[62px] aspect-[3000/2500] flex items-center shrink-0">
               {isDefaultLogo ? (
                 <LogoSvg className="h-full w-full block" />
               ) : (
@@ -212,11 +212,11 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
             </div>
           </div>
 
-          {/* Right Side Block: Desktop items 8-11, Action/Auth buttons, and Mobile Hamburger */}
+          {/* Right Side Block: Desktop items, Action/Auth buttons, and Mobile Hamburger */}
           <div className="flex items-center justify-end space-x-4 lg:space-x-1 xl:space-x-2 shrink-0 lg:w-full">
-            {/* Desktop Right Navigation Links (4 items: Events, News Feed, Affiliations, Contact) */}
+            {/* Desktop Right Navigation Links (5 items: Club Members, Events, News Feed, Affiliations, Contact) */}
             <nav className="hidden lg:flex items-center space-x-0.5 xl:space-x-1.5 whitespace-nowrap shrink-0">
-              {menuItems.slice(7, 11).map((item) => {
+              {menuItems.slice(6, 11).map((item) => {
                 const profileId = (currentPath.startsWith("/profile/") && currentPath.endsWith(".html"))
                   ? currentPath.slice(9, -5)
                   : null;
@@ -281,7 +281,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                 <div className="hidden md:flex items-center space-x-3 whitespace-nowrap">
                   <button
                     onClick={() => handleNavClick(currentUser.role === "admin" ? "/admin-dashboard.html" : "/dashboard.html")}
-                    className="bg-[#111625] text-gold text-[10px] font-sans font-bold uppercase tracking-widest px-4 py-2 border border-gold hover:bg-gold hover:text-navy transition-all duration-300 rounded-xs flex items-center space-x-1 text-center whitespace-nowrap shrink-0"
+                    className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold py-1 px-1.5 xl:px-3 transition-colors text-[10px] font-sans font-bold uppercase tracking-widest flex items-center space-x-1 text-center whitespace-nowrap shrink-0"
                   >
                     <UserCheck className="w-3.5 h-3.5" />
                     <span className="whitespace-nowrap">{currentUser.role === "admin" ? "Admin Terminal" : "My Console"}</span>
@@ -291,7 +291,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                       if (onLogout) onLogout();
                       handleNavClick("/login.html");
                     }}
-                    className="text-slate-400 hover:text-rose-450 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
+                    className="text-slate-400 hover:text-rose-450 px-1.5 xl:px-3 py-1 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
                   >
                     Sign Out
                   </button>
@@ -300,14 +300,14 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                 <div className="hidden md:flex items-center space-x-3 whitespace-nowrap">
                   <button
                     onClick={() => handleNavClick("/login.html" as RoutePath)}
-                    className="text-slate-200 hover:text-gold font-sans text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1 whitespace-nowrap"
+                    className="text-slate-200 hover:text-gold px-1.5 xl:px-3 py-1 font-sans text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1 whitespace-nowrap transition-colors"
                   >
                     <LogIn className="w-3.5 h-3.5 mt-0.5 text-gold shrink-0" />
                     <span className="whitespace-nowrap">Sign In</span>
                   </button>
                   <button
                     onClick={() => handleNavClick("/membership.html" as RoutePath)}
-                    className="bg-gold text-navy text-[10px] font-sans font-bold uppercase tracking-wider px-4 py-2.5 rounded-sm hover:bg-gold-light transition-all duration-300 shadow-sm whitespace-nowrap"
+                    className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold-light px-1.5 xl:px-3 py-1 font-sans text-[10px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
                   >
                     Become a Member
                   </button>
