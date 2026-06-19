@@ -3,6 +3,7 @@ import { getCMSEvents } from "../../utils/cmsStorage";
 import CardMedia from "../CardMedia";
 import { Calendar, MapPin, Users, Ticket, X, Check, Anchor, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { MASTER_HERO_VIDEO } from "../../data";
 
 export default function Events() {
   const [allEvents] = useState(getCMSEvents());
@@ -36,7 +37,15 @@ export default function Events() {
     <div className="bg-bg-primary min-h-screen">
       {/* Editorial Page Header */}
       <section className="relative h-72 bg-navy flex items-center justify-center overflow-hidden border-b border-navy-light">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&q=80&w=1920')] bg-cover bg-center">
+        <div className="absolute inset-0 w-full h-full">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+            src={MASTER_HERO_VIDEO}
+          />
           <div className="absolute inset-0 bg-navy/85 mix-blend-multiply"></div>
         </div>
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center space-y-3">

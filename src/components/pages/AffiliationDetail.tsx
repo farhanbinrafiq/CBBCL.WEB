@@ -17,6 +17,7 @@ import {
   Clock,
   AlertTriangle
 } from "lucide-react";
+import { MASTER_HERO_VIDEO } from "../../data";
 
 interface AffiliationDetailProps {
   clubId: string;
@@ -186,7 +187,16 @@ export default function AffiliationDetail({ clubId, navigate }: AffiliationDetai
       <div className="bg-[#fcfbfc] min-h-screen pb-20">
         {/* 🏛 HERO SECTION */}
         <section className="relative bg-[#0d1629] text-white py-20 px-6 border-b border-gold/20 overflow-hidden">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80&w=1200')] bg-cover bg-center opacity-10"></div>
+          <div className="absolute inset-0 w-full h-full opacity-10">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+              src={MASTER_HERO_VIDEO}
+            />
+          </div>
           <div className="relative z-10 max-w-5xl mx-auto space-y-4">
             
             <button
@@ -449,7 +459,16 @@ export default function AffiliationDetail({ clubId, navigate }: AffiliationDetai
     <div className="bg-[#fcfbfc] min-h-screen pb-20">
       {/* 🏛 HERO SECTION */}
       <section className="relative bg-[#0d1629] text-white py-16 px-6 border-b border-gold/20 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&q=80&w=1200')] bg-cover bg-center opacity-10"></div>
+        <div className="absolute inset-0 w-full h-full opacity-10">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+            src={MASTER_HERO_VIDEO}
+          />
+        </div>
         <div className="relative z-10 max-w-5xl mx-auto space-y-4">
           
           <button

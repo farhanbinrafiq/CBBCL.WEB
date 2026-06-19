@@ -1,5 +1,5 @@
 import React from "react";
-import { DIRECTORS_DATA } from "../../data";
+import { DIRECTORS_DATA, MASTER_HERO_VIDEO } from "../../data";
 import { getBoardMembers, getDirectorPortrait } from "../../utils/storage";
 import { getClubMembers } from "../../utils/memberStorage";
 import { User, Award, Briefcase, Calendar, Globe, Linkedin, Facebook, Twitter, Anchor, Compass, CheckCircle, ArrowLeft } from "lucide-react";
@@ -174,7 +174,15 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
     <div className="bg-bg-primary min-h-screen">
       {/* 1. HERO BLOCK */}
       <section className="relative h-96 bg-navy flex items-center justify-center overflow-hidden border-b border-gold-dark/40">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1505242844900-19279f22006?auto=format&fit=crop&q=80&w=1920')] bg-cover bg-center">
+        <div className="absolute inset-0 w-full h-full">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+            src={MASTER_HERO_VIDEO}
+          />
           <div className="absolute inset-0 bg-navy/85 mix-blend-multiply"></div>
         </div>
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center space-y-3">

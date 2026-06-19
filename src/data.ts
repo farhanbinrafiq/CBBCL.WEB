@@ -1,6 +1,7 @@
 import { Director, NewsPost, EventItem, Facility, Affiliation } from "./types";
 
 export const PRESIDENT_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781880795/HKR_t7xu7d.png";
+export const MASTER_HERO_VIDEO = "https://res.cloudinary.com/djdyqr8yd/video/upload/v1781881396/14818372_3840_2160_24fps_pa7yjz.mp4";
 
 export const DIRECTORS_DATA: Director[] = [
   {

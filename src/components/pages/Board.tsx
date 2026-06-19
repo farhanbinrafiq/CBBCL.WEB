@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { DIRECTORS_DATA } from "../../data";
+import { DIRECTORS_DATA, MASTER_HERO_VIDEO } from "../../data";
 import { RoutePath, Director } from "../../types";
 import { getBoardMembers, getDirectorPortrait } from "../../utils/storage";
 import { User, ShieldAlert, Award, Anchor, ArrowRight } from "lucide-react";
@@ -37,7 +37,15 @@ export default function Board({ navigate }: BoardProps) {
     <div className="bg-bg-primary min-h-screen">
       {/* Page Header */}
       <section className="relative h-72 bg-navy flex items-center justify-center overflow-hidden border-b border-navy-light">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=1920')] bg-cover bg-center">
+        <div className="absolute inset-0 w-full h-full">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+            src={MASTER_HERO_VIDEO}
+          />
           <div className="absolute inset-0 bg-navy/85 mix-blend-multiply"></div>
         </div>
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center space-y-3">
