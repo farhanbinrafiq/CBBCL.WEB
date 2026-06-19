@@ -5,6 +5,7 @@ import { getClubMembers } from "../../utils/memberStorage";
 import { User, Award, Briefcase, Calendar, Globe, Linkedin, Facebook, Twitter, Anchor, Compass, CheckCircle, ArrowLeft } from "lucide-react";
 import { motion } from "motion/react";
 import { RoutePath, Director } from "../../types";
+import BackgroundVideo from "../BackgroundVideo";
 
 interface BoardProfileProps {
   directorId?: string;
@@ -175,12 +176,7 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
       {/* 1. HERO BLOCK */}
       <section className="relative h-96 bg-navy flex items-center justify-center overflow-hidden border-b border-gold-dark/40">
         <div className="absolute inset-0 w-full h-full">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+          <BackgroundVideo
             src={MASTER_HERO_VIDEO}
           />
           <div className="absolute inset-0 bg-navy/85 mix-blend-multiply"></div>

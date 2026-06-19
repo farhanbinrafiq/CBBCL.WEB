@@ -5,6 +5,7 @@ import { getBoardMembers, getDirectorPortrait } from "../../utils/storage";
 import { User, ShieldAlert, Award, Anchor, ArrowRight } from "lucide-react";
 import { motion } from "motion/react";
 import BoardProfileCard from "../BoardProfileCard";
+import BackgroundVideo from "../BackgroundVideo";
 
 interface BoardProps {
   navigate: (path: RoutePath) => void;
@@ -38,12 +39,7 @@ export default function Board({ navigate }: BoardProps) {
       {/* Page Header */}
       <section className="relative h-72 bg-navy flex items-center justify-center overflow-hidden border-b border-navy-light">
         <div className="absolute inset-0 w-full h-full">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+          <BackgroundVideo
             src={MASTER_HERO_VIDEO}
           />
           <div className="absolute inset-0 bg-navy/85 mix-blend-multiply"></div>

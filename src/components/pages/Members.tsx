@@ -4,6 +4,7 @@ import { getClubMembers } from "../../utils/memberStorage";
 import { motion } from "motion/react";
 import { Search, Anchor, Calendar, Award, User, ArrowLeft, ShieldCheck, Mail, BookOpen } from "lucide-react";
 import { MASTER_HERO_VIDEO } from "../../data";
+import BackgroundVideo from "../BackgroundVideo";
 
 interface MembersProps {
   navigate: (path: RoutePath) => void;
@@ -265,12 +266,7 @@ export default function Members({ navigate, selectedMemberId = null }: MembersPr
       {/* Visual Header Banner */}
       <section className="bg-[#1a2744] text-white py-16 px-4 border-b border-gold relative overflow-hidden text-center">
         <div className="absolute inset-0 w-full h-full">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+          <BackgroundVideo
             src={MASTER_HERO_VIDEO}
           />
           <div className="absolute inset-0 bg-navy/85 mix-blend-multiply"></div>

@@ -5,6 +5,7 @@ import CardMedia from "../CardMedia";
 import { Search, Heart, MessageSquare, Tag, X, Send, Calendar, Anchor, ShieldAlert } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { MASTER_HERO_VIDEO } from "../../data";
+import BackgroundVideo from "../BackgroundVideo";
 
 export default function NewsFeed() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -100,12 +101,7 @@ export default function NewsFeed() {
       {/* Page Header */}
       <section className="relative h-72 bg-navy flex items-center justify-center overflow-hidden border-b border-navy-light">
         <div className="absolute inset-0 w-full h-full">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+          <BackgroundVideo
             src={MASTER_HERO_VIDEO}
           />
           <div className="absolute inset-0 bg-navy/85 mix-blend-multiply"></div>

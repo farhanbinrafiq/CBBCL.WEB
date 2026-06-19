@@ -8,6 +8,7 @@ import {
   Building2, User, Mail, Phone, Calendar, Clipboard, FileUp, CheckCircle, ArrowLeft, Loader2, Award 
 } from "lucide-react";
 import { MASTER_HERO_VIDEO } from "../../data";
+import BackgroundVideo from "../BackgroundVideo";
 
 interface MembershipApplicationFormProps {
   navigate: (path: RoutePath) => void;
@@ -163,12 +164,7 @@ export default function MembershipApplicationForm({ navigate }: MembershipApplic
       {/* Tiny Header */}
       <section className="relative h-48 bg-navy flex items-center justify-center overflow-hidden border-b border-navy-light">
         <div className="absolute inset-0 w-full h-full">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+          <BackgroundVideo
             src={MASTER_HERO_VIDEO}
           />
           <div className="absolute inset-0 bg-navy/90 mix-blend-multiply"></div>

@@ -8,6 +8,7 @@ import { getHomeLayoutCMS } from "../../utils/homeCmsStorage";
 import { ArrowRight, Quote, Calendar, MapPin, Mail, Phone, Clock, Anchor, Users, Shield, Award, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
 import { PRESIDENT_IMAGE, MASTER_HERO_VIDEO } from "../../data";
+import BackgroundVideo from "../BackgroundVideo";
 // @ts-ignore
 import cruiseHero from "../../assets/images/cruise_hero_1780825257603.png";
 
@@ -73,14 +74,9 @@ export default function Home({ navigate }: HomeProps) {
               <section key="hero" className="relative h-screen flex items-center justify-center bg-navy overflow-hidden">
                 {/* Background Video with overlays */}
                 <div className="absolute inset-0 w-full h-full">
-                  <video
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    poster={h.image || currentHeroCoverImage}
-                    className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+                  <BackgroundVideo
                     src={MASTER_HERO_VIDEO}
+                    poster={h.image || currentHeroCoverImage}
                   />
                   {h.overlayEnabled && <div className="absolute inset-0 bg-navy/80 mix-blend-multiply"></div>}
                   {h.overlayEnabled && <div className="absolute inset-0 bg-gradient-to-t from-navy via-transparent to-navy/50"></div>}
@@ -313,12 +309,7 @@ export default function Home({ navigate }: HomeProps) {
                 {/* FULL-WIDTH BANNER Rendered cleanly inline with overview */}
                 <section className="relative py-32 bg-navy flex items-center justify-center overflow-hidden">
                   <div className="absolute inset-0 w-full h-full">
-                    <video
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+                    <BackgroundVideo
                       src={MASTER_HERO_VIDEO}
                     />
                     <div className="absolute inset-0 bg-navy/85 mix-blend-multiply"></div>

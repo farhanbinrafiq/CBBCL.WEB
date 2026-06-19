@@ -18,6 +18,7 @@ import {
   AlertTriangle
 } from "lucide-react";
 import { MASTER_HERO_VIDEO } from "../../data";
+import BackgroundVideo from "../BackgroundVideo";
 
 interface AffiliationDetailProps {
   clubId: string;
@@ -188,12 +189,7 @@ export default function AffiliationDetail({ clubId, navigate }: AffiliationDetai
         {/* 🏛 HERO SECTION */}
         <section className="relative bg-[#0d1629] text-white py-20 px-6 border-b border-gold/20 overflow-hidden">
           <div className="absolute inset-0 w-full h-full opacity-10">
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+            <BackgroundVideo
               src={MASTER_HERO_VIDEO}
             />
           </div>
@@ -460,12 +456,7 @@ export default function AffiliationDetail({ clubId, navigate }: AffiliationDetai
       {/* 🏛 HERO SECTION */}
       <section className="relative bg-[#0d1629] text-white py-16 px-6 border-b border-gold/20 overflow-hidden">
         <div className="absolute inset-0 w-full h-full opacity-10">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+          <BackgroundVideo
             src={MASTER_HERO_VIDEO}
           />
         </div>

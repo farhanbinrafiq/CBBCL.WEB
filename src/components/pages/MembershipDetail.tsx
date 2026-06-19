@@ -4,6 +4,7 @@ import {
   Award, ShieldCheck, Check, Key, ClipboardList, HelpCircle, ArrowLeft, ArrowRight, DollarSign, Users, Scale, FileText
 } from "lucide-react";
 import { MASTER_HERO_VIDEO } from "../../data";
+import BackgroundVideo from "../BackgroundVideo";
 
 interface MembershipDetailProps {
   categorySlug: string;
@@ -300,12 +301,7 @@ export default function MembershipDetail({ categorySlug, navigate }: MembershipD
       {/* Editorial Page Header */}
       <section className="relative h-64 bg-navy flex items-center justify-center overflow-hidden border-b border-navy-light">
         <div className="absolute inset-0 w-full h-full">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+          <BackgroundVideo
             src={MASTER_HERO_VIDEO}
           />
           <div className="absolute inset-0 bg-navy/85 mix-blend-multiply"></div>

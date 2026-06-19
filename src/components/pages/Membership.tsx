@@ -5,6 +5,7 @@ import { RoutePath } from "../../types";
 import { getMembershipApplications, saveMembershipApplications } from "../../utils/memberStorage";
 import { getPageContent } from "../../utils/cmsStorage";
 import { MASTER_HERO_VIDEO } from "../../data";
+import BackgroundVideo from "../BackgroundVideo";
 
 interface MembershipProps {
   navigate: (path: RoutePath) => void;
@@ -91,12 +92,7 @@ export default function Membership({ navigate }: MembershipProps) {
       {/* Editorial Page Header */}
       <section className="relative h-72 bg-navy flex items-center justify-center overflow-hidden border-b border-navy-light">
         <div className="absolute inset-0 w-full h-full">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+          <BackgroundVideo
             src={MASTER_HERO_VIDEO}
           />
           <div className="absolute inset-0 bg-navy/85 mix-blend-multiply"></div>

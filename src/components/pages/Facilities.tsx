@@ -4,6 +4,7 @@ import CardMedia from "../CardMedia";
 import { MapPin, Users, Calendar, Clock, Anchor, ShieldCheck, X, Check } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { MASTER_HERO_VIDEO } from "../../data";
+import BackgroundVideo from "../BackgroundVideo";
 
 export default function Facilities() {
   const [facilities] = useState(getCMSFacilities());
@@ -34,12 +35,7 @@ export default function Facilities() {
       {/* Editorial Page Header */}
       <section className="relative h-72 bg-navy flex items-center justify-center overflow-hidden border-b border-navy-light">
         <div className="absolute inset-0 w-full h-full">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+          <BackgroundVideo
             src={MASTER_HERO_VIDEO}
           />
           <div className="absolute inset-0 bg-navy/85 mix-blend-multiply"></div>
