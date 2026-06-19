@@ -97,7 +97,7 @@ export const DIRECTORS_DATA: Director[] = [
   },
   {
     id: "ak-rubel",
-    name: "A.K. Rubel",
+    name: "Ahmedul Karim Rubel",
     designation: "Founding Director",
     membershipCode: "CBBCL-FOUNDER-010"
   },
