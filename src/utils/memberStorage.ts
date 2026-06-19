@@ -1,5 +1,5 @@
 import { ClubMember, MembershipApplication, AffiliationRequest, EZBookingReservation } from "../types";
-import { PRESIDENT_IMAGE, AK_RUBEL_IMAGE } from "../data";
+import { PRESIDENT_IMAGE, AK_RUBEL_IMAGE, MD_IMRAN_ALAM_IMAGE } from "../data";
 
 const MEMBERS_KEY = "cbbcl_club_members";
 const APPLICATIONS_KEY = "cbbcl_membership_applications";
@@ -81,7 +81,7 @@ const DEFAULT_MEMBERS: ClubMember[] = [
     bio: "Md Imran Alam is an active marine commerce enthusiast and deep-water fisherman with a lifelong career dedicated to developing coastal maritime activities around the Bay of Bengal.",
     achievements: "Pioneered blue-economy fishing expeditions; Lifetime achievement award for regional sea tourism.",
     clubInvolvement: "Active organizer of the Annual Deep Sea Fishing Tournament; Core member of the Yachting Committee.",
-    avatarUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400",
+    avatarUrl: MD_IMRAN_ALAM_IMAGE,
     category: "General Member",
     roleType: "RegularMember"
   },
@@ -363,6 +363,7 @@ const GLOBAL_AVATARS: Record<string, string> = {
   "humayun-kabir-robel": PRESIDENT_IMAGE,
   "farhan-bin-rafiq": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/FBR.png",
   "ak-rubel": AK_RUBEL_IMAGE,
+  "md-imran-alam": MD_IMRAN_ALAM_IMAGE,
   "arifur-rahman": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ARF.png",
   "amzad-mahmud": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/AZM.png",
   "mohammed-elias": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ELS.png",
