@@ -1,5 +1,5 @@
 import { User, Profile, Director, NewsPost } from "../types";
-import { DIRECTORS_DATA, NEWS_DATA, PRESIDENT_IMAGE } from "../data";
+import { DIRECTORS_DATA, NEWS_DATA, PRESIDENT_IMAGE, AK_RUBEL_IMAGE } from "../data";
 
 const USERS_KEY = "cbbcl_users";
 const PROFILES_KEY = "cbbcl_profiles";
@@ -269,7 +269,7 @@ const DEFAULT_PORTRAITS: Record<string, string> = {
   "maimunal-karim-jisan": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=600",
   "md-rezaul-kabir-reza": "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&q=80&w=600",
   "amzad-mahmud": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/AZM.png",
-  "ak-rubel": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/AKR.png",
+  "ak-rubel": AK_RUBEL_IMAGE,
   "mohammed-elias": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ELS.png",
   "md-yousuf": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/YSF.png",
   "nurul-absar": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/NRA.png",

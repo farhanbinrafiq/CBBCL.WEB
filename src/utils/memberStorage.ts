@@ -1,5 +1,5 @@
 import { ClubMember, MembershipApplication, AffiliationRequest, EZBookingReservation } from "../types";
-import { PRESIDENT_IMAGE } from "../data";
+import { PRESIDENT_IMAGE, AK_RUBEL_IMAGE } from "../data";
 
 const MEMBERS_KEY = "cbbcl_club_members";
 const APPLICATIONS_KEY = "cbbcl_membership_applications";
@@ -362,7 +362,7 @@ const DEFAULT_MEMBERS: ClubMember[] = [
 const GLOBAL_AVATARS: Record<string, string> = {
   "humayun-kabir-robel": PRESIDENT_IMAGE,
   "farhan-bin-rafiq": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/FBR.png",
-  "ak-rubel": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/AKR.png",
+  "ak-rubel": AK_RUBEL_IMAGE,
   "arifur-rahman": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ARF.png",
   "amzad-mahmud": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/AZM.png",
   "mohammed-elias": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ELS.png",
