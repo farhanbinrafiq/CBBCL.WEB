@@ -7,6 +7,7 @@ import CardMedia from "../CardMedia";
 import { getHomeLayoutCMS } from "../../utils/homeCmsStorage";
 import { ArrowRight, Quote, Calendar, MapPin, Mail, Phone, Clock, Anchor, Users, Shield, Award, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
+import { PRESIDENT_IMAGE } from "../../data";
 // @ts-ignore
 import cruiseHero from "../../assets/images/cruise_hero_1780825257603.png";
 
@@ -169,9 +170,9 @@ export default function Home({ navigate }: HomeProps) {
             if (!p.enabled) return null;
             const targetPresident = directors.find(d => d.id === "humayun-kabir-robel") || directors[0];
             const presName = p.name || targetPresident?.name || "Humayun Kabir Robel";
-            let presPhoto = p.image || targetPresident?.photoUrl || "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png";
+            let presPhoto = p.image || targetPresident?.photoUrl || PRESIDENT_IMAGE;
             if (presName.includes("Humayun Kabir Robel")) {
-              presPhoto = "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png";
+              presPhoto = PRESIDENT_IMAGE;
             }
             const presDesignation = p.designation || targetPresident?.designation || "Founding President";
             const bioLines = p.bio && p.bio.length > 0 ? p.bio : (targetPresident?.bio || [

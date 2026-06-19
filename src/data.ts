@@ -1,5 +1,7 @@
 import { Director, NewsPost, EventItem, Facility, Affiliation } from "./types";
 
+export const PRESIDENT_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781880795/HKR_t7xu7d.png";
+
 export const DIRECTORS_DATA: Director[] = [
   {
     id: "humayun-kabir-robel",

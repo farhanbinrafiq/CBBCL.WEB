@@ -1,4 +1,5 @@
 import { ClubMember, MembershipApplication, AffiliationRequest, EZBookingReservation } from "../types";
+import { PRESIDENT_IMAGE } from "../data";
 
 const MEMBERS_KEY = "cbbcl_club_members";
 const APPLICATIONS_KEY = "cbbcl_membership_applications";
@@ -16,7 +17,7 @@ const DEFAULT_MEMBERS: ClubMember[] = [
     bio: "Founding President of Cox's Bazar Boat Club. A visionary entrepreneur and passionate marine sports advocate driving nautical tourism in Bangladesh.",
     achievements: "Founded Cox's Bazar Boat Club Limited; Leading regional coastal tourism development initiatives.",
     clubInvolvement: "Founding President, Chairman of the Executive Committee, and Senior Patron of the Club.",
-    avatarUrl: "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png",
+    avatarUrl: PRESIDENT_IMAGE,
     category: "Founding Member",
     roleType: "FoundingMember"
   },
@@ -359,7 +360,7 @@ const DEFAULT_MEMBERS: ClubMember[] = [
 ];
 
 const GLOBAL_AVATARS: Record<string, string> = {
-  "humayun-kabir-robel": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png",
+  "humayun-kabir-robel": PRESIDENT_IMAGE,
   "farhan-bin-rafiq": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/FBR.png",
   "ak-rubel": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/AKR.png",
   "arifur-rahman": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ARF.png",

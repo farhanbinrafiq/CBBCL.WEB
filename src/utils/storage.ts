@@ -1,5 +1,5 @@
 import { User, Profile, Director, NewsPost } from "../types";
-import { DIRECTORS_DATA, NEWS_DATA } from "../data";
+import { DIRECTORS_DATA, NEWS_DATA, PRESIDENT_IMAGE } from "../data";
 
 const USERS_KEY = "cbbcl_users";
 const PROFILES_KEY = "cbbcl_profiles";
@@ -260,7 +260,7 @@ export function setLoggedInUser(user: User | null): void {
 }
 
 const DEFAULT_PORTRAITS: Record<string, string> = {
-  "humayun-kabir-robel": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png",
+  "humayun-kabir-robel": PRESIDENT_IMAGE,
   "farhan-bin-rafiq": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/FBR.png",
   "syfuddin-khaled": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/SFK.png",
   "arifur-rahman": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ARF.png",
