@@ -157,6 +157,10 @@ export function getBoardMembers(): Director[] {
   let changed = false;
   const normalized = list.map((item, idx) => {
     const updated = { ...item };
+    if (updated.id === "humayun-kabir-robel" && updated.photoUrl !== "https://github.com/farhanbinrafiq/CBBCL.WEB/blob/main/HKR.png?raw=true") {
+      updated.photoUrl = "https://github.com/farhanbinrafiq/CBBCL.WEB/blob/main/HKR.png?raw=true";
+      changed = true;
+    }
     if (updated.level === undefined) {
       changed = true;
       if (updated.id === "humayun-kabir-robel") {
@@ -190,7 +194,13 @@ export function getBoardMembers(): Director[] {
 }
 
 export function saveBoardMembers(members: Director[]): void {
-  safeLocalSet(BOARD_MEMBERS_KEY, JSON.stringify(members));
+  const normalized = members.map(m => {
+    if (m.id === "humayun-kabir-robel") {
+      return { ...m, photoUrl: "https://github.com/farhanbinrafiq/CBBCL.WEB/blob/main/HKR.png?raw=true" };
+    }
+    return m;
+  });
+  safeLocalSet(BOARD_MEMBERS_KEY, JSON.stringify(normalized));
 }
 
 export function getNewsPosts(): NewsPost[] {
@@ -246,7 +256,7 @@ export function setLoggedInUser(user: User | null): void {
 }
 
 const DEFAULT_PORTRAITS: Record<string, string> = {
-  "humayun-kabir-robel": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=600",
+  "humayun-kabir-robel": "https://github.com/farhanbinrafiq/CBBCL.WEB/blob/main/HKR.png?raw=true",
   "farhan-bin-rafiq": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=600",
   "syfuddin-khaled": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=600",
   "arifur-rahman": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600",
@@ -264,6 +274,9 @@ const DEFAULT_PORTRAITS: Record<string, string> = {
 };
 
 export function getDirectorPortrait(dir: Director): string {
+  if (dir.id === "humayun-kabir-robel") {
+    return "https://github.com/farhanbinrafiq/CBBCL.WEB/blob/main/HKR.png?raw=true";
+  }
   if (dir.photoUrl) return dir.photoUrl;
   return DEFAULT_PORTRAITS[dir.id] || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600";
 }

@@ -168,8 +168,11 @@ export default function Home({ navigate }: HomeProps) {
             const p = homeCms.sections.president;
             if (!p.enabled) return null;
             const targetPresident = directors.find(d => d.id === "humayun-kabir-robel") || directors[0];
-            const presPhoto = p.image || targetPresident?.photoUrl || "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=800";
             const presName = p.name || targetPresident?.name || "Humayun Kabir Robel";
+            let presPhoto = p.image || targetPresident?.photoUrl || "https://github.com/farhanbinrafiq/CBBCL.WEB/blob/main/HKR.png?raw=true";
+            if (presName.includes("Humayun Kabir Robel")) {
+              presPhoto = "https://github.com/farhanbinrafiq/CBBCL.WEB/blob/main/HKR.png?raw=true";
+            }
             const presDesignation = p.designation || targetPresident?.designation || "Founding President";
             const bioLines = p.bio && p.bio.length > 0 ? p.bio : (targetPresident?.bio || [
               "In constructing the permanent pillars of Cox's Bazar Boat Club Limited, our mission transcends establishing a conventional leisure resort. We are erecting Bangladesh’s absolute benchmark for private oceanfront companionship and nautical lifestyle.",
