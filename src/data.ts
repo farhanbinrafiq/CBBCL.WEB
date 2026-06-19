@@ -2,6 +2,7 @@ import { Director, NewsPost, EventItem, Facility, Affiliation } from "./types";
 
 export const PRESIDENT_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781880795/HKR_t7xu7d.png";
 export const AK_RUBEL_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781886344/AKRB_v2_lihuhg.jpg";
+export const MAIMUNAL_KARIM_JISAN_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781888326/WhatsApp_Image_2026-06-19_at_10.52.46_PM_fssskk.jpg";
 export const MASTER_HERO_VIDEO = "https://res.cloudinary.com/djdyqr8yd/video/upload/v1781881396/14818372_3840_2160_24fps_pa7yjz.mp4";
 
 export const DIRECTORS_DATA: Director[] = [
