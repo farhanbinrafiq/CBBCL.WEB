@@ -157,8 +157,10 @@ export function getBoardMembers(): Director[] {
   let changed = false;
   const normalized = list.map((item, idx) => {
     const updated = { ...item };
-    if (updated.id === "humayun-kabir-robel" && updated.photoUrl !== "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png") {
-      updated.photoUrl = "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png";
+    const globalId = updated.id.toLowerCase();
+    const mappedPhoto = DEFAULT_PORTRAITS[globalId];
+    if (mappedPhoto && updated.photoUrl !== mappedPhoto) {
+      updated.photoUrl = mappedPhoto;
       changed = true;
     }
     if (updated.level === undefined) {
@@ -195,8 +197,10 @@ export function getBoardMembers(): Director[] {
 
 export function saveBoardMembers(members: Director[]): void {
   const normalized = members.map(m => {
-    if (m.id === "humayun-kabir-robel") {
-      return { ...m, photoUrl: "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png" };
+    const globalId = m.id.toLowerCase();
+    const mappedPhoto = DEFAULT_PORTRAITS[globalId];
+    if (mappedPhoto) {
+      return { ...m, photoUrl: mappedPhoto };
     }
     return m;
   });
@@ -257,26 +261,26 @@ export function setLoggedInUser(user: User | null): void {
 
 const DEFAULT_PORTRAITS: Record<string, string> = {
   "humayun-kabir-robel": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png",
-  "farhan-bin-rafiq": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=600",
-  "syfuddin-khaled": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=600",
-  "arifur-rahman": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600",
-  "mehedi-hasan": "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?auto=format&fit=crop&q=80&w=600",
+  "farhan-bin-rafiq": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/FBR.png",
+  "syfuddin-khaled": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/SFK.png",
+  "arifur-rahman": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ARF.png",
+  "mehedi-hasan": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/MHD.png",
   "md-imran-alam": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=600",
   "maimunal-karim-jisan": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=600",
   "md-rezaul-kabir-reza": "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&q=80&w=600",
-  "amzad-mahmud": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=600",
-  "ak-rubel": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&q=80&w=600",
-  "mohammed-elias": "https://images.unsplash.com/photo-1489980508314-941910ded1f4?auto=format&fit=crop&q=80&w=600",
-  "md-yousuf": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&q=80&w=600",
-  "nurul-absar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600",
-  "ziaul-haque": "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=600",
+  "amzad-mahmud": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/AZM.png",
+  "ak-rubel": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/AKR.png",
+  "mohammed-elias": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ELS.png",
+  "md-yousuf": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/YSF.png",
+  "nurul-absar": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/NRA.png",
+  "ziaul-haque": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ZUQ.png",
   "reshedul-evu": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=600"
 };
 
 export function getDirectorPortrait(dir: Director): string {
-  if (dir.id === "humayun-kabir-robel") {
-    return "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png";
-  }
+  const globalId = dir.id.toLowerCase();
+  const mappedPhoto = DEFAULT_PORTRAITS[globalId];
+  if (mappedPhoto) return mappedPhoto;
   if (dir.photoUrl) return dir.photoUrl;
-  return DEFAULT_PORTRAITS[dir.id] || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600";
+  return "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600";
 }

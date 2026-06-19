@@ -32,7 +32,7 @@ const DEFAULT_MEMBERS: ClubMember[] = [
     bio: "Founding Vice President of Cox's Bazar Boat Club. Expert yachting navigator and sponsor of deep sea fishing expeditions across the Bay of Bengal.",
     achievements: "First place in Bay of Bengal Yachting Regatta of 2023; Championed sustainable fishery projects.",
     clubInvolvement: "Founding Vice President, Member of the Disciplinary & Ethics Panel.",
-    avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400",
+    avatarUrl: "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/FBR.png",
     category: "Founding Member",
     roleType: "FoundingMember"
   },
@@ -48,7 +48,7 @@ const DEFAULT_MEMBERS: ClubMember[] = [
     bio: "Founding Director and local marine conservationist. Syfuddin has dedicated over 15 years to coastal development and yacht community engagement.",
     achievements: "Co-developer of the Marine Education Center; Prominent speaker on Blue Economy at the National Oceanographic Assembly.",
     clubInvolvement: "Founding Director, Member of the Coastal Environment Committee.",
-    avatarUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400",
+    avatarUrl: "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/SFK.png",
     category: "Founding Member",
     roleType: "FoundingMember"
   },
@@ -64,7 +64,7 @@ const DEFAULT_MEMBERS: ClubMember[] = [
     bio: "Founding Director of CBBCL and serial investor in Cox's Bazar hospitality networks. Arifur combines marine sport passions with elite maritime hospitality.",
     achievements: "Pioneered luxury yacht charters in Cox's Bazar; National Tourism Excellence Award nominee.",
     clubInvolvement: "Founding Director, Head of the Yachting and Leisure Committee.",
-    avatarUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400",
+    avatarUrl: "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ARF.png",
     category: "Founding Member",
     roleType: "FoundingMember"
   },
@@ -176,7 +176,7 @@ const DEFAULT_MEMBERS: ClubMember[] = [
     bio: "Mehedi Hasan is a young watersports developer and trainer specializing in powerboat maneuvers and recreational jet-ski guidelines.",
     achievements: "Awarded cox's bazar safety medal for coastal lifesaver training; Certified diving master.",
     clubInvolvement: "Assistant safety officer for recreational sea sport clinics.",
-    avatarUrl: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=400",
+    avatarUrl: "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/MHD.png",
     category: "General Member",
     roleType: "RegularMember"
   },
@@ -358,6 +358,20 @@ const DEFAULT_MEMBERS: ClubMember[] = [
   }
 ];
 
+const GLOBAL_AVATARS: Record<string, string> = {
+  "humayun-kabir-robel": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png",
+  "farhan-bin-rafiq": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/FBR.png",
+  "ak-rubel": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/AKR.png",
+  "arifur-rahman": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ARF.png",
+  "amzad-mahmud": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/AZM.png",
+  "mohammed-elias": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ELS.png",
+  "mehedi-hasan": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/MHD.png",
+  "nurul-absar": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/NRA.png",
+  "syfuddin-khaled": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/SFK.png",
+  "ziaul-haque": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ZUQ.png",
+  "md-yousuf": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/YSF.png"
+};
+
 export function getClubMembers(): ClubMember[] {
   try {
     const data = localStorage.getItem(MEMBERS_KEY);
@@ -383,8 +397,10 @@ export function getClubMembers(): ClubMember[] {
     let changed = false;
     list.forEach((item, idx) => {
       if (!item) return;
-      if (item.id === "humayun-kabir-robel" && item.avatarUrl !== "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png") {
-        item.avatarUrl = "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png";
+      const globalId = item.id.toLowerCase();
+      const mappedAvatar = GLOBAL_AVATARS[globalId];
+      if (mappedAvatar && item.avatarUrl !== mappedAvatar) {
+        item.avatarUrl = mappedAvatar;
         changed = true;
       }
       if (item.order === undefined) {
@@ -427,8 +443,10 @@ export function saveClubMembers(members: ClubMember[]): void {
     sorted.forEach((item, idx) => {
       if (item) {
         item.order = idx;
-        if (item.id === "humayun-kabir-robel") {
-          item.avatarUrl = "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png";
+        const globalId = item.id.toLowerCase();
+        const mappedAvatar = GLOBAL_AVATARS[globalId];
+        if (mappedAvatar) {
+          item.avatarUrl = mappedAvatar;
         }
       }
     });
