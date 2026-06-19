@@ -157,8 +157,8 @@ export function getBoardMembers(): Director[] {
   let changed = false;
   const normalized = list.map((item, idx) => {
     const updated = { ...item };
-    if (updated.id === "humayun-kabir-robel" && updated.photoUrl !== "https://github.com/farhanbinrafiq/CBBCL.WEB/blob/main/HKR.png?raw=true") {
-      updated.photoUrl = "https://github.com/farhanbinrafiq/CBBCL.WEB/blob/main/HKR.png?raw=true";
+    if (updated.id === "humayun-kabir-robel" && updated.photoUrl !== "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png") {
+      updated.photoUrl = "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png";
       changed = true;
     }
     if (updated.level === undefined) {
@@ -196,7 +196,7 @@ export function getBoardMembers(): Director[] {
 export function saveBoardMembers(members: Director[]): void {
   const normalized = members.map(m => {
     if (m.id === "humayun-kabir-robel") {
-      return { ...m, photoUrl: "https://github.com/farhanbinrafiq/CBBCL.WEB/blob/main/HKR.png?raw=true" };
+      return { ...m, photoUrl: "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png" };
     }
     return m;
   });
@@ -256,7 +256,7 @@ export function setLoggedInUser(user: User | null): void {
 }
 
 const DEFAULT_PORTRAITS: Record<string, string> = {
-  "humayun-kabir-robel": "https://github.com/farhanbinrafiq/CBBCL.WEB/blob/main/HKR.png?raw=true",
+  "humayun-kabir-robel": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png",
   "farhan-bin-rafiq": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=600",
   "syfuddin-khaled": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=600",
   "arifur-rahman": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600",
@@ -275,7 +275,7 @@ const DEFAULT_PORTRAITS: Record<string, string> = {
 
 export function getDirectorPortrait(dir: Director): string {
   if (dir.id === "humayun-kabir-robel") {
-    return "https://github.com/farhanbinrafiq/CBBCL.WEB/blob/main/HKR.png?raw=true";
+    return "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png";
   }
   if (dir.photoUrl) return dir.photoUrl;
   return DEFAULT_PORTRAITS[dir.id] || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600";

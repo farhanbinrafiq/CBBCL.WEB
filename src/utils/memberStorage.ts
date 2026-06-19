@@ -16,7 +16,7 @@ const DEFAULT_MEMBERS: ClubMember[] = [
     bio: "Founding President of Cox's Bazar Boat Club. A visionary entrepreneur and passionate marine sports advocate driving nautical tourism in Bangladesh.",
     achievements: "Founded Cox's Bazar Boat Club Limited; Leading regional coastal tourism development initiatives.",
     clubInvolvement: "Founding President, Chairman of the Executive Committee, and Senior Patron of the Club.",
-    avatarUrl: "https://github.com/farhanbinrafiq/CBBCL.WEB/blob/main/HKR.png?raw=true",
+    avatarUrl: "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png",
     category: "Founding Member",
     roleType: "FoundingMember"
   },
@@ -383,8 +383,8 @@ export function getClubMembers(): ClubMember[] {
     let changed = false;
     list.forEach((item, idx) => {
       if (!item) return;
-      if (item.id === "humayun-kabir-robel" && item.avatarUrl !== "https://github.com/farhanbinrafiq/CBBCL.WEB/blob/main/HKR.png?raw=true") {
-        item.avatarUrl = "https://github.com/farhanbinrafiq/CBBCL.WEB/blob/main/HKR.png?raw=true";
+      if (item.id === "humayun-kabir-robel" && item.avatarUrl !== "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png") {
+        item.avatarUrl = "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png";
         changed = true;
       }
       if (item.order === undefined) {
@@ -428,7 +428,7 @@ export function saveClubMembers(members: ClubMember[]): void {
       if (item) {
         item.order = idx;
         if (item.id === "humayun-kabir-robel") {
-          item.avatarUrl = "https://github.com/farhanbinrafiq/CBBCL.WEB/blob/main/HKR.png?raw=true";
+          item.avatarUrl = "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/main/HKR.png";
         }
       }
     });
