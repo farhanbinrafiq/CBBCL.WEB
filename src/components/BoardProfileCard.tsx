@@ -18,6 +18,23 @@ export default function BoardProfileCard({ director, navigate, variant = "main" 
     navigate(`/profile/${director.id}.html` as RoutePath);
   };
 
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const imgElement = e.currentTarget;
+    const currentSrc = imgElement.src;
+    if (currentSrc.includes("raw.githubusercontent.com")) {
+      const match = currentSrc.match(/https:\/\/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/(.+)/);
+      if (match) {
+        const [, user, repo, version, filePath] = match;
+        imgElement.src = `https://cdn.jsdelivr.net/gh/${user}/${repo}@${version}/${filePath}`;
+        return;
+      }
+    }
+    // Fallback if jsDelivr fails or is what failed:
+    imgElement.src = isPresident 
+      ? "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=600"
+      : "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600";
+  };
+
   if (isCompact) {
     return (
       <div
@@ -31,6 +48,7 @@ export default function BoardProfileCard({ director, navigate, variant = "main" 
               alt={director.name}
               className="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-500"
               referrerPolicy="no-referrer"
+              onError={handleImageError}
             />
           </div>
           <h5 className="font-display text-sm font-bold text-slate-800 tracking-tight group-hover:text-gold transition-colors">
@@ -60,6 +78,7 @@ export default function BoardProfileCard({ director, navigate, variant = "main" 
             alt={director.name}
             className="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-500"
             referrerPolicy="no-referrer"
+            onError={handleImageError}
           />
         </div>
         <h4 className="font-display text-lg sm:text-xl lg:text-2xl font-bold text-slate-800 tracking-tight group-hover:text-gold transition-colors mt-4">
@@ -87,6 +106,7 @@ export default function BoardProfileCard({ director, navigate, variant = "main" 
           alt={director.name}
           className="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-500"
           referrerPolicy="no-referrer"
+          onError={handleImageError}
         />
       </div>
       <h4 className="font-display text-base sm:text-lg font-bold text-slate-800 tracking-tight group-hover:text-gold transition-colors mt-3">

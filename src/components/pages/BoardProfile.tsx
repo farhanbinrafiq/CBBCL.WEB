@@ -1,3 +1,4 @@
+import React from "react";
 import { DIRECTORS_DATA } from "../../data";
 import { getBoardMembers, getDirectorPortrait } from "../../utils/storage";
 import { getClubMembers } from "../../utils/memberStorage";
@@ -65,6 +66,23 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
 
   const getPortraitUrl = (dir: Director) => {
     return getDirectorPortrait(dir);
+  };
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const imgElement = e.currentTarget;
+    const currentSrc = imgElement.src;
+    if (currentSrc.includes("raw.githubusercontent.com")) {
+      const match = currentSrc.match(/https:\/\/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/(.+)/);
+      if (match) {
+        const [, user, repo, version, filePath] = match;
+        imgElement.src = `https://cdn.jsdelivr.net/gh/${user}/${repo}@${version}/${filePath}`;
+        return;
+      }
+    }
+    // Fallback if jsDelivr fails or is what failed:
+    imgElement.src = (directorId === "humayun-kabir-robel")
+      ? "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=600"
+      : "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600";
   };
 
   // Enrich missing fields dynamically to ensure pristine display
@@ -207,6 +225,8 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
                   src={getPortraitUrl(director)}
                   alt={director.name}
                   className="w-full h-full object-cover transition-all duration-500"
+                  referrerPolicy="no-referrer"
+                  onError={handleImageError}
                 />
               </div>
 

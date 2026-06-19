@@ -191,6 +191,19 @@ export default function Home({ navigate }: HomeProps) {
                         alt="President photo representation"
                         className="w-full h-[460px] object-cover object-top transition-all duration-700"
                         referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          const img = e.currentTarget;
+                          const src = img.src;
+                          if (src.includes("raw.githubusercontent.com")) {
+                            const match = src.match(/https:\/\/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/(.+)/);
+                            if (match) {
+                              const [, user, repo, version, filePath] = match;
+                              img.src = `https://cdn.jsdelivr.net/gh/${user}/${repo}@${version}/${filePath}`;
+                              return;
+                            }
+                          }
+                          img.src = "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=600";
+                        }}
                       />
                       <div className="absolute bottom-0 inset-x-0 bg-navy/90 p-4 border-t border-gold text-center">
                         <span className="font-display text-lg text-white font-light tracking-wide">{presName}</span>
@@ -564,7 +577,7 @@ export default function Home({ navigate }: HomeProps) {
             const president = directors.find(d => d.level === 1) || directors.find(d => d.id === "humayun-kabir-robel") || directors[0];
             const vicePresidents = directors.filter(d => d.level === 2);
             const coreSecretariat = directors.filter(d => d.level === 3).sort((a,b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0));
-            const foundingDirectorsList = directors.filter(d => d.level === 4 || (d.level === undefined && d.id !== president.id && !vicePresidents.some(v => v.id === d.id) && !coreSecretariat.some(c => c.id === d.id))).sort((a,b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0));
+            const foundingDirectorsList = directors.filter(d => d.level === 4 || (d.level === undefined && d.id !== president.id && !vicePresidents.some(v => v.id === d.id) && !coreSecretariat.some(c => c.id === d.id))).sort((a,b) => a.name.localeCompare(b.name));
 
             return (
               <section key="board" className="py-24 px-6 bg-white border-y border-slate-100">

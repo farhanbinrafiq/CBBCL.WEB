@@ -26,7 +26,8 @@ export default function Board({ navigate }: BoardProps) {
   const president = level1Arr[0] || boardList.find((d) => d.id === "humayun-kabir-robel") || DIRECTORS_DATA[0];
   const vicePresident = level2Arr[0] || boardList.find((d) => d.id === "farhan-bin-rafiq") || DIRECTORS_DATA[1];
   const secretariatDirectors = level3Arr.length > 0 ? level3Arr : boardList.filter((d) => d.id === "syfuddin-khaled" || d.id === "arifur-rahman");
-  const foundingDirectors = level4Arr.length > 0 ? level4Arr : boardList.filter((d) => d.level === 4 || (d.id !== "humayun-kabir-robel" && d.id !== "farhan-bin-rafiq" && d.id !== "syfuddin-khaled" && d.id !== "arifur-rahman"));
+  const rawFounding = level4Arr.length > 0 ? level4Arr : boardList.filter((d) => d.level === 4 || (d.id !== "humayun-kabir-robel" && d.id !== "farhan-bin-rafiq" && d.id !== "syfuddin-khaled" && d.id !== "arifur-rahman"));
+  const foundingDirectors = [...rawFounding].sort((a, b) => a.name.localeCompare(b.name));
 
   const getPortrait = (dir: Director) => {
     return getDirectorPortrait(dir);
