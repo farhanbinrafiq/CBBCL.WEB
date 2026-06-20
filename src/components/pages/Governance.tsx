@@ -57,11 +57,11 @@ export default function Governance({ initialSection = "articles" }: GovernancePr
           />
           <div className="absolute inset-0 bg-navy/85 mix-blend-multiply"></div>
         </div>
-        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center space-y-3">
+        <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-3 overflow-hidden">
           <p className="font-sans text-[10px] tracking-[0.2em] text-gold uppercase font-semibold">
             Cox's Bazar Boat Club Ltd.
           </p>
-          <h1 className="font-display text-4xl sm:text-5xl font-extralight text-white tracking-tight">
+          <h1 className="font-display text-2xl sm:text-4xl md:text-5xl font-extralight text-white tracking-tight break-words whitespace-normal leading-tight">
             Club Governance & <span className="font-serif italic text-gold">Regulatory Framework</span>
           </h1>
           <div className="font-sans text-[11px] text-slate-400 flex items-center justify-center space-x-2">

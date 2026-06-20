@@ -169,9 +169,9 @@ export default function MembershipApplicationForm({ navigate }: MembershipApplic
           />
           <div className="absolute inset-0 bg-navy/90 mix-blend-multiply"></div>
         </div>
-        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center space-y-2">
+        <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-2 overflow-hidden">
           <Award className="w-8 h-8 text-gold mx-auto animate-pulse" />
-          <h1 className="font-display text-2xl sm:text-3xl font-extralight text-white tracking-tight">
+          <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-extralight text-white tracking-tight break-words whitespace-normal leading-tight">
             CBBCL <span className="font-serif italic text-gold font-normal">Admissions Nomination Portal</span>
           </h1>
           <p className="font-sans text-[10px] text-slate-400 uppercase tracking-widest">

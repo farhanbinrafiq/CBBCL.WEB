@@ -118,11 +118,11 @@ export default function NewsFeedDetail({ newsId, navigate }: NewsFeedDetailProps
           <BackgroundVideo src={MASTER_HERO_VIDEO} />
           <div className="absolute inset-0 bg-navy/85 mix-blend-multiply"></div>
         </div>
-        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center space-y-4">
+        <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-4 overflow-hidden">
           <p className="font-sans text-[10px] tracking-[0.25em] text-gold uppercase font-bold">
             {news.category} · OFFICIAL GAZETTE RELEASE
           </p>
-          <h1 className="font-display text-3xl sm:text-5xl font-light text-white tracking-tight leading-tight max-w-3xl mx-auto whitespace-pre-line">
+          <h1 className="font-display text-2xl sm:text-4xl md:text-5xl font-light text-white tracking-tight leading-tight max-w-3xl mx-auto whitespace-pre-line break-words">
             {news.title}
           </h1>
           <div className="font-sans text-xs text-slate-400 flex items-center justify-center space-x-2">

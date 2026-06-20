@@ -112,13 +112,13 @@ export default function EZBookingPortal({ navigate }: EZBookingPortalProps) {
         </button>
 
         {/* Brand Header */}
-        <div className="bg-gradient-to-r from-navy to-[#1e345e] p-8 border border-gold/30 rounded shadow-md text-white flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-2 text-center md:text-left">
-            <span className="inline-flex items-center space-x-1.5 text-[9px] font-mono tracking-widest text-gold uppercase font-extrabold bg-gold/10 px-2 py-1 rounded">
-              <Sparkles className="w-3.5 h-3.5 text-gold animate-pulse" />
-              <span>CBBCL Official OTA Portal Gateway</span>
+        <div className="bg-gradient-to-r from-navy to-[#1e345e] p-4 sm:p-8 border border-gold/30 rounded shadow-md text-white flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden max-w-full">
+          <div className="space-y-2 text-center md:text-left w-full max-w-full overflow-hidden">
+            <span className="inline-flex items-center space-x-1.5 text-[9px] font-mono tracking-widest text-gold uppercase font-extrabold bg-gold/10 px-2 py-1 rounded max-w-full break-words">
+              <Sparkles className="w-3.5 h-3.5 text-gold animate-pulse shrink-0" />
+              <span className="truncate">CBBCL Official OTA Portal Gateway</span>
             </span>
-            <h1 className="font-display text-4xl font-extralight tracking-tight text-white">
+            <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-extralight tracking-tight text-white break-words leading-tight">
               EZ<span className="text-gold font-bold font-serif italic">BOOKING</span>
             </h1>
             <p className="font-sans text-xs text-slate-300 font-light max-w-lg leading-relaxed">

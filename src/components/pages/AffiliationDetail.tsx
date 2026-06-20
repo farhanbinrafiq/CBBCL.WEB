@@ -193,7 +193,7 @@ export default function AffiliationDetail({ clubId, navigate }: AffiliationDetai
               src={MASTER_HERO_VIDEO}
             />
           </div>
-          <div className="relative z-10 max-w-5xl mx-auto space-y-4">
+          <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 space-y-4 overflow-hidden">
             
             <button
               onClick={() => navigate("/affiliations.html")}
@@ -212,7 +212,7 @@ export default function AffiliationDetail({ clubId, navigate }: AffiliationDetai
               </span>
             </div>
 
-            <h1 className="font-display text-3xl sm:text-4.5xl font-light text-white tracking-tight leading-tight">
+            <h1 className="font-display text-2xl sm:text-3xl md:text-4.5xl font-light text-white tracking-tight leading-tight break-words whitespace-normal">
               EZBOOKING OTA Partnership
             </h1>
 
@@ -460,7 +460,7 @@ export default function AffiliationDetail({ clubId, navigate }: AffiliationDetai
             src={MASTER_HERO_VIDEO}
           />
         </div>
-        <div className="relative z-10 max-w-5xl mx-auto space-y-4">
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 space-y-4 overflow-hidden">
           
           <button
             onClick={() => navigate("/affiliations.html")}
@@ -479,7 +479,7 @@ export default function AffiliationDetail({ clubId, navigate }: AffiliationDetai
             </span>
           </div>
 
-          <h1 className="font-display text-3xl sm:text-4.5xl font-light text-white tracking-tight leading-tight">
+          <h1 className="font-display text-2xl sm:text-3xl md:text-4.5xl font-light text-white tracking-tight leading-tight break-words whitespace-normal">
             {club.name}
           </h1>
 

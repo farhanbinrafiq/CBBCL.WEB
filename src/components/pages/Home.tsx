@@ -83,7 +83,7 @@ export default function Home({ navigate }: HomeProps) {
                   {h.overlayEnabled && <div className="absolute inset-0 bg-gradient-to-t from-navy via-transparent to-navy/50"></div>}
                 </div>
 
-                <div className="relative z-10 max-w-5xl mx-auto px-6 text-center text-white space-y-8">
+                <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 text-center text-white space-y-6 sm:space-y-8 overflow-hidden">
                   <motion.p
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -97,7 +97,7 @@ export default function Home({ navigate }: HomeProps) {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.9, delay: 0.2 }}
-                    className="font-display font-light uppercase tracking-tight text-white text-3xl sm:text-5xl md:text-7xl lg:text-8xl leading-none"
+                    className="font-display font-light uppercase tracking-tight text-white text-2xl sm:text-5xl md:text-7xl lg:text-8xl leading-tight sm:leading-none break-words whitespace-normal"
                   >
                     {h.title}
                   </motion.h1>
@@ -106,7 +106,7 @@ export default function Home({ navigate }: HomeProps) {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.4 }}
-                    className="max-w-2xl mx-auto font-sans text-xs sm:text-sm text-slate-300 font-light tracking-wide leading-relaxed"
+                    className="max-w-2xl mx-auto font-sans text-xs sm:text-sm text-slate-300 font-light tracking-wide leading-relaxed break-words whitespace-normal"
                   >
                     {h.subtitle}
                   </motion.p>

@@ -181,11 +181,11 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
           />
           <div className="absolute inset-0 bg-navy/85 mix-blend-multiply"></div>
         </div>
-        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center space-y-3">
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-3 overflow-hidden">
           <p className="font-sans text-[10px] tracking-[0.25em] text-gold uppercase font-bold">
             {isOnBoard ? "Estd. 2026 · Founding Executive Profile" : "Verified Registry · CBBCL Member Profile"}
           </p>
-          <h1 className="font-display text-4xl sm:text-6xl font-light text-white tracking-tight leading-none">
+          <h1 className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-white tracking-tight leading-tight break-words whitespace-normal">
             {director.name}
           </h1>
           <p className="text-gold-light font-sans text-sm sm:text-base font-semibold uppercase tracking-widest">
