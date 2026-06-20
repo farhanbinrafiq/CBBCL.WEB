@@ -213,19 +213,6 @@ export const NEWS_DATA: NewsPost[] = [
     commentsCount: 14
   },
   {
-    id: "1",
-    title: "Official Incorporation of Cox’s Bazar Boat Club Limited",
-    date: "June 05, 2026",
-    category: "News",
-    year: "2026",
-    month: "June",
-    excerpt: "Cox’s Bazar Boat Club Limited has been officially registered and incorporated under The Companies Act, 1994, as a premier private socio-cultural non-profit entity.",
-    content: "We are immensely proud to announce the formal registration and incorporation of Cox’s Bazar Boat Club Limited (CBBCL). Duly recognized by the Registrar of Joint Stock Companies and Firms (RJSC) under The Companies Act, 1994, Bangladesh, as a Company Limited by Guarantee, CBBCL is structuralized as an elite non-profit. This establishes our statutory foundation to deliver world-class nautical facilities, social spaces, and marine conservation programs to our exclusive members, setting a benchmark parallel to the prestigious historic clubs across South Asia.",
-    tags: ["incorporation", "legal", "official", "governance"],
-    likes: 124,
-    commentsCount: 18
-  },
-  {
     id: "2",
     title: "Welcome Message from Founding President Humayun Kabir Robel",
     date: "June 01, 2026",
@@ -238,6 +225,19 @@ export const NEWS_DATA: NewsPost[] = [
     image: PRESIDENT_IMAGE,
     likes: 245,
     commentsCount: 32
+  },
+  {
+    id: "1",
+    title: "Official Incorporation of Cox’s Bazar Boat Club Limited",
+    date: "June 05, 2026",
+    category: "News",
+    year: "2026",
+    month: "June",
+    excerpt: "Cox’s Bazar Boat Club Limited has been officially registered and incorporated under The Companies Act, 1994, as a premier private socio-cultural non-profit entity.",
+    content: "We are immensely proud to announce the formal registration and incorporation of Cox’s Bazar Boat Club Limited (CBBCL). Duly recognized by the Registrar of Joint Stock Companies and Firms (RJSC) under The Companies Act, 1994, Bangladesh, as a Company Limited by Guarantee, CBBCL is structuralized as an elite non-profit. This establishes our statutory foundation to deliver world-class nautical facilities, social spaces, and marine conservation programs to our exclusive members, setting a benchmark parallel to the prestigious historic clubs across South Asia.",
+    tags: ["incorporation", "legal", "official", "governance"],
+    likes: 124,
+    commentsCount: 18
   },
   {
     id: "3",

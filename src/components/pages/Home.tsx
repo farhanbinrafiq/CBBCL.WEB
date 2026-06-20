@@ -5,7 +5,7 @@ import { getPageContent, getCMSFacilities, getCMSEvents, getCMSAffiliations } fr
 import BoardProfileCard from "../BoardProfileCard";
 import CardMedia from "../CardMedia";
 import { getHomeLayoutCMS } from "../../utils/homeCmsStorage";
-import { ArrowRight, Quote, Calendar, MapPin, Mail, Phone, Clock, Anchor, Users, Shield, Award, Sparkles } from "lucide-react";
+import { ArrowRight, Quote, Calendar, MapPin, Mail, Phone, Clock, Anchor, Users, Shield, Award, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "motion/react";
 import { PRESIDENT_IMAGE, MASTER_HERO_VIDEO } from "../../data";
 import BackgroundVideo from "../BackgroundVideo";
@@ -19,6 +19,7 @@ interface HomeProps {
 export default function Home({ navigate }: HomeProps) {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formData, setFormData] = useState({ name: "", phone: "", email: "", message: "" });
+  const newsCarouselRef = React.useRef<HTMLDivElement>(null);
 
   const [cms, setCms] = useState(getPageContent());
   const [news, setNews] = useState(getNewsPosts());
@@ -490,7 +491,7 @@ export default function Home({ navigate }: HomeProps) {
           case "news": {
             const nc = homeCms.sections.news;
             if (!nc.enabled) return null;
-            const newsLimit = nc.limit || 3;
+            const newsLimit = nc.limit || 6;
             const catFilter = nc.categoryFilter || "All";
             
             const filteredNews = news.filter(p => {
@@ -501,73 +502,142 @@ export default function Home({ navigate }: HomeProps) {
               return isPublic && matchesCategory;
             });
             
-            const selectedNews = filteredNews.slice(0, newsLimit);
+            const selectedNews = filteredNews.slice(0, Math.max(newsLimit, 6));
+
+            const scrollLeft = () => {
+              if (newsCarouselRef.current) {
+                newsCarouselRef.current.scrollBy({ left: -380, behavior: "smooth" });
+              }
+            };
+            const scrollRight = () => {
+              if (newsCarouselRef.current) {
+                newsCarouselRef.current.scrollBy({ left: 380, behavior: "smooth" });
+              }
+            };
 
             return (
-              <section key="news" className="py-24 px-6 bg-bg-secondary border-b border-slate-100">
-                <div className="max-w-6xl mx-auto space-y-16">
-                  <div className="text-center space-y-3">
-                    <span className="font-sans text-[9px] font-semibold tracking-[0.25em] uppercase text-text-gold block">
-                      The Ocean Gazette
-                    </span>
-                    <h2 className="font-display text-3xl md:text-5xl font-light text-text-dark tracking-tight">
-                      Announcements & <span className="font-serif italic font-normal text-gold">Recent News Updates</span>
-                    </h2>
-                    <div className="w-16 h-[1px] bg-gold mx-auto"></div>
+              <section key="news" className="py-24 px-6 bg-bg-secondary border-b border-slate-100 overflow-hidden">
+                <div className="max-w-6xl mx-auto space-y-12">
+                  
+                  {/* Title & See All Header Row */}
+                  <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 border-b border-slate-100 pb-6 mb-4">
+                    <div className="space-y-2 text-left">
+                      <span className="font-sans text-[9px] font-semibold tracking-[0.25em] uppercase text-text-gold block">
+                        The Ocean Gazette
+                      </span>
+                      <h2 className="font-display text-3xl md:text-4xl font-light text-text-dark tracking-tight">
+                        Announcements & <span className="font-serif italic font-normal text-gold">Recent News Updates</span>
+                      </h2>
+                    </div>
+                    <div className="flex items-center space-x-6 shrink-0">
+                      <button
+                        onClick={() => navigate("/news-feed.html")}
+                        className="font-sans text-[11px] uppercase tracking-widest font-semibold text-navy hover:text-gold transition-colors cursor-pointer"
+                      >
+                        See All News →
+                      </button>
+                    </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {selectedNews.map((post) => (
-                      <div
-                        key={post.id}
-                        className="bg-white border border-slate-100 shadow-sm p-6 flex flex-col justify-between hover:shadow-lg transition-shadow rounded-xs h-96 animate-fade-in animate-duration-300"
-                      >
-                        <div className="space-y-4">
-                          <div className="flex justify-between items-center text-[10px] font-sans tracking-wider">
-                            <span className="text-gold uppercase font-semibold">{post.category}</span>
-                            <span className="text-slate-400">{post.date}</span>
+                  {/* Carousel Container */}
+                  <div className="relative group/carousel px-1">
+                    
+                    {/* Navigation Buttons */}
+                    <button
+                      onClick={scrollLeft}
+                      aria-label="Scroll left"
+                      className="absolute -left-4 md:-left-8 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-white border border-slate-100 shadow-md text-navy hover:text-gold hover:border-gold/40 transition-all cursor-pointer opacity-0 group-hover/carousel:opacity-100 pointer-events-auto shrink-0 md:flex hidden items-center justify-center"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                    </button>
+
+                    <button
+                      onClick={scrollRight}
+                      aria-label="Scroll right"
+                      className="absolute -right-4 md:-right-8 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-white border border-slate-100 shadow-md text-navy hover:text-gold hover:border-gold/40 transition-all cursor-pointer opacity-0 group-hover/carousel:opacity-100 pointer-events-auto shrink-0 md:flex hidden items-center justify-center"
+                    >
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+
+                    {/* Sliding Track */}
+                    <div
+                      ref={newsCarouselRef}
+                      className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-6 whitespace-nowrap"
+                      style={{
+                        scrollbarWidth: "none",
+                        msOverflowStyle: "none"
+                      }}
+                    >
+                      {selectedNews.map((post) => (
+                        <div
+                          key={post.id}
+                          onClick={() => navigate(`/news-feed/${post.id}.html`)}
+                          className="w-[85vw] sm:w-[48vw] md:w-[38vw] lg:w-[24rem] shrink-0 snap-start bg-white border border-slate-200/80 hover:border-gold/40 shadow-sm hover:shadow-md p-6 flex flex-col justify-between transition-all duration-300 rounded-sm h-[26rem] cursor-pointer group whitespace-normal"
+                        >
+                          <div className="space-y-4">
+                            <div className="flex justify-between items-center text-[10px] font-sans tracking-wider">
+                              <span className="text-gold uppercase font-semibold flex items-center space-x-1">
+                                <Anchor className="w-3 h-3 text-gold-dark shrink-0" />
+                                <span>{post.category}</span>
+                              </span>
+                              <span className="text-slate-400 font-light flex items-center space-x-1">
+                                <Calendar className="w-3.5 h-3.5 text-slate-300" />
+                                <span>{post.date}</span>
+                              </span>
+                            </div>
+
+                            <h3 className="font-display text-base font-semibold text-text-dark leading-snug line-clamp-2 group-hover:text-gold transition-colors duration-200 whitespace-pre-line">
+                              {post.title}
+                            </h3>
+
+                            {post.image ? (
+                              <div className="h-40 overflow-hidden rounded-xs bg-slate-50 border border-slate-100">
+                                <CardMedia
+                                  media={post.image}
+                                  alt={post.title}
+                                  className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500 saturate-75"
+                                />
+                              </div>
+                            ) : (
+                              <div className="h-40 bg-slate-50 rounded-xs flex items-center justify-center border border-dashed border-slate-200">
+                                <Anchor className="w-8 h-8 text-slate-300" />
+                              </div>
+                            )}
+
+                            <p className="font-sans text-[11px] text-text-body font-light line-clamp-3 leading-relaxed">
+                              {post.excerpt}
+                            </p>
                           </div>
 
-                          <h3 className="font-display text-lg font-medium text-text-dark leading-snug line-clamp-2">
-                            {post.title}
-                          </h3>
-
-                          {post.image && (
-                            <div className="h-28 overflow-hidden rounded-xs bg-slate-100">
-                              <CardMedia
-                                media={post.image}
-                                alt="News post visuals"
-                                className="w-full h-full object-cover filter saturate-75"
-                              />
-                            </div>
-                          )}
-
-                          <p className="font-sans text-[11px] text-text-body font-light line-clamp-3 leading-relaxed">
-                            {post.excerpt}
-                          </p>
+                          <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <span className="flex items-center space-x-1 font-sans text-[9px] font-semibold tracking-widest text-navy group-hover:text-gold uppercase transition-colors">
+                              <span>Read Full Gazette</span>
+                              <ArrowRight className="w-3 h-3" />
+                            </span>
+                          </div>
                         </div>
+                      ))}
+                    </div>
 
-                        <div className="pt-4 border-t border-slate-50">
-                          <button
-                            onClick={() => navigate("/news-feed.html")}
-                            className="flex items-center space-x-1 font-sans text-[9px] font-semibold tracking-widest text-[#1a2744] hover:text-gold uppercase transition-colors cursor-pointer"
-                          >
-                            <span>Read Full Post</span>
-                            <ArrowRight className="w-3 h-3" />
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                    {/* Touch Swipe Assist Cue (Mobile only layout indicator dots/swipe hint) */}
+                    <div className="md:hidden flex justify-center space-x-1.5 mt-2">
+                      <div className="w-8 h-1 rounded-full bg-gold/60"></div>
+                      <div className="w-2 h-1 rounded-full bg-slate-200"></div>
+                      <div className="w-2 h-1 rounded-full bg-slate-200"></div>
+                    </div>
+
                   </div>
 
-                  <div className="text-center pt-4">
+                  {/* See All Main Button */}
+                  <div className="text-center pt-2">
                     <button
                       onClick={() => navigate("/news-feed.html")}
-                      className="px-8 py-3 bg-[#1a2744] text-white font-sans text-[11px] uppercase tracking-widest font-semibold hover:bg-gold hover:text-navy transition-colors inline-block cursor-pointer"
+                      className="px-8 py-3 bg-[#1a2744] text-white font-sans text-[11px] uppercase tracking-widest font-semibold hover:bg-gold hover:text-navy transition-colors inline-block cursor-pointer shadow-sm rounded-xs"
                     >
                       Browse The Live News Feed
                     </button>
                   </div>
+
                 </div>
               </section>
             );

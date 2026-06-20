@@ -220,14 +220,22 @@ export function getNewsPosts(): NewsPost[] {
       const merged = [...parsed];
       for (const defaultPost of NEWS_DATA) {
         if (!merged.some((p) => p.id === defaultPost.id)) {
-          const defaultIndex = NEWS_DATA.indexOf(defaultPost);
-          if (defaultIndex === 0) {
-            merged.unshift(defaultPost);
-          } else {
-            merged.push(defaultPost);
-          }
+          merged.push(defaultPost);
         }
       }
+      
+      // Sort to prioritize and align default posts according to their index in NEWS_DATA, with custom posts following after
+      merged.sort((a, b) => {
+        const idxA = NEWS_DATA.findIndex((nd) => nd.id === a.id);
+        const idxB = NEWS_DATA.findIndex((nd) => nd.id === b.id);
+        if (idxA !== -1 && idxB !== -1) {
+          return idxA - idxB;
+        }
+        if (idxA !== -1) return -1;
+        if (idxB !== -1) return 1;
+        return 0;
+      });
+
       // Save it back to local storage if merged length is different
       if (merged.length !== parsed.length) {
         safeLocalSet(NEWS_POSTS_KEY, JSON.stringify(merged));
