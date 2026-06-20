@@ -43,7 +43,7 @@ export interface NewsPost {
   id: string;
   title: string;
   date: string;
-  category: "Events" | "News" | "Announcements" | "Sports" | "Cultural" | "CSR" | "Governance";
+  category: "Events" | "News" | "Announcements" | "Sports" | "Cultural" | "CSR" | "Governance" | "Official Gazette Release";
   year: string;
   month: string; // e.g., "June", "January"
   excerpt: string;

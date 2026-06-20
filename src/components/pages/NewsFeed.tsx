@@ -81,7 +81,7 @@ export default function NewsFeed({ navigate }: NewsFeedProps) {
     });
   };
 
-  const categories = ["All", "News", "Announcements", "Governance", "CSR", "Sports", "Cultural", "Events"];
+  const categories = ["All", "Official Gazette Release", "News", "Announcements", "Governance", "CSR", "Sports", "Cultural", "Events"];
 
   // Filter and search logic
   const filteredPosts = newsList.filter((post) => {
@@ -221,7 +221,7 @@ export default function NewsFeed({ navigate }: NewsFeedProps) {
                       <div className="h-10 border-b border-dashed border-slate-200"></div>
                     )}
 
-                    <h3 className="font-display text-base font-semibold text-text-dark leading-snug line-clamp-2">
+                    <h3 className="font-display text-base font-semibold text-text-dark leading-snug line-clamp-2 whitespace-pre-line">
                       {post.title}
                     </h3>
 

@@ -122,7 +122,7 @@ export default function NewsFeedDetail({ newsId, navigate }: NewsFeedDetailProps
           <p className="font-sans text-[10px] tracking-[0.25em] text-gold uppercase font-bold">
             {news.category} · OFFICIAL GAZETTE RELEASE
           </p>
-          <h1 className="font-display text-3xl sm:text-5xl font-light text-white tracking-tight leading-tight max-w-3xl mx-auto">
+          <h1 className="font-display text-3xl sm:text-5xl font-light text-white tracking-tight leading-tight max-w-3xl mx-auto whitespace-pre-line">
             {news.title}
           </h1>
           <div className="font-sans text-xs text-slate-400 flex items-center justify-center space-x-2">

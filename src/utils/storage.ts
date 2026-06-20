@@ -216,11 +216,34 @@ export function getNewsPosts(): NewsPost[] {
     }
     const parsed = JSON.parse(data);
     if (Array.isArray(parsed)) {
-      // Map to ensure actual image URLs from NEWS_DATA of corresponding posts are preserved
-      return parsed.map((post: NewsPost) => {
+      // Merge: any post hardcoded in NEWS_DATA that is missing in localStorage's parsed is added
+      const merged = [...parsed];
+      for (const defaultPost of NEWS_DATA) {
+        if (!merged.some((p) => p.id === defaultPost.id)) {
+          const defaultIndex = NEWS_DATA.indexOf(defaultPost);
+          if (defaultIndex === 0) {
+            merged.unshift(defaultPost);
+          } else {
+            merged.push(defaultPost);
+          }
+        }
+      }
+      // Save it back to local storage if merged length is different
+      if (merged.length !== parsed.length) {
+        safeLocalSet(NEWS_POSTS_KEY, JSON.stringify(merged));
+      }
+      // Map to ensure actual values from NEWS_DATA of corresponding posts are preserved
+      return merged.map((post: NewsPost) => {
         const corresponding = NEWS_DATA.find((nd) => nd.id === post.id);
         if (corresponding) {
-          return { ...post, image: corresponding.image };
+          return { 
+            ...post, 
+            image: corresponding.image,
+            title: corresponding.title,
+            category: corresponding.category,
+            content: corresponding.content,
+            excerpt: corresponding.excerpt
+          };
         }
         return post;
       });

@@ -199,6 +199,20 @@ export const FACILITIES_DATA: Facility[] = [
 
 export const NEWS_DATA: NewsPost[] = [
   {
+    id: "gazette-niigata-2026",
+    title: "📰 NEWS · OFFICIAL GAZETTE RELEASE\nEsteemed Sponsorship Announcement — Cox’s Bazar Boat Club Ltd.",
+    date: "June 20, 2026",
+    category: "Official Gazette Release",
+    year: "2026",
+    month: "June",
+    excerpt: "The Cox’s Bazar Boat Club Ltd. (CBBCL) is proud to formally announce its esteemed sponsorship engagement with JCI Bangladesh during the ASPAC 2026 gathering in Niigata, Japan.",
+    content: "The Cox’s Bazar Boat Club Ltd. (CBBCL) is proud to formally announce its esteemed sponsorship engagement with JCI Bangladesh during the prestigious international gathering at NIIGATA, Japan, held in conjunction with the JCI Asia-Pacific Conference (ASPAC) 2026.\n\nThis milestone reflects the Club’s continued commitment to fostering international cooperation, youth leadership development, and global networking across the Asia-Pacific region. The partnership highlights Bangladesh’s growing presence on the international stage, particularly in platforms that promote leadership excellence, entrepreneurship, and cross-cultural collaboration.\n\nThrough this sponsorship, Cox’s Bazar Boat Club Ltd. reinforces its dedication to supporting initiatives that connect Bangladesh with the global JCI community, strengthening diplomatic and organizational ties beyond borders.\n\nThe Club extends its sincere appreciation to JCI Bangladesh for representing the nation at such a prestigious international forum and for advancing Bangladesh’s visibility at ASPAC 2026 in Niigata, Japan.\n\nThis collaboration stands as a testament to shared values of leadership, service, and global unity.",
+    tags: ["sponsorship", "gazette", "jci", "niigata", "aspac"],
+    image: "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781952035/CBBCL_sponsor_chlygi.jpg",
+    likes: 312,
+    commentsCount: 14
+  },
+  {
     id: "1",
     title: "Official Incorporation of Cox’s Bazar Boat Club Limited",
     date: "June 05, 2026",
