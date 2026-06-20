@@ -167,11 +167,11 @@ export default function NewsFeedDetail({ newsId, navigate }: NewsFeedDetailProps
 
           {/* Large Cover Image */}
           {news.image && (
-            <div className="w-full max-h-[450px] overflow-hidden rounded-xs border border-slate-100 bg-slate-50">
+            <div className="w-full overflow-hidden rounded-xs border border-slate-200 bg-slate-50/50 flex items-center justify-center py-4 my-2">
               <CardMedia
                 media={news.image}
                 alt={news.title}
-                className="w-full h-full object-contain filter brightness-95 saturate-100"
+                className="w-full md:max-w-[95%] h-auto max-h-[700px] object-contain filter brightness-95 saturate-100 rounded-xs shadow-sm transition-all duration-300"
               />
             </div>
           )}

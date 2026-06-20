@@ -200,7 +200,7 @@ export const FACILITIES_DATA: Facility[] = [
 export const NEWS_DATA: NewsPost[] = [
   {
     id: "gazette-niigata-2026",
-    title: "📰 NEWS · OFFICIAL GAZETTE RELEASE\nEsteemed Sponsorship Announcement — Cox’s Bazar Boat Club Ltd.",
+    title: "Esteemed Sponsorship Announcement — Cox’s Bazar Boat Club Ltd.",
     date: "June 20, 2026",
     category: "Official Gazette Release",
     year: "2026",
