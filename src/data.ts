@@ -5,6 +5,10 @@ export const AK_RUBEL_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload
 export const MAIMUNAL_KARIM_JISAN_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781894886/IMG-20260619-WA0013_edit_31000412747443_t2sefa.jpg";
 export const MD_IMRAN_ALAM_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781893293/white_bg_20260620_001621_0000_lzshvp.png";
 export const MD_REZAUL_KABIR_REZA_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781895223/white_bg_20260620_005151_0000_geiljj.png";
+export const MD_ZIAUL_HAQUE = {
+  name: "MD. Ziaul Haque",
+  image: "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781934394/white_bg_on1dfi.png"
+};
 export const MASTER_HERO_VIDEO = "https://res.cloudinary.com/djdyqr8yd/video/upload/v1781881396/14818372_3840_2160_24fps_pa7yjz.mp4";
 
 export const DIRECTORS_DATA: Director[] = [
@@ -121,7 +125,7 @@ export const DIRECTORS_DATA: Director[] = [
   },
   {
     id: "ziaul-haque",
-    name: "Ziaul Haque",
+    name: MD_ZIAUL_HAQUE.name,
     designation: "Founding Director",
     membershipCode: "CBBCL-FOUNDER-014"
   },

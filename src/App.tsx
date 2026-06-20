@@ -16,6 +16,7 @@ import Governance from "./components/pages/Governance";
 import Board from "./components/pages/Board";
 import BoardProfile from "./components/pages/BoardProfile";
 import NewsFeed from "./components/pages/NewsFeed";
+import NewsFeedDetail from "./components/pages/NewsFeedDetail";
 import Events from "./components/pages/Events";
 import Affiliations from "./components/pages/Affiliations";
 import Contact from "./components/pages/Contact";
@@ -81,6 +82,7 @@ export default function App() {
         validPaths.includes(pathname) ||
         pathname === "/members.html" ||
         pathname.startsWith("/members/") ||
+        pathname.startsWith("/news-feed/") ||
         (pathname.startsWith("/board/") && pathname.endsWith(".html")) ||
         (pathname.startsWith("/profile/") && pathname.endsWith(".html"))
       ) {
@@ -234,6 +236,12 @@ export default function App() {
       const clubId = filePart.endsWith(".html") ? filePart.slice(0, -5) : filePart;
       return <AffiliationDetail clubId={clubId} navigate={navigate} />;
     }
+    if (currentPath.startsWith("/news-feed/") && currentPath !== "/news-feed.html") {
+      const parts = currentPath.split("/");
+      const filePart = parts[parts.length - 1];
+      const newsId = filePart.endsWith(".html") ? filePart.slice(0, -5) : filePart;
+      return <NewsFeedDetail newsId={newsId} navigate={navigate} />;
+    }
 
     switch (currentPath) {
       case "/":
@@ -252,7 +260,7 @@ export default function App() {
       case "/board.html":
         return <Board navigate={navigate} />;
       case "/news-feed.html":
-        return <NewsFeed />;
+        return <NewsFeed navigate={navigate} />;
       case "/events.html":
         return <Events />;
       case "/affiliations.html":

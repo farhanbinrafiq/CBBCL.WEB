@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { getNewsPosts } from "../../utils/storage";
-import { NewsPost } from "../../types";
+import { NewsPost, RoutePath } from "../../types";
 import CardMedia from "../CardMedia";
 import { Search, Heart, MessageSquare, Tag, X, Send, Calendar, Anchor, ShieldAlert } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { MASTER_HERO_VIDEO } from "../../data";
 import BackgroundVideo from "../BackgroundVideo";
 
-export default function NewsFeed() {
+interface NewsFeedProps {
+  navigate: (path: RoutePath) => void;
+}
+
+export default function NewsFeed({ navigate }: NewsFeedProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const [activePost, setActivePost] = useState<NewsPost | null>(null);
   const [newsList, setNewsList] = useState<NewsPost[]>([]);
   
   // Local state to simulate interactive likes and comments for the 12 posts
@@ -21,13 +24,29 @@ export default function NewsFeed() {
     setNewsList(list);
 
     const initialStates = list.reduce((acc, p) => {
+      let likesVal = p.likes;
+      let commentsVal = [
+        { author: "Kazi Farhan (Founder VP)", text: "This is indeed an outstanding hallmark. Proud of the board's dedication.", date: "June 06" },
+        { author: "Zafar Chowdury (Life Member)", text: "Magnificent progress! Can't wait for the Clubhouse opening.", date: "June 05" }
+      ].slice(0, p.id === "1" ? 2 : 1);
+      let likedVal = false;
+
+      try {
+        const stored = localStorage.getItem(`cbbcl_news_eng_${p.id}`);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          likesVal = parsed.likes ?? p.likes;
+          commentsVal = parsed.comments ?? commentsVal;
+          likedVal = parsed.liked ?? false;
+        }
+      } catch (e) {
+        // Fallback
+      }
+
       acc[p.id] = {
-        likes: p.likes,
-        liked: false,
-        comments: [
-          { author: "Kazi Farhan (Founder VP)", text: "This is indeed an outstanding hallmark. Proud of the board's dedication.", date: "June 06" },
-          { author: "Zafar Chowdury (Life Member)", text: "Magnificent progress! Can't wait for the Clubhouse opening.", date: "June 05" }
-        ].slice(0, p.id === "1" ? 2 : 1)
+        likes: likesVal,
+        liked: likedVal,
+        comments: commentsVal
       };
       return acc;
     }, {} as Record<string, { likes: number; liked: boolean; comments: { author: string; text: string; date: string }[] }>);
@@ -35,46 +54,31 @@ export default function NewsFeed() {
     setPostsState(initialStates);
   }, []);
 
-  const [newCommentName, setNewCommentName] = useState("");
-  const [newCommentText, setNewCommentText] = useState("");
-
   const handleLike = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation(); // Avoid opening modal when clicking like
+    e.stopPropagation(); // Avoid triggering card navigation
     setPostsState((prev) => {
-      const isLiked = prev[id]?.liked || false;
+      const current = prev[id] || { likes: 0, liked: false, comments: [] };
+      const isLiked = current.liked;
+      const nextLikes = isLiked ? current.likes - 1 : current.likes + 1;
+      const nextLiked = !isLiked;
+      
+      const updatedState = {
+        ...current,
+        liked: nextLiked,
+        likes: nextLikes
+      };
+
+      try {
+        localStorage.setItem(`cbbcl_news_eng_${id}`, JSON.stringify(updatedState));
+      } catch (err) {
+        console.error(err);
+      }
+
       return {
         ...prev,
-        [id]: {
-          ...prev[id],
-          liked: !isLiked,
-          likes: isLiked ? (prev[id]?.likes || 1) - 1 : (prev[id]?.likes || 0) + 1
-        }
+        [id]: updatedState
       };
     });
-  };
-
-  const submitComment = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (activePost && newCommentName.trim() && newCommentText.trim()) {
-      const postId = activePost.id;
-      const dateStr = "Today";
-      const newComment = {
-        author: newCommentName.trim(),
-        text: newCommentText.trim(),
-        date: dateStr
-      };
-
-      setPostsState((prev) => ({
-        ...prev,
-        [postId]: {
-          ...prev[postId],
-          comments: [...(prev[postId]?.comments || []), newComment]
-        }
-      }));
-
-      setNewCommentText("");
-      setNewCommentName("");
-    }
   };
 
   const categories = ["All", "News", "Announcements", "Governance", "CSR", "Sports", "Cultural", "Events"];
@@ -115,7 +119,7 @@ export default function NewsFeed() {
           </h1>
           <div className="font-sans text-[11px] text-slate-400 flex items-center justify-center space-x-2">
             <span>Home</span>
-            <span>&gt;</span>
+            <span className="text-white/35">▪</span>
             <span className="text-gold">Club Gazette</span>
           </div>
         </div>
@@ -188,7 +192,7 @@ export default function NewsFeed() {
               return (
                 <div
                   key={post.id}
-                  onClick={() => setActivePost(post)}
+                  onClick={() => navigate(`/news-feed/${post.id}.html`)}
                   className="bg-white border border-slate-200 hover:border-gold/60 p-6 flex flex-col justify-between h-[440px] shadow-sm hover:shadow-xl transition-all duration-300 rounded-sm cursor-pointer group"
                 >
                   <div className="space-y-4">
@@ -226,30 +230,38 @@ export default function NewsFeed() {
                     </p>
                   </div>
 
-                  {/* Comments/likes bar footer */}
-                  <div className="pt-4 border-t border-slate-100 flex justify-between items-center text-[10px] font-sans">
-                    {/* Tags block */}
-                    <div className="flex items-center space-x-1.5 text-text-light truncate max-w-[140px]">
-                      <Tag className="w-3 h-3 text-gold-dark shrink-0" />
-                      <span className="truncate uppercase text-[8px] font-bold">{post.tags[0]}</span>
+                  <div className="space-y-3">
+                    {/* View News Link */}
+                    <div className="text-[10px] font-sans font-bold text-navy group-hover:text-gold transition-colors duration-200 capitalize flex items-center space-x-1">
+                      <span>Read Gazette Release</span>
+                      <span>→</span>
                     </div>
 
-                    <div className="flex items-center space-x-4">
-                      {/* Interactive Like toggle */}
-                      <button
-                        onClick={(e) => handleLike(post.id, e)}
-                        className={`flex items-center space-x-1 px-1.5 py-0.5 rounded-sm transition-colors ${
-                          hasLiked ? "text-rose-600 bg-rose-50" : "text-slate-400 hover:text-rose-600"
-                        }`}
-                      >
-                        <Heart className="w-3.5 h-3.5 fill-current" />
-                        <span>{localLikes}</span>
-                      </button>
+                    {/* Comments/likes bar footer */}
+                    <div className="pt-3 border-t border-slate-100 flex justify-between items-center text-[10px] font-sans">
+                      {/* Tags block */}
+                      <div className="flex items-center space-x-1.5 text-text-light truncate max-w-[140px]">
+                        <Tag className="w-3 h-3 text-gold-dark shrink-0" />
+                        <span className="truncate uppercase text-[8px] font-bold">{post.tags[0]}</span>
+                      </div>
 
-                      {/* Comments count indicator */}
-                      <div className="flex items-center space-x-1 text-slate-400">
-                        <MessageSquare className="w-3.5 h-3.5" />
-                        <span>{totalComments}</span>
+                      <div className="flex items-center space-x-4">
+                        {/* Interactive Like toggle */}
+                        <button
+                          onClick={(e) => handleLike(post.id, e)}
+                          className={`flex items-center space-x-1 px-1.5 py-0.5 rounded-sm transition-colors ${
+                            hasLiked ? "text-rose-600 bg-rose-50" : "text-slate-400 hover:text-rose-600"
+                          }`}
+                        >
+                          <Heart className="w-3.5 h-3.5 fill-current" />
+                          <span>{localLikes}</span>
+                        </button>
+
+                        {/* Comments count indicator */}
+                        <div className="flex items-center space-x-1 text-slate-400">
+                          <MessageSquare className="w-3.5 h-3.5" />
+                          <span>{totalComments}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -259,123 +271,6 @@ export default function NewsFeed() {
           </div>
         )}
       </section>
-
-      {/* Detailed Full Post Pop-up Modal */}
-      <AnimatePresence>
-        {activePost && (
-          <div className="fixed inset-0 bg-navy/80 z-50 flex items-center justify-center p-4 backdrop-blur-md overflow-y-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 30 }}
-              className="bg-white border border-gold w-full max-w-2xl max-h-[85vh] overflow-y-auto relative rounded-sm shadow-2xl p-6 md:p-8 space-y-6"
-            >
-              {/* Close Button Modal info */}
-              <button
-                onClick={() => { setActivePost(null); setNewCommentName(""); setNewCommentText(""); }}
-                className="absolute top-4 right-4 p-1 rounded-full text-slate-400 hover:text-gold hover:bg-slate-50 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              {/* Title & header metadata */}
-              <div className="space-y-2 border-b border-slate-100 pb-4">
-                <div className="flex items-center space-x-2 text-gold">
-                  <Anchor className="w-4 h-4" />
-                  <span className="font-sans text-[9px] uppercase font-bold tracking-widest mt-0.5">
-                    {activePost.category} · OFFICIAL GAZETTE RELEASE
-                  </span>
-                </div>
-                <h2 className="font-display text-2xl md:text-3xl text-text-dark font-light leading-tight">
-                  {activePost.title}
-                </h2>
-                <p className="font-sans text-[10px] text-text-light uppercase tracking-widest mt-1">
-                  Registered: {activePost.date} by CBBCL Registry Board
-                </p>
-              </div>
-
-              {/* Cover layout inside Modal */}
-              {activePost.image && (
-                <div className="h-64 overflow-hidden rounded-xs border border-slate-100 bg-slate-50">
-                  <CardMedia
-                    media={activePost.image}
-                    alt="Cover banner details"
-                    className="w-full h-full object-cover filter brightness-95 saturate-100"
-                  />
-                </div>
-              )}
-
-              {/* Content body layout */}
-              <div className="font-sans text-xs sm:text-[13px] text-text-body font-light leading-relaxed tracking-wide space-y-4 border-b border-slate-100 pb-6">
-                <p className="font-bold text-navy">{activePost.excerpt}</p>
-                <p className="whitespace-pre-line">{activePost.content}</p>
-              </div>
-
-              {/* Interactive Engagement Comments Section */}
-              <div className="space-y-6 pt-2">
-                <h4 className="font-display text-lg text-text-dark font-bold uppercase tracking-wider flex items-center space-x-2">
-                  <MessageSquare className="w-4.5 h-4.5 text-gold" />
-                  <span>Interactive Member Commentary</span>
-                </h4>
-
-                {/* Submissions form of comment */}
-                <form onSubmit={submitComment} className="bg-slate-50 p-4 border border-slate-205 rounded-xs space-y-3">
-                  <span className="block text-[8px] font-sans text-slate-400 font-bold uppercase tracking-widest">
-                    Post Member Feedback
-                  </span>
-                  
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <input
-                      type="text"
-                      required
-                      value={newCommentName}
-                      onChange={(e) => setNewCommentName(e.target.value)}
-                      placeholder="Your Name (or member code)"
-                      className="bg-white border border-slate-200 px-3 py-2 text-xs outline-none focus:border-gold"
-                    />
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        required
-                        value={newCommentText}
-                        onChange={(e) => setNewCommentText(e.target.value)}
-                        placeholder="Write your constructive message..."
-                        className="bg-white border border-slate-200 px-3 py-2 text-xs outline-none focus:border-gold flex-grow"
-                      />
-                      <button
-                        type="submit"
-                        className="bg-navy hover:bg-gold hover:text-navy text-white px-4 rounded-xs transition-colors"
-                      >
-                        <Send className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                </form>
-
-                {/* Existing comments trail */}
-                <div className="space-y-3">
-                  {(postsState[activePost.id]?.comments || []).length === 0 ? (
-                    <p className="text-center font-sans text-[10px] text-text-light italic">No commentary posted yet. Share your thoughts above.</p>
-                  ) : (
-                    (postsState[activePost.id]?.comments || []).map((comm, cIdx) => (
-                      <div key={cIdx} className="p-3.5 bg-white border border-slate-100 rounded-sm space-y-1">
-                        <div className="flex justify-between items-center text-[9px] font-sans">
-                          <span className="text-navy font-semibold">{comm.author}</span>
-                          <span className="text-slate-400">{comm.date}</span>
-                        </div>
-                        <p className="font-sans text-[11px] text-slate-700 leading-relaxed font-light">
-                          {comm.text}
-                        </p>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

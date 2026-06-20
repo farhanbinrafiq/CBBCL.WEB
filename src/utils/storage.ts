@@ -1,5 +1,5 @@
 import { User, Profile, Director, NewsPost } from "../types";
-import { DIRECTORS_DATA, NEWS_DATA, PRESIDENT_IMAGE, AK_RUBEL_IMAGE, MAIMUNAL_KARIM_JISAN_IMAGE, MD_IMRAN_ALAM_IMAGE, MD_REZAUL_KABIR_REZA_IMAGE } from "../data";
+import { DIRECTORS_DATA, NEWS_DATA, PRESIDENT_IMAGE, AK_RUBEL_IMAGE, MAIMUNAL_KARIM_JISAN_IMAGE, MD_IMRAN_ALAM_IMAGE, MD_REZAUL_KABIR_REZA_IMAGE, MD_ZIAUL_HAQUE } from "../data";
 
 const USERS_KEY = "cbbcl_users";
 const PROFILES_KEY = "cbbcl_profiles";
@@ -273,7 +273,7 @@ const DEFAULT_PORTRAITS: Record<string, string> = {
   "mohammed-elias": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ELS.png",
   "md-yousuf": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/YSF.png",
   "nurul-absar": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/NRA.png",
-  "ziaul-haque": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ZUQ.png",
+  "ziaul-haque": MD_ZIAUL_HAQUE.image,
   "reshedul-evu": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=600"
 };
 

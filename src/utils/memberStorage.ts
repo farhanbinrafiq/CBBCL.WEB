@@ -1,5 +1,5 @@
 import { ClubMember, MembershipApplication, AffiliationRequest, EZBookingReservation } from "../types";
-import { PRESIDENT_IMAGE, AK_RUBEL_IMAGE, MD_IMRAN_ALAM_IMAGE } from "../data";
+import { PRESIDENT_IMAGE, AK_RUBEL_IMAGE, MD_IMRAN_ALAM_IMAGE, MD_ZIAUL_HAQUE } from "../data";
 
 const MEMBERS_KEY = "cbbcl_club_members";
 const APPLICATIONS_KEY = "cbbcl_membership_applications";
@@ -370,7 +370,7 @@ const GLOBAL_AVATARS: Record<string, string> = {
   "mehedi-hasan": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/MHD.png",
   "nurul-absar": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/NRA.png",
   "syfuddin-khaled": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/SFK.png",
-  "ziaul-haque": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ZUQ.png",
+  "ziaul-haque": MD_ZIAUL_HAQUE.image,
   "md-yousuf": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/YSF.png"
 };
 

@@ -220,11 +220,6 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
 
                 return (
                   <div key={item.label} className="flex items-center">
-                    {idx > 0 && (
-                      <span className="text-[10px] xl:text-[10px] 2xl:text-[11px] text-white/30 font-semibold px-1 lg:px-1.5 select-none">
-                        &gt;
-                      </span>
-                    )}
                     <div
                       className="relative group py-2"
                       onMouseEnter={() => setActiveDropdown(item.label)}
@@ -316,11 +311,6 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
 
                     return (
                       <div key={item.label} className="flex items-center">
-                        {idx > 0 && (
-                          <span className="text-[10px] xl:text-[10px] 2xl:text-[11px] text-white/30 font-semibold px-1 lg:px-1.5 select-none">
-                            &gt;
-                          </span>
-                        )}
                         <div
                           className="relative group py-2"
                           onMouseEnter={() => setActiveDropdown(item.label)}
@@ -358,15 +348,10 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                   })}
                 </nav>
 
-                {/* Separator before Auth buttons on desktop */}
-                <span className="text-[10px] xl:text-[10px] 2xl:text-[11px] text-white/30 font-semibold px-1 lg:px-1.5 select-none font-sans">
-                  &gt;
-                </span>
-
                 {/* CTA Member Button for Desktop */}
-                <div className="flex items-center whitespace-nowrap shrink-0 lg:pr-0">
+                <div className="flex items-center whitespace-nowrap shrink-0 lg:pr-0 pl-3">
                   {currentUser ? (
-                    <div className="flex items-center whitespace-nowrap">
+                    <div className="flex items-center whitespace-nowrap space-x-2">
                       <button
                         onClick={() => handleNavClick(currentUser.role === "admin" ? "/admin-dashboard.html" : "/dashboard.html")}
                         className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold py-1 px-1 xl:px-1 2xl:px-2 transition-colors text-[10px] xl:text-[10px] 2xl:text-[11px] font-sans font-bold uppercase tracking-widest flex items-center space-x-1 text-center whitespace-nowrap shrink-0" /* LAYOUT FIX */
@@ -374,9 +359,6 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                         <UserCheck className="w-3.5 h-3.5" />
                         <span className="whitespace-nowrap">{currentUser.role === "admin" ? "Admin Terminal" : "My Console"}</span>
                       </button>
-                      <span className="text-[10px] xl:text-[10px] 2xl:text-[11px] text-white/30 font-semibold px-1 lg:px-1.5 select-none">
-                        &gt;
-                      </span>
                       <button
                         onClick={() => {
                           if (onLogout) onLogout();
@@ -388,7 +370,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                       </button>
                     </div>
                   ) : (
-                    <div className="flex items-center whitespace-nowrap">
+                    <div className="flex items-center whitespace-nowrap space-x-2">
                       <button
                         onClick={() => handleNavClick("/login.html" as RoutePath)}
                         className="text-white hover:text-gold px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] xl:text-[10px] 2xl:text-[11px] font-bold uppercase tracking-wider flex items-center space-x-1 whitespace-nowrap transition-colors" /* LAYOUT FIX */
@@ -396,9 +378,6 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                         <LogIn className="w-3.5 h-3.5 mt-0.5 text-gold shrink-0" />
                         <span className="whitespace-nowrap">Sign In</span>
                       </button>
-                      <span className="text-[10px] xl:text-[10px] 2xl:text-[11px] text-white/30 font-semibold px-1 lg:px-1.5 select-none">
-                        &gt;
-                      </span>
                       <button
                         onClick={() => handleNavClick("/membership.html" as RoutePath)}
                         className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold-light px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] xl:text-[10px] 2xl:text-[11px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap" /* LAYOUT FIX */
