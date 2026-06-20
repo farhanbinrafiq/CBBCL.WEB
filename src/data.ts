@@ -5,8 +5,9 @@ export const AK_RUBEL_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload
 export const MAIMUNAL_KARIM_JISAN_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781894886/IMG-20260619-WA0013_edit_31000412747443_t2sefa.jpg";
 export const MD_IMRAN_ALAM_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781893293/white_bg_20260620_001621_0000_lzshvp.png";
 export const MD_REZAUL_KABIR_REZA_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781895223/white_bg_20260620_005151_0000_geiljj.png";
-export const MD_ZIAUL_HAQUE = {
-  name: "MD. Ziaul Haque",
+export const MEHEDI_HASAN_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781945122/IMG_1928_l2m81l.jpg";
+export const MD_ZIAUL_HOQUE = {
+  name: "MD. Ziaul Hoque",
   image: "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781934394/white_bg_on1dfi.png"
 };
 export const MASTER_HERO_VIDEO = "https://res.cloudinary.com/djdyqr8yd/video/upload/v1781881396/14818372_3840_2160_24fps_pa7yjz.mp4";
@@ -125,7 +126,7 @@ export const DIRECTORS_DATA: Director[] = [
   },
   {
     id: "ziaul-haque",
-    name: MD_ZIAUL_HAQUE.name,
+    name: MD_ZIAUL_HOQUE.name,
     designation: "Founding Director",
     membershipCode: "CBBCL-FOUNDER-014"
   },
@@ -220,7 +221,7 @@ export const NEWS_DATA: NewsPost[] = [
     excerpt: "On our founding month, President Humayun Kabir Robel shares his bold vision for the future of nautical leisure and membership prestige at CBBCL.",
     content: "Dear Founding Members and Guests, as we embark on this exciting journey, I welcome you to Cox’s Bazar Boat Club Limited. Our club represents more than just a leisure resort. It is a long-awaited vision to anchor the elite social, maritime, and philanthropic networks of Bangladesh on the longest natural sea beach in the world. CBBCL will act as a luxurious maritime haven that promotes yachting, water sports, and environmental preservation while fostering tight-knit camaraderie. Our board is committed to developing state-of-the-art facilities and securing reciprocal arrangements with elite global clubs.",
     tags: ["president", "welcome", "vision", "cbbcl"],
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=600",
+    image: PRESIDENT_IMAGE,
     likes: 245,
     commentsCount: 32
   },

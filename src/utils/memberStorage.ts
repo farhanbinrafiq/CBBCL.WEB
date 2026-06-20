@@ -1,5 +1,5 @@
 import { ClubMember, MembershipApplication, AffiliationRequest, EZBookingReservation } from "../types";
-import { PRESIDENT_IMAGE, AK_RUBEL_IMAGE, MD_IMRAN_ALAM_IMAGE, MD_ZIAUL_HAQUE } from "../data";
+import { PRESIDENT_IMAGE, AK_RUBEL_IMAGE, MD_IMRAN_ALAM_IMAGE, MEHEDI_HASAN_IMAGE, MD_ZIAUL_HOQUE } from "../data";
 
 const MEMBERS_KEY = "cbbcl_club_members";
 const APPLICATIONS_KEY = "cbbcl_membership_applications";
@@ -177,7 +177,7 @@ const DEFAULT_MEMBERS: ClubMember[] = [
     bio: "Mehedi Hasan is a young watersports developer and trainer specializing in powerboat maneuvers and recreational jet-ski guidelines.",
     achievements: "Awarded cox's bazar safety medal for coastal lifesaver training; Certified diving master.",
     clubInvolvement: "Assistant safety officer for recreational sea sport clinics.",
-    avatarUrl: "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/MHD.png",
+    avatarUrl: MEHEDI_HASAN_IMAGE,
     category: "General Member",
     roleType: "RegularMember"
   },
@@ -367,10 +367,10 @@ const GLOBAL_AVATARS: Record<string, string> = {
   "arifur-rahman": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ARF.png",
   "amzad-mahmud": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/AZM.png",
   "mohammed-elias": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ELS.png",
-  "mehedi-hasan": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/MHD.png",
+  "mehedi-hasan": MEHEDI_HASAN_IMAGE,
   "nurul-absar": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/NRA.png",
   "syfuddin-khaled": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/SFK.png",
-  "ziaul-haque": MD_ZIAUL_HAQUE.image,
+  "ziaul-haque": MD_ZIAUL_HOQUE.image,
   "md-yousuf": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/YSF.png"
 };
 
