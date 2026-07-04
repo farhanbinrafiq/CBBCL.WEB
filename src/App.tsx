@@ -96,7 +96,11 @@ export default function App() {
     handleLocationChange();
 
     // 1. Service Worker Registration & Version Update Listener (PWA)
-    if ("serviceWorker" in navigator) {
+    const isIframe = typeof window !== "undefined" && window.self !== window.top;
+    // @ts-ignore
+    const isDev = import.meta.env.DEV;
+
+    if (!isIframe && !isDev && "serviceWorker" in navigator) {
       navigator.serviceWorker
         .register("/sw.js")
         .then((reg) => {
