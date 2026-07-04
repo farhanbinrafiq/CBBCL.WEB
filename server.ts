@@ -272,6 +272,23 @@ async function setupVite() {
       appType: "spa",
     });
     app.use(vite.middlewares);
+
+    // Serve transformed index.html as a fallback for page navigation requests in dev mode
+    app.get("*", async (req, res, next) => {
+      if (req.method === "GET" && (req.headers.accept?.includes("text/html") || req.url.endsWith(".html") || !req.url.includes("."))) {
+        try {
+          const templatePath = path.join(process.cwd(), "index.html");
+          if (fs.existsSync(templatePath)) {
+            let html = fs.readFileSync(templatePath, "utf-8");
+            html = await vite.transformIndexHtml(req.originalUrl, html);
+            return res.status(200).set({ "Content-Type": "text/html" }).end(html);
+          }
+        } catch (e) {
+          return next(e);
+        }
+      }
+      next();
+    });
   } else {
     console.log("Starting server in PRODUCTION mode with static build assets...");
     const distPath = path.join(process.cwd(), "dist");

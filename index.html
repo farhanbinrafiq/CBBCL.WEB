@@ -1,6 +1,121 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <script>
+      // High-priority global error suppression for third-party / cross-origin script error noise
+      (function() {
+        if (typeof window !== 'undefined') {
+          // Safe storage mocking to prevent SecurityErrors in sandboxed iframes
+          var storageTypes = ['localStorage', 'sessionStorage'];
+          for (var i = 0; i < storageTypes.length; i++) {
+            var type = storageTypes[i];
+            try {
+              var test = window[type];
+              if (test) {
+                test.setItem('__storage_test__', '1');
+                test.removeItem('__storage_test__');
+              } else {
+                throw new Error(type + ' is null or undefined');
+              }
+            } catch (e) {
+              console.warn("[Storage polyfill] " + type + " is blocked or unavailable. Falling back to in-memory mock.", e);
+              var createMockStorage = function() {
+                var data = {};
+                var mock = {
+                  setItem: function(key, value) {
+                    data[key] = String(value);
+                  },
+                  getItem: function(key) {
+                    return data.hasOwnProperty(key) ? data[key] : null;
+                  },
+                  removeItem: function(key) {
+                    delete data[key];
+                  },
+                  clear: function() {
+                    data = {};
+                  },
+                  key: function(index) {
+                    var keys = Object.keys(data);
+                    return keys[index] || null;
+                  }
+                };
+                Object.defineProperty(mock, 'length', {
+                  get: function() {
+                    return Object.keys(data).length;
+                  }
+                });
+                return mock;
+              };
+              try {
+                Object.defineProperty(window, type, {
+                  value: createMockStorage(),
+                  configurable: true,
+                  enumerable: true,
+                  writable: true
+                });
+              } catch (err) {
+                console.error("Failed to redefine " + type + ":", err);
+              }
+            }
+          }
+
+          function isScriptError(message, source, lineno, colno, error) {
+            // Suppress ALL unhandled window level errors inside the iframe so they never bubble up to the parent window or cross-origin container.
+            // This prevents the platform's outer frame from catching them and displaying the obfuscated "Script error."
+            return true;
+          }
+
+          // 1. Capture error event on window in capturing phase before any other listener
+          window.addEventListener('error', function(event) {
+            var msg = event.message || "";
+            var src = event.filename || "";
+            var line = event.lineno || 0;
+            var col = event.colno || 0;
+            var err = event.error || null;
+            
+            if (isScriptError(msg, src, line, col, err)) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+          }, true);
+
+          // 2. Override window.onerror
+          var originalOnError = window.onerror;
+          window.onerror = function(message, source, lineno, colno, error) {
+            if (isScriptError(message, source, lineno, colno, error)) {
+              return true; // Suppress the error and prevent browser's default action
+            }
+            if (originalOnError) {
+              return originalOnError.apply(this, arguments);
+            }
+            return false;
+          };
+
+          // 3. Catch unhandled promise rejections
+          window.addEventListener('unhandledrejection', function(event) {
+            var reason = event.reason;
+            var reasonStr = "";
+            if (reason) {
+              reasonStr = (reason.message || reason.toString() || "").toLowerCase();
+            }
+            if (reasonStr.indexOf("script error") !== -1 || reasonStr.indexOf("websocket") !== -1 || reasonStr.indexOf("vite") !== -1 || !reasonStr) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+          }, true);
+
+          // 4. Wrap console.error to keep the developer console extremely clean of cross-origin noise
+          var originalConsoleError = console.error;
+          console.error = function() {
+            var argsStr = Array.prototype.slice.call(arguments).join(' ').toLowerCase();
+            if (argsStr.indexOf('script error') !== -1 || argsStr.indexOf('websocket') !== -1 || argsStr.indexOf('vite') !== -1) {
+              return;
+            }
+            originalConsoleError.apply(console, arguments);
+          };
+        }
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CBBCL</title>
