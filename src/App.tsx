@@ -32,6 +32,21 @@ import AffiliationRequestForm from "./components/pages/AffiliationRequestForm";
 import EZBookingPortal from "./components/pages/EZBookingPortal";
 import { motion, AnimatePresence } from "motion/react";
 
+function normalizePath(rawPath: string): string {
+  if (!rawPath) return "/";
+  let p = rawPath.trim();
+  if (p.includes("?")) {
+    p = p.split("?")[0];
+  }
+  if (p.includes("#")) {
+    p = p.split("#")[0];
+  }
+  if (p.length > 1 && p.endsWith("/")) {
+    p = p.slice(0, -1);
+  }
+  return p;
+}
+
 export default function App() {
   const [currentPath, setCurrentPath] = useState<RoutePath>("/");
   const [initialSection, setInitialSection] = useState<string>("");
@@ -43,52 +58,72 @@ export default function App() {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showInstallBanner, setShowInstallBanner] = useState<boolean>(false);
 
+  // Dynamic document title and SEO metadata update
+  useEffect(() => {
+    const normalized = normalizePath(currentPath);
+    let pageTitle = "Cox's Bazar Boat Club Limited | CBBCL Official";
+
+    if (normalized === "/about" || normalized === "/about.html") {
+      pageTitle = "About Us | Cox's Bazar Boat Club Limited";
+    } else if (normalized === "/facilities" || normalized === "/facilities.html" || normalized === "/gallery" || normalized === "/gallery.html") {
+      pageTitle = "Facilities & Gallery Showcase | Cox's Bazar Boat Club Limited";
+    } else if (normalized === "/membership" || normalized === "/membership.html") {
+      pageTitle = "Membership Tiers | Cox's Bazar Boat Club Limited";
+    } else if (normalized.startsWith("/membership/")) {
+      const slug = normalized.replace("/membership/", "").replace(/\.html$/, "");
+      const formatted = slug.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+      pageTitle = `${formatted} | Cox's Bazar Boat Club Limited`;
+    } else if (normalized === "/governance" || normalized === "/governance.html") {
+      pageTitle = "Governance & Leadership | Cox's Bazar Boat Club Limited";
+    } else if (normalized === "/board" || normalized === "/board.html") {
+      pageTitle = "Board of Directors | Cox's Bazar Boat Club Limited";
+    } else if (normalized.startsWith("/board/") || normalized.startsWith("/profile/")) {
+      pageTitle = "Director Profile | Cox's Bazar Boat Club Limited";
+    } else if (normalized === "/news-feed" || normalized === "/news-feed.html" || normalized === "/news" || normalized === "/news.html") {
+      pageTitle = "Club News Feed & Gazette | Cox's Bazar Boat Club Limited";
+    } else if (normalized.startsWith("/news-feed/") || normalized.startsWith("/news/")) {
+      pageTitle = "Official Gazette Release | Cox's Bazar Boat Club Limited";
+    } else if (normalized === "/events" || normalized === "/events.html") {
+      pageTitle = "Upcoming Events & Regattas | Cox's Bazar Boat Club Limited";
+    } else if (normalized === "/affiliations" || normalized === "/affiliations.html") {
+      pageTitle = "Reciprocal Affiliations | Cox's Bazar Boat Club Limited";
+    } else if (normalized.startsWith("/affiliations/")) {
+      pageTitle = "Affiliation Detail | Cox's Bazar Boat Club Limited";
+    } else if (normalized === "/contact" || normalized === "/contact.html") {
+      pageTitle = "Contact Us | Cox's Bazar Boat Club Limited";
+    } else if (normalized === "/login" || normalized === "/login.html") {
+      pageTitle = "Member Login | Cox's Bazar Boat Club Limited";
+    } else if (normalized === "/register" || normalized === "/register.html") {
+      pageTitle = "Member Registration | Cox's Bazar Boat Club Limited";
+    } else if (normalized === "/dashboard" || normalized === "/dashboard.html") {
+      pageTitle = "Member Portal Dashboard | Cox's Bazar Boat Club Limited";
+    } else if (normalized === "/admin-dashboard" || normalized === "/admin-dashboard.html") {
+      pageTitle = "Admin Central Ledger | Cox's Bazar Boat Club Limited";
+    } else if (normalized === "/members" || normalized === "/members.html" || normalized.startsWith("/members/")) {
+      pageTitle = "Member Directory | Cox's Bazar Boat Club Limited";
+    } else if (normalized === "/ezbooking-portal" || normalized === "/ezbooking-portal.html") {
+      pageTitle = "EZ Booking Portal | Cox's Bazar Boat Club Limited";
+    }
+
+    document.title = pageTitle;
+  }, [currentPath]);
+
   // Handle address bar routing from the window location if accessed directly
   useEffect(() => {
     setCurrentUser(getLoggedInUser());
 
     const handleLocationChange = () => {
       const pathname = window.location.pathname as RoutePath;
-      const validPaths: RoutePath[] = [
-        "/",
-        "/index.html",
-        "/about.html",
-        "/facilities.html",
-        "/membership.html",
-        "/governance.html",
-        "/board.html",
-        "/board/humayun-kabir-robel.html",
-        "/news-feed.html",
-        "/events.html",
-        "/affiliations.html",
-        "/contact.html",
-        "/login.html",
-        "/register.html",
-        "/dashboard.html",
-        "/admin-dashboard.html",
-        "/admin-dashboard/home-cms.html",
-        "/ezbooking-portal.html",
-        "/affiliations/ezbooking.html"
-      ];
-
       const user = getLoggedInUser();
+      const normalized = normalizePath(pathname);
 
       // Protected route guards
-      if (pathname === "/dashboard.html" && !user) {
+      if ((normalized === "/dashboard" || normalized === "/dashboard.html") && !user) {
         navigate("/login.html");
-      } else if (pathname === "/admin-dashboard.html" && (!user || user.role !== "admin")) {
+      } else if ((normalized === "/admin-dashboard" || normalized === "/admin-dashboard.html") && (!user || user.role !== "admin")) {
         navigate("/login.html");
-      } else if (
-        validPaths.includes(pathname) ||
-        pathname === "/members.html" ||
-        pathname.startsWith("/members/") ||
-        pathname.startsWith("/news-feed/") ||
-        (pathname.startsWith("/board/") && pathname.endsWith(".html")) ||
-        (pathname.startsWith("/profile/") && pathname.endsWith(".html"))
-      ) {
-        setCurrentPath(pathname);
       } else {
-        setCurrentPath("/");
+        setCurrentPath(pathname);
       }
     };
 
@@ -207,82 +242,104 @@ export default function App() {
   };
 
   const renderPage = () => {
-    if (currentPath === "/members.html") {
+    const normalized = normalizePath(currentPath);
+
+    if (normalized === "/members" || normalized === "/members.html") {
       return <Members navigate={navigate} />;
     }
-    if (currentPath.startsWith("/members/")) {
-      const parts = currentPath.split("/");
+    if (normalized.startsWith("/members/")) {
+      const parts = normalized.split("/");
       const filePart = parts[parts.length - 1];
-      const memberId = filePart.endsWith(".html") ? filePart.slice(0, -5) : filePart;
+      const memberId = filePart.replace(/\.html$/, "");
       return <Members navigate={navigate} selectedMemberId={memberId} />;
     }
-    if (currentPath.startsWith("/board/") && currentPath !== "/board.html") {
-      const parts = currentPath.split("/");
+    if ((normalized.startsWith("/board/") && normalized !== "/board" && normalized !== "/board.html") ||
+        (normalized.startsWith("/profile/") && normalized !== "/profile" && normalized !== "/profile.html")) {
+      const parts = normalized.split("/");
       const filePart = parts[parts.length - 1];
-      const directorId = filePart.endsWith(".html") ? filePart.slice(0, -5) : filePart;
+      const directorId = filePart.replace(/\.html$/, "");
       return <BoardProfile directorId={directorId} navigate={navigate} />;
     }
-    if (currentPath.startsWith("/profile/") && currentPath !== "/profile.html") {
-      const parts = currentPath.split("/");
+    if (normalized.startsWith("/membership/") && normalized !== "/membership" && normalized !== "/membership.html") {
+      const parts = normalized.split("/");
       const filePart = parts[parts.length - 1];
-      const profileId = filePart.endsWith(".html") ? filePart.slice(0, -5) : filePart;
-      return <BoardProfile directorId={profileId} navigate={navigate} />;
-    }
-    if (currentPath.startsWith("/membership/") && currentPath !== "/membership.html") {
-      const parts = currentPath.split("/");
-      const filePart = parts[parts.length - 1];
-      const categorySlug = filePart.endsWith(".html") ? filePart.slice(0, -5) : filePart;
+      const categorySlug = filePart.replace(/\.html$/, "");
       return <MembershipDetail categorySlug={categorySlug} navigate={navigate} />;
     }
-    if (currentPath.startsWith("/affiliations/") && currentPath !== "/affiliations.html") {
-      const parts = currentPath.split("/");
+    if (normalized.startsWith("/affiliations/") && normalized !== "/affiliations" && normalized !== "/affiliations.html") {
+      const parts = normalized.split("/");
       const filePart = parts[parts.length - 1];
-      const clubId = filePart.endsWith(".html") ? filePart.slice(0, -5) : filePart;
+      const clubId = filePart.replace(/\.html$/, "");
       return <AffiliationDetail clubId={clubId} navigate={navigate} />;
     }
-    if (currentPath.startsWith("/news-feed/") && currentPath !== "/news-feed.html") {
-      const parts = currentPath.split("/");
+    if ((normalized.startsWith("/news-feed/") && normalized !== "/news-feed" && normalized !== "/news-feed.html") ||
+        (normalized.startsWith("/news/") && normalized !== "/news" && normalized !== "/news.html")) {
+      const parts = normalized.split("/");
       const filePart = parts[parts.length - 1];
-      const newsId = filePart.endsWith(".html") ? filePart.slice(0, -5) : filePart;
+      const newsId = filePart.replace(/\.html$/, "");
       return <NewsFeedDetail newsId={newsId} navigate={navigate} />;
     }
 
-    switch (currentPath) {
+    switch (normalized) {
       case "/":
+      case "/index":
       case "/index.html":
+      case "/home":
+      case "/home.html":
         return <Home navigate={navigate} />;
+      case "/about":
       case "/about.html":
         return <About initialSection={initialSection || "overview"} />;
+      case "/facilities":
       case "/facilities.html":
+      case "/gallery":
+      case "/gallery.html":
         return <Facilities />;
+      case "/membership":
       case "/membership.html":
         return <Membership navigate={navigate} />;
+      case "/membership-application":
       case "/membership-application.html":
         return <MembershipApplicationForm navigate={navigate} />;
+      case "/governance":
       case "/governance.html":
         return <Governance initialSection={initialSection || "articles"} />;
+      case "/board":
       case "/board.html":
         return <Board navigate={navigate} />;
+      case "/news-feed":
       case "/news-feed.html":
+      case "/news":
+      case "/news.html":
         return <NewsFeed navigate={navigate} />;
+      case "/events":
       case "/events.html":
         return <Events />;
+      case "/affiliations":
       case "/affiliations.html":
         return <Affiliations navigate={navigate} />;
+      case "/affiliation-request":
       case "/affiliation-request.html":
         return <AffiliationRequestForm navigate={navigate} />;
+      case "/ezbooking-portal":
       case "/ezbooking-portal.html":
         return <EZBookingPortal navigate={navigate} />;
+      case "/contact":
       case "/contact.html":
         return <Contact />;
+      case "/login":
       case "/login.html":
         return <Login navigate={navigate} onLoginSuccess={refreshUser} />;
+      case "/register":
       case "/register.html":
         return <Register navigate={navigate} />;
+      case "/dashboard":
       case "/dashboard.html":
         return <Dashboard navigate={navigate} onLogout={handleLogout} />;
+      case "/admin-dashboard":
       case "/admin-dashboard.html":
         return <AdminDashboard navigate={navigate} onLogout={handleLogout} />;
+      case "/admin-dashboard/home-cms":
       case "/admin-dashboard/home-cms.html":
         return <AdminDashboard navigate={navigate} onLogout={handleLogout} initialActiveTab="home_cms" />;
       default:

@@ -124,6 +124,17 @@ export default function Membership({ navigate }: MembershipProps) {
           <p className="font-sans text-xs sm:text-[13px] text-text-body font-light leading-relaxed">
             {cmsPage.membership.preamble || "By joining Cox's Bazar Boat Club Limited, you align your family and corporate lifestyle with Bangladesh's outstanding leaders. Access elegant oceanfront ballrooms, premium beach sports fields, and enjoy full reciprocal privileges with historic private clubs across South Asia."}
           </p>
+          <div className="pt-2">
+            <button
+              onClick={() => {
+                window.location.href = "https://registration.coxsbazarboatclubltd.com/";
+              }}
+              className="inline-flex items-center space-x-2 px-6 py-3 bg-gold text-navy hover:bg-navy hover:text-white font-sans text-xs font-extrabold uppercase tracking-widest transition-all shadow-md cursor-pointer"
+            >
+              <span>Apply for Nomination</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </section>
 
@@ -249,8 +260,18 @@ export default function Membership({ navigate }: MembershipProps) {
                 Nomination Proposal Request
               </h3>
               <p className="font-sans text-[11px] text-slate-500 font-light leading-relaxed">
-                If you do not have current proposer references, the Scrutiny Committee may grant temporary clearance upon corporate profile review.
+                If you do not have current proposer references, the Scrutiny Committee may grant temporary clearance upon corporate profile review. You can also apply directly through our official nomination registration portal.
               </p>
+              <button
+                type="button"
+                onClick={() => {
+                  window.location.href = "https://registration.coxsbazarboatclubltd.com/";
+                }}
+                className="w-full py-3 bg-gold text-navy hover:bg-navy hover:text-white text-xs font-sans font-extrabold uppercase tracking-widest transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer mt-2"
+              >
+                <span>Apply for Nomination</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
             </div>
 
             {formSubmitted ? (

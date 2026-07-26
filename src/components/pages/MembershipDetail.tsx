@@ -292,8 +292,7 @@ export default function MembershipDetail({ categorySlug, navigate }: MembershipD
   const detail = MEMBERSHIP_DETAILS[slug] || MEMBERSHIP_DETAILS["life-member"];
 
   const handleApplyClick = () => {
-    // Redirect to the membership action page with category query
-    navigate(`/membership-application.html?type=${encodeURIComponent(detail.name)}`);
+    window.location.href = "https://registration.coxsbazarboatclubltd.com/";
   };
 
   return (

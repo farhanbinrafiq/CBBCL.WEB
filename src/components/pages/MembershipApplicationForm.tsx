@@ -192,6 +192,22 @@ export default function MembershipApplicationForm({ navigate }: MembershipApplic
 
         {/* Core Card Form */}
         <div className="bg-white border border-slate-200 p-6 md:p-8 rounded-sm shadow-sm space-y-6 text-left">
+          <div className="bg-amber-50 border border-amber-200 p-4 text-xs text-navy font-sans rounded-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div>
+              <p className="font-bold text-sm">Official CBBCL Online Registration Portal</p>
+              <p className="text-slate-600 font-light mt-0.5">Submit your nomination application directly on our external portal.</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                window.location.href = "https://registration.coxsbazarboatclubltd.com/";
+              }}
+              className="bg-gold hover:bg-navy text-navy hover:text-white px-4 py-2 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap transition-colors cursor-pointer"
+            >
+              Apply for Nomination &rarr;
+            </button>
+          </div>
+
           <div className="border-b pb-4">
             <h2 className="font-display text-xl text-text-dark font-semibold">Initiate Prestige Nomination</h2>
             <p className="text-xs text-slate-500 font-light mt-1">

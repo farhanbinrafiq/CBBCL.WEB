@@ -47,14 +47,14 @@ if (typeof window !== 'undefined') {
         return mock;
       };
       try {
-        Object.defineProperty(window, type, {
-          value: createMockStorage(),
+        const mockStore = createMockStorage();
+        Object.defineProperty(Window.prototype, type, {
+          get: () => mockStore,
           configurable: true,
-          enumerable: true,
-          writable: true
+          enumerable: true
         });
       } catch (err) {
-        console.error(`Failed to redefine ${type}:`, err);
+        console.warn(`Failed to redefine ${type} on Window.prototype:`, err);
       }
     }
   }
@@ -69,6 +69,17 @@ if (typeof window !== 'undefined') {
     if (isScriptError(event.message, event.filename, event.lineno, event.colno, event.error)) {
       event.preventDefault();
       event.stopPropagation();
+      if (event.stopImmediatePropagation) {
+        event.stopImmediatePropagation();
+      }
+    }
+  }, true);
+
+  window.addEventListener('unhandledrejection', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.stopImmediatePropagation) {
+      event.stopImmediatePropagation();
     }
   }, true);
 

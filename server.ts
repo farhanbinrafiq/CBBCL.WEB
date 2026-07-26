@@ -275,17 +275,18 @@ async function setupVite() {
 
     // Serve transformed index.html as a fallback for page navigation requests in dev mode
     app.get("*", async (req, res, next) => {
-      if (req.method === "GET" && (req.headers.accept?.includes("text/html") || req.url.endsWith(".html") || !req.url.includes("."))) {
-        try {
-          const templatePath = path.join(process.cwd(), "index.html");
-          if (fs.existsSync(templatePath)) {
-            let html = fs.readFileSync(templatePath, "utf-8");
-            html = await vite.transformIndexHtml(req.originalUrl, html);
-            return res.status(200).set({ "Content-Type": "text/html" }).end(html);
-          }
-        } catch (e) {
-          return next(e);
+      if (req.path.startsWith("/api") || req.path.startsWith("/uploads")) {
+        return next();
+      }
+      try {
+        const templatePath = path.join(process.cwd(), "index.html");
+        if (fs.existsSync(templatePath)) {
+          let html = fs.readFileSync(templatePath, "utf-8");
+          html = await vite.transformIndexHtml(req.originalUrl, html);
+          return res.status(200).set({ "Content-Type": "text/html" }).end(html);
         }
+      } catch (e) {
+        return next(e);
       }
       next();
     });
@@ -293,8 +294,15 @@ async function setupVite() {
     console.log("Starting server in PRODUCTION mode with static build assets...");
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
-    app.get("*", (req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
+    app.get("*", (req, res, next) => {
+      if (req.path.startsWith("/api") || req.path.startsWith("/uploads")) {
+        return next();
+      }
+      const indexPath = path.join(distPath, "index.html");
+      if (fs.existsSync(indexPath)) {
+        return res.sendFile(indexPath);
+      }
+      res.status(404).send("Page not found");
     });
   }
 

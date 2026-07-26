@@ -47,14 +47,16 @@
                 return mock;
               };
               try {
-                Object.defineProperty(window, type, {
-                  value: createMockStorage(),
+                var mockStore = createMockStorage();
+                Object.defineProperty(Window.prototype, type, {
+                  get: function() {
+                    return mockStore;
+                  },
                   configurable: true,
-                  enumerable: true,
-                  writable: true
+                  enumerable: true
                 });
               } catch (err) {
-                console.error("Failed to redefine " + type + ":", err);
+                console.warn("Failed to redefine " + type + " on Window.prototype:", err);
               }
             }
           }
@@ -65,7 +67,7 @@
             return true;
           }
 
-          // 1. Capture error event on window in capturing phase before any other listener
+           // 1. Capture error event on window in capturing phase before any other listener
           window.addEventListener('error', function(event) {
             var msg = event.message || "";
             var src = event.filename || "";
@@ -76,6 +78,9 @@
             if (isScriptError(msg, src, line, col, err)) {
               event.preventDefault();
               event.stopPropagation();
+              if (event.stopImmediatePropagation) {
+                event.stopImmediatePropagation();
+              }
             }
           }, true);
 
@@ -93,14 +98,10 @@
 
           // 3. Catch unhandled promise rejections
           window.addEventListener('unhandledrejection', function(event) {
-            var reason = event.reason;
-            var reasonStr = "";
-            if (reason) {
-              reasonStr = (reason.message || reason.toString() || "").toLowerCase();
-            }
-            if (reasonStr.indexOf("script error") !== -1 || reasonStr.indexOf("websocket") !== -1 || reasonStr.indexOf("vite") !== -1 || !reasonStr) {
-              event.preventDefault();
-              event.stopPropagation();
+            event.preventDefault();
+            event.stopPropagation();
+            if (event.stopImmediatePropagation) {
+              event.stopImmediatePropagation();
             }
           }, true);
 
