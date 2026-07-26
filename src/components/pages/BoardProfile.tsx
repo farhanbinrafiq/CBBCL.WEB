@@ -62,7 +62,7 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
     rawDirector = DIRECTORS_DATA[0];
   }
 
-  const backPath: RoutePath = isOnBoard ? "/board.html" : "/members.html";
+  const backPath: RoutePath = isOnBoard ? "/board" : "/members";
   const backLabel = isOnBoard ? "Back to Board Directory" : "Back to Registry Directory";
 
   const getPortraitUrl = (dir: Director) => {

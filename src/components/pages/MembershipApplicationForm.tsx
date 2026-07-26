@@ -141,14 +141,14 @@ export default function MembershipApplicationForm({ navigate }: MembershipApplic
             <button
               onClick={() => {
                 // Clear state or navigate home
-                navigate("/membership.html");
+                navigate("/membership");
               }}
               className="flex-1 py-3 bg-navy text-gold hover:bg-navy-light text-xs font-sans font-extrabold uppercase tracking-widest transition-all rounded-xs"
             >
               Return to Membership
             </button>
             <button
-              onClick={() => navigate("/dashboard.html")}
+              onClick={() => navigate("/dashboard")}
               className="flex-1 py-3 bg-white text-navy border hover:bg-slate-50 text-xs font-sans font-extrabold uppercase tracking-widest transition-all rounded-xs"
             >
               Go to Portal
@@ -183,7 +183,7 @@ export default function MembershipApplicationForm({ navigate }: MembershipApplic
       <div className="max-w-2xl mx-auto px-6 py-10">
         {/* Back Link */}
         <button
-          onClick={() => navigate("/membership.html")}
+          onClick={() => navigate("/membership")}
           className="group inline-flex items-center space-x-2 text-xs font-sans uppercase font-bold tracking-widest text-[#1a2744] hover:text-gold transition-colors mb-6"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />

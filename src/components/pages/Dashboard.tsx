@@ -34,7 +34,7 @@ export default function Dashboard({ navigate, onLogout }: DashboardProps) {
   useEffect(() => {
     const currentUser = getLoggedInUser();
     if (!currentUser) {
-      navigate("/login.html");
+      navigate("/login");
       return;
     }
     setUser(currentUser);
@@ -132,7 +132,7 @@ export default function Dashboard({ navigate, onLogout }: DashboardProps) {
 
   const handleLogOutAction = () => {
     onLogout();
-    navigate("/login.html");
+    navigate("/login");
   };
 
   return (

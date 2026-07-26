@@ -59,14 +59,16 @@ if (typeof window !== 'undefined') {
     }
   }
 
-  const isScriptError = (message: any, source?: string, lineno?: number, colno?: number, error?: any) => {
-    // Suppress ALL unhandled window level errors inside the iframe so they never bubble up to the parent window or cross-origin container.
-    // This absolutely guarantees that the platform's outer frame does not catch them and display the obfuscated "Script error."
-    return true;
+  const isScriptError = (message: any, source?: string) => {
+    // Suppress cross-origin generic script error noise from parent frame or browser extensions
+    if (typeof message === 'string' && (message.includes('Script error') || message.includes('ResizeObserver'))) {
+      return true;
+    }
+    return false;
   };
 
   window.addEventListener('error', (event) => {
-    if (isScriptError(event.message, event.filename, event.lineno, event.colno, event.error)) {
+    if (isScriptError(event.message, event.filename)) {
       event.preventDefault();
       event.stopPropagation();
       if (event.stopImmediatePropagation) {
@@ -85,7 +87,7 @@ if (typeof window !== 'undefined') {
 
   const originalOnError = window.onerror;
   window.onerror = function (message, source, lineno, colno, error) {
-    if (isScriptError(message, source as string, lineno, colno, error)) {
+    if (isScriptError(message, source as string)) {
       return true; // Stop propagation
     }
     if (originalOnError) {

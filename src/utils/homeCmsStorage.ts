@@ -126,9 +126,9 @@ const DEFAULT_HOME_LAYOUT: HomeCMSLayoutData = {
       image: "",
       overlayEnabled: true,
       cta1Text: "Explore the Club",
-      cta1Link: "/about.html",
+      cta1Link: "/about",
       cta2Text: "Membership Information",
-      cta2Link: "/membership.html"
+      cta2Link: "/membership"
     },
     stats: {
       enabled: true,

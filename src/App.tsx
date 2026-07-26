@@ -48,7 +48,12 @@ function normalizePath(rawPath: string): string {
 }
 
 export default function App() {
-  const [currentPath, setCurrentPath] = useState<RoutePath>("/");
+  const [currentPath, setCurrentPath] = useState<RoutePath>(() => {
+    if (typeof window !== "undefined" && window.location.pathname) {
+      return window.location.pathname as RoutePath;
+    }
+    return "/";
+  });
   const [initialSection, setInitialSection] = useState<string>("");
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
@@ -117,11 +122,17 @@ export default function App() {
       const user = getLoggedInUser();
       const normalized = normalizePath(pathname);
 
+      // Automatically strip legacy .html extension from browser location bar if visited directly
+      if (pathname.endsWith(".html") && pathname !== "/index.html") {
+        const cleanPath = pathname.replace(/\.html$/, "") as RoutePath;
+        window.history.replaceState(null, "", cleanPath + window.location.search + window.location.hash);
+      }
+
       // Protected route guards
       if ((normalized === "/dashboard" || normalized === "/dashboard.html") && !user) {
-        navigate("/login.html");
+        navigate("/login");
       } else if ((normalized === "/admin-dashboard" || normalized === "/admin-dashboard.html") && (!user || user.role !== "admin")) {
-        navigate("/login.html");
+        navigate("/login");
       } else {
         setCurrentPath(pathname);
       }

@@ -157,7 +157,7 @@ export default function Affiliations({ navigate }: AffiliationsProps) {
                   <button
                     onClick={() => {
                       const slug = aff.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-                      navigate(`/affiliations/${slug}.html`);
+                      navigate(`/affiliations/${slug}`);
                     }}
                     className={`w-full py-2.5 text-[9px] font-sans font-bold uppercase tracking-widest transition-all duration-205 flex items-center justify-center space-x-1.5 border cursor-pointer ${
                       isEz

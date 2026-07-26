@@ -36,7 +36,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
   const headerRef = useRef<HTMLElement>(null);
   const [headerBottom, setHeaderBottom] = useState(78);
 
-  const isHome = currentPath === "/" || currentPath === "/index.html";
+  const isHome = currentPath === "/" || currentPath === "/index" || currentPath === "/index.html";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -87,8 +87,11 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
     navCms.navbarLogo.includes("Logo");
 
   const checkIsActive = (itemPath: string) => {
-    const profileId = (currentPath.startsWith("/profile/") && currentPath.endsWith(".html"))
-      ? currentPath.slice(9, -5)
+    const cleanPath = itemPath.replace(/\.html$/, "");
+    const cleanCurrent = currentPath.replace(/\.html$/, "");
+
+    const profileId = (cleanCurrent.startsWith("/profile/"))
+      ? cleanCurrent.replace("/profile/", "")
       : null;
     
     const isOnBoard = profileId
@@ -96,10 +99,10 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
       : false;
 
     return (
-      currentPath === itemPath ||
-      (itemPath === "/" && currentPath === "/index.html") ||
-      (itemPath === "/board.html" && (currentPath.startsWith("/board/") || (profileId && isOnBoard))) ||
-      (itemPath === "/members.html" && (currentPath.startsWith("/members/") || (profileId && !isOnBoard)))
+      cleanCurrent === cleanPath ||
+      ((cleanPath === "/" || cleanPath === "/index") && (cleanCurrent === "/" || cleanCurrent === "/index")) ||
+      (cleanPath === "/board" && (cleanCurrent.startsWith("/board") || (profileId && isOnBoard))) ||
+      (cleanPath === "/members" && (cleanCurrent.startsWith("/members") || (profileId && !isOnBoard)))
     );
   };
 
@@ -109,26 +112,26 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
     const findItem = (label: string) => {
       return rawItems.find(item => 
         item.label.toLowerCase() === label.toLowerCase() || 
-        (label === "Home" && (item.path === "/" || item.path === "/index.html"))
+        (label === "Home" && (item.path === "/" || item.path === "/index" || item.path === "/index.html"))
       );
     };
 
     const homeItem = findItem("Home") || { label: "Home", path: "/" as RoutePath };
-    const facilitiesItem = findItem("Facilities") || { label: "Facilities", path: "/facilities.html" as RoutePath };
-    const membershipItem = findItem("Membership") || { label: "Membership", path: "/membership.html" as RoutePath };
-    const boardItem = findItem("Board of Directors") || { label: "Board of Directors", path: "/board.html" as RoutePath };
-    const membersItem = findItem("Club Members") || { label: "Club Members", path: "/members.html" as RoutePath };
-    const eventsItem = findItem("Events") || { label: "Events", path: "/events.html" as RoutePath };
-    const newsItem = findItem("News Feed") || { label: "News Feed", path: "/news-feed.html" as RoutePath };
-    const affiliationsItem = findItem("Affiliations") || { label: "Affiliations", path: "/affiliations.html" as RoutePath };
-    const contactItem = findItem("Contact") || { label: "Contact", path: "/contact.html" as RoutePath };
-    const aboutItem = findItem("About") || { label: "About", path: "/about.html" as RoutePath };
+    const facilitiesItem = findItem("Facilities") || { label: "Facilities", path: "/facilities" as RoutePath };
+    const membershipItem = findItem("Membership") || { label: "Membership", path: "/membership" as RoutePath };
+    const boardItem = findItem("Board of Directors") || { label: "Board of Directors", path: "/board" as RoutePath };
+    const membersItem = findItem("Club Members") || { label: "Club Members", path: "/members" as RoutePath };
+    const eventsItem = findItem("Events") || { label: "Events", path: "/events" as RoutePath };
+    const newsItem = findItem("News Feed") || { label: "News Feed", path: "/news-feed" as RoutePath };
+    const affiliationsItem = findItem("Affiliations") || { label: "Affiliations", path: "/affiliations" as RoutePath };
+    const contactItem = findItem("Contact") || { label: "Contact", path: "/contact" as RoutePath };
+    const aboutItem = findItem("About") || { label: "About", path: "/about" as RoutePath };
     const governanceItem = findItem("Governance");
 
     let aboutDropdown = aboutItem.dropdown ? [...aboutItem.dropdown] : [];
     if (governanceItem) {
       if (!aboutDropdown.some(sub => sub.sub === "governance" || sub.label === "Governance & Constitution")) {
-        aboutDropdown.push({ label: "Governance & Constitution", sub: "", path: "/governance.html" as RoutePath });
+        aboutDropdown.push({ label: "Governance & Constitution", sub: "", path: "/governance" as RoutePath });
       }
       if (governanceItem.dropdown) {
         governanceItem.dropdown.forEach(gSub => {
@@ -136,7 +139,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
             aboutDropdown.push({
               label: gSub.label,
               sub: gSub.sub,
-              path: "/governance.html" as RoutePath
+              path: "/governance" as RoutePath
             });
           }
         });
@@ -353,7 +356,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                   {currentUser ? (
                     <div className="flex items-center whitespace-nowrap space-x-2">
                       <button
-                        onClick={() => handleNavClick(currentUser.role === "admin" ? "/admin-dashboard.html" : "/dashboard.html")}
+                        onClick={() => handleNavClick(currentUser.role === "admin" ? "/admin-dashboard" : "/dashboard")}
                         className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold py-1 px-1 xl:px-1 2xl:px-2 transition-colors text-[10px] xl:text-[10px] 2xl:text-[11px] font-sans font-bold uppercase tracking-widest flex items-center space-x-1 text-center whitespace-nowrap shrink-0" /* LAYOUT FIX */
                       >
                         <UserCheck className="w-3.5 h-3.5" />
@@ -362,7 +365,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                       <button
                         onClick={() => {
                           if (onLogout) onLogout();
-                          handleNavClick("/login.html");
+                          handleNavClick("/login");
                         }}
                         className="text-slate-200 hover:text-rose-455 px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] xl:text-[10px] 2xl:text-[11px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap" /* LAYOUT FIX */
                       >
@@ -372,14 +375,14 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                   ) : (
                     <div className="flex items-center whitespace-nowrap space-x-2">
                       <button
-                        onClick={() => handleNavClick("/login.html" as RoutePath)}
+                        onClick={() => handleNavClick("/login" as RoutePath)}
                         className="text-white hover:text-gold px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] xl:text-[10px] 2xl:text-[11px] font-bold uppercase tracking-wider flex items-center space-x-1 whitespace-nowrap transition-colors" /* LAYOUT FIX */
                       >
                         <LogIn className="w-3.5 h-3.5 mt-0.5 text-gold shrink-0" />
                         <span className="whitespace-nowrap">Sign In</span>
                       </button>
                       <button
-                        onClick={() => handleNavClick("/membership.html" as RoutePath)}
+                        onClick={() => handleNavClick("/membership" as RoutePath)}
                         className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold-light px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] xl:text-[10px] 2xl:text-[11px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap" /* LAYOUT FIX */
                       >
                         Become a Member
@@ -459,7 +462,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
             {currentUser ? (
               <div className="flex flex-col space-y-3 pt-4 border-t border-white/[0.08]">
                 <button
-                  onClick={() => handleNavClick(currentUser.role === "admin" ? "/admin-dashboard.html" : "/dashboard.html")}
+                  onClick={() => handleNavClick(currentUser.role === "admin" ? "/admin-dashboard" : "/dashboard")}
                   className="bg-transparent text-gold text-xs font-bold uppercase tracking-wider py-2.5 rounded-sm text-center transition-colors border border-gold hover:bg-gold hover:text-navy"
                 >
                   {currentUser.role === "admin" ? "Admin Terminal" : "My Console"}
@@ -467,7 +470,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                 <button
                   onClick={() => {
                     if (onLogout) onLogout();
-                    handleNavClick("/login.html");
+                    handleNavClick("/login");
                   }}
                   className="bg-red-500/10 text-red-100 hover:bg-red-500/20 text-xs font-bold uppercase tracking-wider py-2.5 rounded-sm text-center transition-colors"
                 >
@@ -477,13 +480,13 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
             ) : (
               <div className="flex flex-col space-y-3 pt-4 border-t border-white/[0.08]">
                 <button
-                  onClick={() => handleNavClick("/login.html" as RoutePath)}
+                  onClick={() => handleNavClick("/login" as RoutePath)}
                   className="bg-white/[0.03] border border-white/[0.1] text-slate-100 text-xs font-semibold uppercase tracking-wider py-2.5 rounded-xs text-center transition-all hover:bg-white/[0.06]"
                 >
                   Sign In to Registry
                 </button>
                 <button
-                  onClick={() => handleNavClick("/membership.html" as RoutePath)}
+                  onClick={() => handleNavClick("/membership" as RoutePath)}
                   className="bg-gold text-navy text-xs font-semibold uppercase tracking-wider py-2.5 rounded-sm text-center shadow hover:bg-gold-light transition-all"
                 >
                   Become a Member

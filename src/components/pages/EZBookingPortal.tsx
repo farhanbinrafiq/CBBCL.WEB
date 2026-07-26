@@ -104,7 +104,7 @@ export default function EZBookingPortal({ navigate }: EZBookingPortalProps) {
         
         {/* Back navigation */}
         <button
-          onClick={() => navigate("/affiliations.html")}
+          onClick={() => navigate("/affiliations")}
           className="inline-flex items-center space-x-1.5 text-slate-500 hover:text-gold text-[10px] font-sans uppercase tracking-widest transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -226,7 +226,7 @@ export default function EZBookingPortal({ navigate }: EZBookingPortalProps) {
                     Reserve Another Travel
                   </button>
                   <button
-                    onClick={() => navigate("/affiliations.html")}
+                    onClick={() => navigate("/affiliations")}
                     className="px-5 py-2.5 border border-slate-200 text-slate-700 hover:bg-slate-50 text-[10px] font-sans font-bold uppercase tracking-widest transition-all"
                   >
                     Main Network Ledger

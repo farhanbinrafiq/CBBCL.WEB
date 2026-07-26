@@ -60,7 +60,7 @@ export default function Register({ navigate }: RegisterProps) {
 
     setSuccess(true);
     setTimeout(() => {
-      navigate("/login.html");
+      navigate("/login");
     }, 4500);
   };
 
@@ -195,7 +195,7 @@ export default function Register({ navigate }: RegisterProps) {
             Already registered an account signature?
           </p>
           <button
-            onClick={() => navigate("/login.html")}
+            onClick={() => navigate("/login")}
             className="font-sans text-[11px] font-bold text-gold-dark hover:text-navy uppercase tracking-wider"
           >
             Authenticate Credentials &gt;

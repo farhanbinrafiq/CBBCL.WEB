@@ -72,26 +72,26 @@ function getSiteSettings() {
           title: "Explore the Club",
           links: [
             { name: "Home Base", url: "/" },
-            { name: "About Our Story", url: "/about.html" },
-            { name: "Facilities Showcase", url: "/facilities.html" },
-            { name: "Board of Directors", url: "/board.html" },
-            { name: "Club News Feed", url: "/news-feed.html" },
-            { name: "Affiliations", url: "/affiliations.html" }
+            { name: "About Our Story", url: "/about" },
+            { name: "Facilities Showcase", url: "/facilities" },
+            { name: "Board of Directors", url: "/board" },
+            { name: "Club News Feed", url: "/news-feed" },
+            { name: "Affiliations", url: "/affiliations" }
           ]
         },
         {
           title: "Membership Tiers",
           links: [
-            { name: "🏆 Donor Membership", url: "/membership.html" },
-            { name: "🏵️ Life Membership", url: "/membership.html" },
-            { name: "🛡️ Permanent Membership", url: "/membership.html" },
-            { name: "⚓ Associate Membership", url: "/membership.html" }
+            { name: "🏆 Donor Membership", url: "/membership" },
+            { name: "🏵️ Life Membership", url: "/membership" },
+            { name: "🛡️ Permanent Membership", url: "/membership" },
+            { name: "⚓ Associate Membership", url: "/membership" }
           ]
         }
       ],
       legalLinks: [
-        { name: "Privacy Policy", url: "/about.html" },
-        { name: "Terms of Service", url: "/about.html" }
+        { name: "Privacy Policy", url: "/about" },
+        { name: "Terms of Service", url: "/about" }
       ],
       copyright: "© 2026 Cox's Bazar Boat Club Limited. All Rights Reserved. Incorporated under The Companies Act, 1994, Bangladesh."
     }
@@ -278,6 +278,10 @@ async function setupVite() {
       if (req.path.startsWith("/api") || req.path.startsWith("/uploads")) {
         return next();
       }
+      // Don't intercept static assets or files with extensions (e.g. .js, .css, .png, .ico, .map)
+      if (req.path.includes(".") && !req.path.endsWith(".html")) {
+        return next();
+      }
       try {
         const templatePath = path.join(process.cwd(), "index.html");
         if (fs.existsSync(templatePath)) {
@@ -296,6 +300,9 @@ async function setupVite() {
     app.use(express.static(distPath));
     app.get("*", (req, res, next) => {
       if (req.path.startsWith("/api") || req.path.startsWith("/uploads")) {
+        return next();
+      }
+      if (req.path.includes(".") && !req.path.endsWith(".html")) {
         return next();
       }
       const indexPath = path.join(distPath, "index.html");

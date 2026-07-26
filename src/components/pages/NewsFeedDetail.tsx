@@ -100,7 +100,7 @@ export default function NewsFeedDetail({ newsId, navigate }: NewsFeedDetailProps
             The news article you are seeking does not exist in our historical archive registries.
           </p>
           <button
-            onClick={() => navigate("/news-feed.html")}
+            onClick={() => navigate("/news-feed")}
             className="w-full py-2.5 bg-navy text-white text-[10px] uppercase font-sans font-semibold tracking-wider hover:bg-gold hover:text-navy transition-colors"
           >
             ← Return to News Feed
@@ -128,7 +128,7 @@ export default function NewsFeedDetail({ newsId, navigate }: NewsFeedDetailProps
           <div className="font-sans text-xs text-slate-400 flex items-center justify-center space-x-2">
             <span>Home</span>
             <span className="text-white/35">▪</span>
-            <span onClick={() => navigate("/news-feed.html")} className="hover:text-gold cursor-pointer transition-colors">Club Gazette</span>
+            <span onClick={() => navigate("/news-feed")} className="hover:text-gold cursor-pointer transition-colors">Club Gazette</span>
             <span className="text-white/35">▪</span>
             <span className="text-gold truncate max-w-xs">{news.title}</span>
           </div>
@@ -140,7 +140,7 @@ export default function NewsFeedDetail({ newsId, navigate }: NewsFeedDetailProps
         {/* Prominent Fixed Back Button */}
         <div>
           <button
-            onClick={() => navigate("/news-feed.html")}
+            onClick={() => navigate("/news-feed")}
             className="inline-flex items-center space-x-2 px-5 py-2.5 bg-white border border-slate-200 hover:border-gold hover:text-gold text-slate-700 text-[11px] uppercase font-sans font-semibold tracking-wider transition-all duration-200 shadow-sm"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -284,7 +284,7 @@ export default function NewsFeedDetail({ newsId, navigate }: NewsFeedDetailProps
         {/* Floating prominent back navigation button at the bottom for easy scrolling back */}
         <div className="flex justify-center pt-4">
           <button
-            onClick={() => navigate("/news-feed.html")}
+            onClick={() => navigate("/news-feed")}
             className="inline-flex items-center space-x-2 px-6 py-3 bg-navy hover:bg-gold text-white hover:text-navy text-xs uppercase font-sans font-bold tracking-wider transition-all duration-200 shadow-md rounded-xs"
           >
             <ArrowLeft className="w-4 h-4" />

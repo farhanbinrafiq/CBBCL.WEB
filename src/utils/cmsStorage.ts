@@ -319,7 +319,7 @@ const DEFAULT_NAV: NavCMSData = {
     { label: "Home", path: "/" },
     {
       label: "About",
-      path: "/about.html",
+      path: "/about",
       dropdown: [
         { label: "Club Introduction", sub: "overview" },
         { label: "History & Story", sub: "history" },
@@ -327,10 +327,10 @@ const DEFAULT_NAV: NavCMSData = {
         { label: "Key Objectives", sub: "objectives" }
       ]
     },
-    { label: "Facilities", path: "/facilities.html" },
+    { label: "Facilities", path: "/facilities" },
     {
       label: "Membership",
-      path: "/membership.html",
+      path: "/membership",
       dropdown: [
         { label: "Donor Membership", sub: "donor" },
         { label: "Life Membership", sub: "life" },
@@ -342,7 +342,7 @@ const DEFAULT_NAV: NavCMSData = {
     },
     {
       label: "Governance",
-      path: "/governance.html",
+      path: "/governance",
       dropdown: [
         { label: "Articles of Association", sub: "articles" },
         { label: "Club Constitution", sub: "constitution" },
@@ -350,12 +350,12 @@ const DEFAULT_NAV: NavCMSData = {
         { label: "Standing Committees", sub: "committees" }
       ]
     },
-    { label: "Board of Directors", path: "/board.html" },
-    { label: "Club Members", path: "/members.html" },
-    { label: "Events", path: "/events.html" },
-    { label: "News Feed", path: "/news-feed.html" },
-    { label: "Affiliations", path: "/affiliations.html" },
-    { label: "Contact", path: "/contact.html" }
+    { label: "Board of Directors", path: "/board" },
+    { label: "Club Members", path: "/members" },
+    { label: "Events", path: "/events" },
+    { label: "News Feed", path: "/news-feed" },
+    { label: "Affiliations", path: "/affiliations" },
+    { label: "Contact", path: "/contact" }
   ]
 };
 
@@ -365,11 +365,11 @@ const DEFAULT_FOOTER: FooterCMSData = {
   description: "Bangladesh’s premier coastal sanctuary and private social club, incorporated as a Non-Profit Company under The Companies Act, 1994.",
   quickLinks: [
     { label: "Home Base", path: "/" },
-    { label: "About Our Story", path: "/about.html" },
-    { label: "Club Facilities Showcase", path: "/facilities.html" },
-    { label: "Board of Directors", path: "/board.html" },
-    { label: "Club News Feed", path: "/news-feed.html" },
-    { label: "Affiliations", path: "/affiliations.html" }
+    { label: "About Our Story", path: "/about" },
+    { label: "Club Facilities Showcase", path: "/facilities" },
+    { label: "Board of Directors", path: "/board" },
+    { label: "Club News Feed", path: "/news-feed" },
+    { label: "Affiliations", path: "/affiliations" }
   ],
   membershipLinks: [
     "🏆 Donor Membership",
@@ -483,26 +483,26 @@ export const DEFAULT_FOOTER_SETTINGS: FooterSettings = {
       title: "Explore the Club",
       links: [
         { name: "Home Base", url: "/" },
-        { name: "About Our Story", url: "/about.html" },
-        { name: "Facilities Showcase", url: "/facilities.html" },
-        { name: "Board of Directors", url: "/board.html" },
-        { name: "Club News Feed", url: "/news-feed.html" },
-        { name: "Affiliations", url: "/affiliations.html" }
+        { name: "About Our Story", url: "/about" },
+        { name: "Facilities Showcase", url: "/facilities" },
+        { name: "Board of Directors", url: "/board" },
+        { name: "Club News Feed", url: "/news-feed" },
+        { name: "Affiliations", url: "/affiliations" }
       ]
     },
     {
       title: "Membership Tiers",
       links: [
-        { name: "🏆 Donor Membership", url: "/membership.html" },
-        { name: "🏵️ Life Membership", url: "/membership.html" },
-        { name: "🛡️ Permanent Membership", url: "/membership.html" },
-        { name: "⚓ Associate Membership", url: "/membership.html" }
+        { name: "🏆 Donor Membership", url: "/membership" },
+        { name: "🏵️ Life Membership", url: "/membership" },
+        { name: "🛡️ Permanent Membership", url: "/membership" },
+        { name: "⚓ Associate Membership", url: "/membership" }
       ]
     }
   ],
   legalLinks: [
-    { name: "Privacy Policy", url: "/about.html" },
-    { name: "Terms of Service", url: "/about.html" }
+    { name: "Privacy Policy", url: "/about" },
+    { name: "Terms of Service", url: "/about" }
   ],
   copyright: "© 2026 Cox's Bazar Boat Club Limited. All Rights Reserved. Incorporated under The Companies Act, 1994, Bangladesh."
 };

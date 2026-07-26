@@ -15,7 +15,7 @@ export default function BoardProfileCard({ director, navigate, variant = "main" 
   const isPresident = variant === "president";
 
   const handleCardClick = () => {
-    navigate(`/profile/${director.id}.html` as RoutePath);
+    navigate(`/profile/${director.id}` as RoutePath);
   };
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {

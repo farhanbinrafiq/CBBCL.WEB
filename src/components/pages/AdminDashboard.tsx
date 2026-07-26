@@ -60,16 +60,16 @@ type AdminTab = "members" | "profiles" | "board" | "news" | "club_members" | "si
 
 const AVAILABLE_ROUTES: { label: string; value: RoutePath }[] = [
   { label: "Home Page", value: "/" },
-  { label: "About Page", value: "/about.html" },
-  { label: "Facilities Showcase", value: "/facilities.html" },
-  { label: "Membership Qualifications", value: "/membership.html" },
-  { label: "Governance Documents", value: "/governance.html" },
-  { label: "Board of Directors Profile", value: "/board.html" },
-  { label: "Club Members Registry", value: "/members.html" },
-  { label: "Events & Festivals", value: "/events.html" },
-  { label: "Club News Feed & Circulars", value: "/news-feed.html" },
-  { label: "Affiliations Guide", value: "/affiliations.html" },
-  { label: "Contact registry & Forms", value: "/contact.html" },
+  { label: "About Page", value: "/about" },
+  { label: "Facilities Showcase", value: "/facilities" },
+  { label: "Membership Qualifications", value: "/membership" },
+  { label: "Governance Documents", value: "/governance" },
+  { label: "Board of Directors Profile", value: "/board" },
+  { label: "Club Members Registry", value: "/members" },
+  { label: "Events & Festivals", value: "/events" },
+  { label: "Club News Feed & Circulars", value: "/news-feed" },
+  { label: "Affiliations Guide", value: "/affiliations" },
+  { label: "Contact registry & Forms", value: "/contact" },
   { label: "Admin Console Panel", value: "/admin-dashboard" }
 ];
 
@@ -195,7 +195,7 @@ export default function AdminDashboard({ navigate, onLogout, initialActiveTab }:
   useEffect(() => {
     const adminUser = getLoggedInUser();
     if (!adminUser || adminUser.role !== "admin") {
-      navigate("/login.html");
+      navigate("/login");
       return;
     }
 
@@ -244,26 +244,26 @@ export default function AdminDashboard({ navigate, onLogout, initialActiveTab }:
           title: "Explore the Club",
           links: [
             { name: "Home Base", url: "/" },
-            { name: "About Our Story", url: "/about.html" },
-            { name: "Facilities Showcase", url: "/facilities.html" },
-            { name: "Board of Directors", url: "/board.html" },
-            { name: "Club News Feed", url: "/news-feed.html" },
-            { name: "Affiliations", url: "/affiliations.html" }
+            { name: "About Our Story", url: "/about" },
+            { name: "Facilities Showcase", url: "/facilities" },
+            { name: "Board of Directors", url: "/board" },
+            { name: "Club News Feed", url: "/news-feed" },
+            { name: "Affiliations", url: "/affiliations" }
           ]
         },
         {
           title: "Membership Tiers",
           links: [
-            { name: "🏆 Donor Membership", url: "/membership.html" },
-            { name: "🏵️ Life Membership", url: "/membership.html" },
-            { name: "🛡️ Permanent Membership", url: "/membership.html" },
-            { name: "⚓ Associate Membership", url: "/membership.html" }
+            { name: "🏆 Donor Membership", url: "/membership" },
+            { name: "🏵️ Life Membership", url: "/membership" },
+            { name: "🛡️ Permanent Membership", url: "/membership" },
+            { name: "⚓ Associate Membership", url: "/membership" }
           ]
         }
       ],
       legalLinks: [
-        { name: "Privacy Policy", url: "/about.html" },
-        { name: "Terms of Service", url: "/about.html" }
+        { name: "Privacy Policy", url: "/about" },
+        { name: "Terms of Service", url: "/about" }
       ],
       copyright: "© 2026 Cox's Bazar Boat Club Limited. All Rights Reserved. Incorporated under The Companies Act, 1994, Bangladesh."
     };
@@ -1172,7 +1172,7 @@ export default function AdminDashboard({ navigate, onLogout, initialActiveTab }:
 
   const handleLogOutAction = () => {
     onLogout();
-    navigate("/login.html");
+    navigate("/login");
   };
 
   return (
@@ -5076,7 +5076,7 @@ export default function AdminDashboard({ navigate, onLogout, initialActiveTab }:
                                 value={link.url}
                                 onChange={(e) => handleUpdateGroupLink(groupIdx, linkIdx, "url", e.target.value)}
                                 className="flex-1 text-xs p-2 border rounded bg-white font-mono focus:ring-1 focus:ring-gold"
-                                placeholder="URL Route (e.g. /about.html)"
+                                placeholder="URL Route (e.g. /about)"
                               />
                               <button
                                 type="button"
@@ -5129,7 +5129,7 @@ export default function AdminDashboard({ navigate, onLogout, initialActiveTab }:
                           value={legal.url}
                           onChange={(e) => handleUpdateLegalLink(legalIdx, "url", e.target.value)}
                           className="flex-1 text-xs p-2 border rounded bg-white font-mono focus:ring-1 focus:ring-gold"
-                          placeholder="URL Route (e.g. /about.html)"
+                          placeholder="URL Route (e.g. /about)"
                         />
                         <button
                           type="button"

@@ -194,7 +194,7 @@ export default function Membership({ navigate }: MembershipProps) {
                     <button
                       onClick={() => {
                         const slug = cat.title.toLowerCase().replace(/ +/g, "-").replace("-membership", "-member");
-                        navigate(`/membership/${slug}.html`);
+                        navigate(`/membership/${slug}`);
                       }}
                       className={`w-full py-2 text-center font-sans text-[9px] font-extrabold uppercase tracking-widest transition-colors border rounded-none ${
                         isLife

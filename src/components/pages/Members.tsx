@@ -102,7 +102,7 @@ export default function Members({ navigate, selectedMemberId = null }: MembersPr
               This membership record is empty, pending admin authorization, or has shifted indices.
             </p>
             <button
-              onClick={() => navigate("/members.html")}
+              onClick={() => navigate("/members")}
               className="mt-6 inline-flex items-center space-x-2 text-xs font-sans font-semibold uppercase tracking-wider text-navy hover:text-gold transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -118,7 +118,7 @@ export default function Members({ navigate, selectedMemberId = null }: MembersPr
         <div className="max-w-4xl mx-auto">
           {/* Breadcrumb nav */}
           <button
-            onClick={() => navigate("/members.html")}
+            onClick={() => navigate("/members")}
             className="group flex items-center space-x-2 text-xs font-semibold uppercase tracking-widest text-[#1a2744] hover:text-[#c9a84c] transition-colors mb-8"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
@@ -393,7 +393,7 @@ export default function Members({ navigate, selectedMemberId = null }: MembersPr
                   {foundingMembers.map((member) => (
                     <div
                       key={member.id}
-                      onClick={() => navigate(`/profile/${member.id}.html`)}
+                      onClick={() => navigate(`/profile/${member.id}`)}
                       className="bg-white border-2 border-gold/40 p-5 rounded-sm hover:border-gold hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group flex flex-col justify-between space-y-4 relative overflow-hidden"
                     >
                       {/* Subtle premium gold badge */}
@@ -465,7 +465,7 @@ export default function Members({ navigate, selectedMemberId = null }: MembersPr
                   {executiveOfficers.map((member) => (
                     <div
                       key={member.id}
-                      onClick={() => navigate(`/profile/${member.id}.html`)}
+                      onClick={() => navigate(`/profile/${member.id}`)}
                       className="bg-white border border-slate-200/80 p-5 rounded-xs hover:border-[#1a2744] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between space-y-4"
                     >
                       <div className="flex items-start space-x-4 min-w-0">
@@ -532,7 +532,7 @@ export default function Members({ navigate, selectedMemberId = null }: MembersPr
                   {generalMembers.map((member) => (
                     <div
                       key={member.id}
-                      onClick={() => navigate(`/profile/${member.id}.html`)}
+                      onClick={() => navigate(`/profile/${member.id}`)}
                       className="bg-white border border-slate-200/80 p-5 rounded-xs hover:border-[#c9a84c] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between space-y-4"
                     >
                       <div className="flex items-start space-x-4 min-w-0">

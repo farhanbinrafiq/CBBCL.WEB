@@ -313,7 +313,7 @@ export default function MembershipDetail({ categorySlug, navigate }: MembershipD
             {detail.name} <span className="font-serif italic text-gold font-normal">Registry Details</span>
           </h1>
           <div className="font-sans text-[11px] text-slate-400 flex items-center justify-center space-x-2">
-            <button onClick={() => navigate("/membership.html")} className="hover:text-gold transition-colors">Membership Guild</button>
+            <button onClick={() => navigate("/membership")} className="hover:text-gold transition-colors">Membership Guild</button>
             <span>&gt;</span>
             <span className="text-gold font-mono">{detail.name}</span>
           </div>
@@ -324,7 +324,7 @@ export default function MembershipDetail({ categorySlug, navigate }: MembershipD
       <div className="max-w-5xl mx-auto px-6 py-12">
         {/* Back Link */}
         <button
-          onClick={() => navigate("/membership.html")}
+          onClick={() => navigate("/membership")}
           className="group inline-flex items-center space-x-2 text-xs font-sans uppercase font-bold tracking-widest text-[#1a2744] hover:text-gold transition-colors mb-8"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />

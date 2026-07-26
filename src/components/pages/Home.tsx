@@ -118,13 +118,13 @@ export default function Home({ navigate }: HomeProps) {
                     className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4"
                   >
                     <button
-                      onClick={() => navigate(h.cta1Link as RoutePath)}
+                      onClick={() => navigate((h.cta1Link || "/about").replace(/\.html$/, "") as RoutePath)}
                       className="w-full sm:w-auto px-8 py-3.5 bg-gold text-navy font-sans text-[11px] font-semibold uppercase tracking-widest hover:bg-gold-light hover:scale-105 transition-all shadow-lg text-center cursor-pointer"
                     >
                       {h.cta1Text}
                     </button>
                     <button
-                      onClick={() => navigate(h.cta2Link as RoutePath)}
+                      onClick={() => navigate((h.cta2Link || "/membership").replace(/\.html$/, "") as RoutePath)}
                       className="w-full sm:w-auto px-8 py-3.5 bg-transparent text-white border border-white/40 font-sans text-[11px] font-semibold uppercase tracking-widest hover:bg-white hover:text-navy transition-all text-center cursor-pointer"
                     >
                       {h.cta2Text}
@@ -296,7 +296,7 @@ export default function Home({ navigate }: HomeProps) {
 
                       <div className="pt-4">
                         <button
-                          onClick={() => navigate("/about.html")}
+                          onClick={() => navigate("/about")}
                           className="group flex items-center space-x-2 font-sans text-[10px] font-semibold tracking-widest text-[#1a2744] hover:text-gold uppercase cursor-pointer"
                         >
                           <span>Read More About Our Constitution</span>
@@ -328,7 +328,7 @@ export default function Home({ navigate }: HomeProps) {
                     </p>
                     <div className="pt-2">
                       <button
-                        onClick={() => navigate("/membership.html")}
+                        onClick={() => navigate("/membership")}
                         className="px-6 py-3 bg-gold text-navy font-sans text-[10px] uppercase font-semibold tracking-widest hover:bg-gold-light hover:scale-105 transition-all inline-block shadow-lg cursor-pointer"
                       >
                         Apply For Registry Entry
@@ -364,7 +364,7 @@ export default function Home({ navigate }: HomeProps) {
                     {selectedFacilities.map((facility) => (
                       <div
                         key={facility.id}
-                        onClick={() => navigate("/facilities.html")}
+                        onClick={() => navigate("/facilities")}
                         className="group relative h-[320px] overflow-hidden bg-navy-mid cursor-pointer shadow-md rounded-sm border border-slate-200/50"
                       >
                         {/* Facility Background */}
@@ -468,7 +468,7 @@ export default function Home({ navigate }: HomeProps) {
                               <span className="truncate">{event.venue}</span>
                             </div>
                             <button
-                              onClick={() => navigate("/events.html")}
+                              onClick={() => navigate("/events")}
                               className="w-full text-center py-2 bg-navy text-white hover:bg-gold hover:text-navy text-[10px] uppercase font-semibold tracking-widest transition-colors duration-200 cursor-pointer text-sans"
                             >
                               Register Interest
@@ -531,7 +531,7 @@ export default function Home({ navigate }: HomeProps) {
                     </div>
                     <div className="flex items-center space-x-6 shrink-0">
                       <button
-                        onClick={() => navigate("/news-feed.html")}
+                        onClick={() => navigate("/news-feed")}
                         className="font-sans text-[11px] uppercase tracking-widest font-semibold text-navy hover:text-gold transition-colors cursor-pointer"
                       >
                         See All News →
@@ -571,7 +571,7 @@ export default function Home({ navigate }: HomeProps) {
                       {selectedNews.map((post) => (
                         <div
                           key={post.id}
-                          onClick={() => navigate(`/news-feed/${post.id}.html`)}
+                          onClick={() => navigate(`/news-feed/${post.id}`)}
                           className="w-[85vw] sm:w-[48vw] md:w-[38vw] lg:w-[24rem] shrink-0 snap-start bg-white border border-slate-200/80 hover:border-gold/40 shadow-sm hover:shadow-md p-6 flex flex-col justify-between transition-all duration-300 rounded-sm h-[26rem] cursor-pointer group whitespace-normal"
                         >
                           <div className="space-y-4">
@@ -631,7 +631,7 @@ export default function Home({ navigate }: HomeProps) {
                   {/* See All Main Button */}
                   <div className="text-center pt-2">
                     <button
-                      onClick={() => navigate("/news-feed.html")}
+                      onClick={() => navigate("/news-feed")}
                       className="px-8 py-3 bg-[#1a2744] text-white font-sans text-[11px] uppercase tracking-widest font-semibold hover:bg-gold hover:text-navy transition-colors inline-block cursor-pointer shadow-sm rounded-xs"
                     >
                       Browse The Live News Feed
@@ -792,7 +792,7 @@ export default function Home({ navigate }: HomeProps) {
                             </p>
                           </div>
                           <button
-                            onClick={() => navigate("/membership.html")}
+                            onClick={() => navigate("/membership")}
                             className="text-left font-sans text-[8px] font-semibold tracking-widest uppercase text-navy hover:text-gold cursor-pointer"
                           >
                             Learn More →
@@ -829,7 +829,7 @@ export default function Home({ navigate }: HomeProps) {
                       return (
                         <div
                           key={aff.id}
-                          onClick={() => navigate("/affiliations.html")}
+                          onClick={() => navigate("/affiliations")}
                           className={`bg-bg-primary p-6 text-center flex flex-col justify-between space-y-4 hover:shadow-lg transition-all cursor-pointer rounded-xs border ${
                             isFeatured ? "border-gold/60 ring-1 ring-gold/20" : "border-slate-200/50 hover:border-gold"
                           }`}

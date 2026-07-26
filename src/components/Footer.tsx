@@ -25,7 +25,8 @@ export default function Footer({ navigate }: FooterProps) {
   }, []);
 
   const handleLinkClick = (path: RoutePath) => {
-    navigate(path);
+    const clean = path ? (path.replace(/\.html$/, "") as RoutePath) : "/";
+    navigate(clean);
   };
 
   return (

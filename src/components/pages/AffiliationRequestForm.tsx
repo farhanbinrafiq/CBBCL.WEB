@@ -90,7 +90,7 @@ export default function AffiliationRequestForm({ navigate }: AffiliationRequestF
         
         {/* Back Link */}
         <button
-          onClick={() => navigate("/affiliations.html")}
+          onClick={() => navigate("/affiliations")}
           className="inline-flex items-center space-x-1.5 text-slate-500 hover:text-gold text-[10px] font-sans uppercase tracking-widest transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -127,14 +127,14 @@ export default function AffiliationRequestForm({ navigate }: AffiliationRequestF
             </div>
             <div className="pt-4 flex justify-center space-x-3">
               <button
-                onClick={() => navigate("/affiliations.html")}
+                onClick={() => navigate("/affiliations")}
                 className="px-5 py-2.5 bg-[#1a2744] text-white hover:bg-gold hover:text-navy text-[10px] font-sans font-bold uppercase tracking-widest inline-block transition-colors"
               >
                 Return to Reciprocal Grid
               </button>
               {currentUser && (
                 <button
-                  onClick={() => navigate("/dashboard.html")}
+                  onClick={() => navigate("/dashboard")}
                   className="px-5 py-2.5 border border-[#1a2744] text-navy hover:bg-[#1a2744] hover:text-white text-[10px] font-sans font-bold uppercase tracking-widest inline-block transition-colors"
                 >
                   My Portal
@@ -155,7 +155,7 @@ export default function AffiliationRequestForm({ navigate }: AffiliationRequestF
                 <p className="font-light leading-relaxed text-[11px]">
                   Reciprocal visitation passes are strictly issued to active, verified CBBCL members. 
                   {!currentUser ? (
-                    <span> Please <strong className="underline cursor-pointer" onClick={() => navigate("/login.html")}>Log In to your Member Portal</strong> to auto-authenticate your credentials.</span>
+                    <span> Please <strong className="underline cursor-pointer" onClick={() => navigate("/login")}>Log In to your Member Portal</strong> to auto-authenticate your credentials.</span>
                   ) : (
                     <span> Your account currently has status <strong>"{currentUser.role}"</strong>. Submissions from non-verified accounts will remain pending until your official Member Scrutiny is fully resolved.</span>
                   )}

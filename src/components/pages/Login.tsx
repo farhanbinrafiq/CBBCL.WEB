@@ -34,9 +34,9 @@ export default function Login({ navigate, onLoginSuccess }: LoginProps) {
     setTimeout(() => {
       onLoginSuccess();
       if (user.role === "admin") {
-        navigate("/admin-dashboard.html");
+        navigate("/admin-dashboard");
       } else {
-        navigate("/dashboard.html");
+        navigate("/dashboard");
       }
     }, 1000);
   };
@@ -116,30 +116,7 @@ export default function Login({ navigate, onLoginSuccess }: LoginProps) {
           </button>
         </form>
 
-        <div className="border-t border-slate-100 pt-6 text-center space-y-2">
-          <p className="font-sans text-xs text-slate-400 font-light">
-            Don't have a digital account signature yet?
-          </p>
-          <button
-            onClick={() => navigate("/register.html")}
-            className="font-sans text-[11px] font-bold text-gold-dark hover:text-navy uppercase tracking-wider"
-          >
-            Register Digital Credentials
-          </button>
-        </div>
 
-        {/* Demo hints table */}
-        <div className="bg-slate-50 p-4 rounded text-[10px] font-mono text-slate-500 border border-dashed border-slate-200">
-          <span className="block text-slate-400 font-bold mb-1 uppercase tracking-wider">Developer Demo Access Keys:</span>
-          <div className="grid grid-cols-2 gap-1.5">
-            <div>Admin: <strong className="text-navy">admin@cbbcl.org</strong></div>
-            <div>Key: <strong className="text-navy">admin123</strong></div>
-            <div>Verified: <strong className="text-navy">verified@cbbcl.org</strong></div>
-            <div>Key: <strong className="text-navy">verified123</strong></div>
-            <div>Normal: <strong className="text-navy">member@cbbcl.org</strong></div>
-            <div>Key: <strong className="text-navy">member123</strong></div>
-          </div>
-        </div>
 
       </div>
     </div>

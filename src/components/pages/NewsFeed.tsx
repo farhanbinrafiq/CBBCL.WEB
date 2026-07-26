@@ -192,7 +192,7 @@ export default function NewsFeed({ navigate }: NewsFeedProps) {
               return (
                 <div
                   key={post.id}
-                  onClick={() => navigate(`/news-feed/${post.id}.html`)}
+                  onClick={() => navigate(`/news-feed/${post.id}`)}
                   className="bg-white border border-slate-200 hover:border-gold/60 p-6 flex flex-col justify-between h-[440px] shadow-sm hover:shadow-xl transition-all duration-300 rounded-sm cursor-pointer group"
                 >
                   <div className="space-y-4">

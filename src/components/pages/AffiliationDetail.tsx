@@ -170,7 +170,7 @@ export default function AffiliationDetail({ clubId, navigate }: AffiliationDetai
             The requested reciprocal partner signature could not be verified or is temporarily unlisted or draft in the CMS registry.
           </p>
           <button
-            onClick={() => navigate("/affiliations.html")}
+            onClick={() => navigate("/affiliations")}
             className="px-6 py-2 bg-[#1a2744] text-white hover:bg-gold hover:text-[#1a2744] text-[10px] font-sans font-bold uppercase tracking-widest inline-flex items-center space-x-1.5 transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
@@ -196,7 +196,7 @@ export default function AffiliationDetail({ clubId, navigate }: AffiliationDetai
           <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 space-y-4 overflow-hidden">
             
             <button
-              onClick={() => navigate("/affiliations.html")}
+              onClick={() => navigate("/affiliations")}
               className="inline-flex items-center space-x-1.5 text-slate-400 hover:text-gold text-[10px] font-sans uppercase tracking-widest transition-colors mb-4 group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
@@ -433,7 +433,7 @@ export default function AffiliationDetail({ clubId, navigate }: AffiliationDetai
                 
                 <div className="pt-2">
                   <button
-                    onClick={() => navigate("/ezbooking-portal.html")}
+                    onClick={() => navigate("/ezbooking-portal")}
                     className="w-full py-3 bg-gold text-navy hover:bg-white hover:text-navy text-[10.5px] font-sans font-extrabold uppercase tracking-widest transition-all duration-200 cursor-pointer"
                   >
                     👉 Access EZBOOKING Member Portal
@@ -463,7 +463,7 @@ export default function AffiliationDetail({ clubId, navigate }: AffiliationDetai
         <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 space-y-4 overflow-hidden">
           
           <button
-            onClick={() => navigate("/affiliations.html")}
+            onClick={() => navigate("/affiliations")}
             className="inline-flex items-center space-x-1.5 text-slate-400 hover:text-gold text-[10px] font-sans uppercase tracking-widest transition-colors mb-4 group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
@@ -721,7 +721,7 @@ export default function AffiliationDetail({ clubId, navigate }: AffiliationDetai
               
               <div className="pt-2">
                 <button
-                  onClick={() => navigate(`/affiliation-request.html?club=${encodeURIComponent(club.name)}`)}
+                  onClick={() => navigate(`/affiliation-request?club=${encodeURIComponent(club.name)}`)}
                   className="w-full py-3 bg-gold text-navy hover:bg-white hover:text-navy text-[10px] font-sans font-extrabold uppercase tracking-widest rounded-none transition-all duration-200 shadow-md cursor-pointer"
                 >
                   Request Affiliation Access
