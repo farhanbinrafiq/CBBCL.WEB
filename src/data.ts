@@ -6,6 +6,7 @@ export const MAIMUNAL_KARIM_JISAN_IMAGE = "https://res.cloudinary.com/djdyqr8yd/
 export const MD_IMRAN_ALAM_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781893293/white_bg_20260620_001621_0000_lzshvp.png";
 export const MD_REZAUL_KABIR_REZA_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781895223/white_bg_20260620_005151_0000_geiljj.png";
 export const MEHEDI_HASAN_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781945122/IMG_1928_l2m81l.jpg";
+export const RESHEDUL_EVU_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1785186153/Untitled_design_lkmkvr.png";
 export const MD_ZIAUL_HOQUE = {
   name: "MD. Ziaul Hoque",
   image: "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781934394/white_bg_on1dfi.png"
@@ -134,7 +135,8 @@ export const DIRECTORS_DATA: Director[] = [
     id: "reshedul-evu",
     name: "Reshedul Evu",
     designation: "Founding Director",
-    membershipCode: "CBBCL-FOUNDER-015"
+    membershipCode: "CBBCL-FOUNDER-015",
+    photoUrl: RESHEDUL_EVU_IMAGE
   }
 ];
 
