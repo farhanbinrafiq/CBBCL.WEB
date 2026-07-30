@@ -63,9 +63,9 @@ function getSiteSettings() {
         twitter: "https://twitter.com"
       },
       contact: {
-        email: "registry@cbbcl.org, admin@cbbcl.org",
-        phone: "+880 1711-223344",
-        address: "Coastal Point Bypass, Marine Drive Boulevard, Cox's Bazar, Bangladesh"
+        email: "registration@cbbcl.org, info@cbbcl.org",
+        phone: "+880 13328 86688",
+        address: "Level 9, House 28, Block A, Kolatoli R/A.\n4700, Cox's Bazar, Bangladesh\nwww.cbbcl.org"
       },
       footerLinks: [
         {

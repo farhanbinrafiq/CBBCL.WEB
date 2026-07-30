@@ -192,12 +192,12 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
       <div id="cbbcl-topbar" className="bg-navy py-2 px-6 text-slate-300 font-sans tracking-wide text-[11px] border-b border-navy-light hidden md:block">
         <div className="container flex justify-between items-center">
           <div className="flex items-center space-x-6">
-            <span>📍 Coastal Point Bypass, Cox's Bazar, Bangladesh</span>
-            <span>📞 +880 1711-223344</span>
+            <span>📍 Level 9, House 28, Block A, Kolatoli R/A., 4700 Cox's Bazar, Bangladesh</span>
+            <span>📞 +880 13328 86688</span>
           </div>
           <div className="flex items-center space-x-6">
-            <span>✉️ registry@cbbcl.org</span>
-            <span>🕒 Open Daily: 09:00 AM – 10:00 PM</span>
+            <span>✉️ registration@cbbcl.org, info@cbbcl.org</span>
+            <span>🌐 www.cbbcl.org</span>
           </div>
         </div>
       </div>

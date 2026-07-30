@@ -153,11 +153,13 @@ export default function Footer({ navigate }: FooterProps) {
                       <span className="leading-relaxed whitespace-pre-line">{data.contact.address}</span>
                     </li>
                     <li>
-                      <span className="text-gold font-semibold tracking-wider block text-xs uppercase mb-0.5">REGISTRY EMAIL</span>
-                      <span className="block">{data.contact.email}</span>
+                      <span className="text-gold font-semibold tracking-wider block text-xs uppercase mb-0.5">OFFICIAL EMAIL</span>
+                      {data.contact.email.split(",").map((email) => email.trim()).filter(Boolean).map((email) => (
+                        <span key={email} className="block">{email}</span>
+                      ))}
                     </li>
                     <li>
-                      <span className="text-gold font-semibold tracking-wider block text-xs uppercase mb-0.5">RESERVATION HOTLINE</span>
+                      <span className="text-gold font-semibold tracking-wider block text-xs uppercase mb-0.5">SECRETARIAT HOTLINE</span>
                       <span className="block">{data.contact.phone}</span>
                     </li>
                   </>
