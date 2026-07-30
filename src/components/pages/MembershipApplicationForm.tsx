@@ -200,7 +200,7 @@ export default function MembershipApplicationForm({ navigate }: MembershipApplic
             <button
               type="button"
               onClick={() => {
-                window.location.href = "https://registration.coxsbazarboatclubltd.com/";
+                window.location.href = "https://registration.cbbcl.org";
               }}
               className="bg-gold hover:bg-navy text-navy hover:text-white px-4 py-2 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap transition-colors cursor-pointer"
             >

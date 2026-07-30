@@ -127,7 +127,7 @@ export default function Membership({ navigate }: MembershipProps) {
           <div className="pt-2">
             <button
               onClick={() => {
-                window.location.href = "https://registration.coxsbazarboatclubltd.com/";
+                window.location.href = "https://registration.cbbcl.org";
               }}
               className="inline-flex items-center space-x-2 px-6 py-3 bg-gold text-navy hover:bg-navy hover:text-white font-sans text-xs font-extrabold uppercase tracking-widest transition-all shadow-md cursor-pointer"
             >
@@ -265,7 +265,7 @@ export default function Membership({ navigate }: MembershipProps) {
               <button
                 type="button"
                 onClick={() => {
-                  window.location.href = "https://registration.coxsbazarboatclubltd.com/";
+                  window.location.href = "https://registration.cbbcl.org";
                 }}
                 className="w-full py-3 bg-gold text-navy hover:bg-navy hover:text-white text-xs font-sans font-extrabold uppercase tracking-widest transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer mt-2"
               >

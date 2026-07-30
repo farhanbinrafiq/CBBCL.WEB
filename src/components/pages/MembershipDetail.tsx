@@ -292,7 +292,7 @@ export default function MembershipDetail({ categorySlug, navigate }: MembershipD
   const detail = MEMBERSHIP_DETAILS[slug] || MEMBERSHIP_DETAILS["life-member"];
 
   const handleApplyClick = () => {
-    window.location.href = "https://registration.coxsbazarboatclubltd.com/";
+    window.location.href = "https://registration.cbbcl.org";
   };
 
   return (
