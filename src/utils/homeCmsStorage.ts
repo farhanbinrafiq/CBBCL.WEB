@@ -109,12 +109,12 @@ const DEFAULT_HOME_LAYOUT: HomeCMSLayoutData = {
     "hero",
     "stats",
     "president",
+    "membership",
     "overview",
     "facilities",
     "events",
     "news",
     "board",
-    "membership",
     "affiliations",
     "contact"
   ],

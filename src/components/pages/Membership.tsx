@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Award, Check, ShieldCheck, HelpCircle, ArrowRight, UserPlus, FileText } from "lucide-react";
 import { motion } from "motion/react";
 import { RoutePath } from "../../types";
@@ -6,6 +6,18 @@ import { getMembershipApplications, saveMembershipApplications } from "../../uti
 import { getPageContent } from "../../utils/cmsStorage";
 import { MASTER_HERO_VIDEO } from "../../data";
 import BackgroundVideo from "../BackgroundVideo";
+import { MEMBERSHIP_DETAILS } from "./MembershipDetail";
+
+// Strips the parenthetical note from a fee string, e.g. "BDT 800,000 (Onboarding Tariff)" -> "BDT 800,000"
+function formatEntryFee(admission: string): string {
+  return admission.split(" (")[0];
+}
+
+// "Exempted..." -> "No Annual Fee"; otherwise strips parenthetical and appends "/yr"
+function formatAnnualFee(annual: string): string {
+  if (annual.toLowerCase().startsWith("exempt")) return "No Annual Fee";
+  return `${annual.split(" (")[0]}/yr`;
+}
 
 interface MembershipProps {
   navigate: (path: RoutePath) => void;
@@ -14,36 +26,69 @@ interface MembershipProps {
 export default function Membership({ navigate }: MembershipProps) {
   const [activeFAQ, setActiveFAQ] = useState<number | null>(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const nominationFormRef = React.useRef<HTMLDivElement | null>(null);
   const [formData, setFormData] = useState({
     fullName: "",
+    email: "",
     category: "Permanent",
     dob: "",
     org: "",
     designation: "",
     phone: "",
+    facebookLink: "",
+    linkedinLink: "",
+    websiteLink: "",
     proposerCode: "",
     seconderCode: ""
   });
 
   const [cmsPage] = useState(getPageContent());
 
+  useEffect(() => {
+    if (window.location.hash === "#nomination-form") {
+      nominationFormRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, []);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const scrollToNominationForm = () => {
+    nominationFormRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.fullName && formData.phone) {
+    if (!formData.fullName || !formData.email || !formData.phone || !formData.facebookLink || !formData.linkedinLink) return;
+
+    setSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const res = await fetch("/api/membership/nominate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Failed to send nomination request.");
+      }
+
       const currentList = getMembershipApplications();
       const newAppId = "app-" + Date.now();
       const newApp = {
         id: newAppId,
         fullName: formData.fullName,
-        email: `${formData.fullName.toLowerCase().replace(/ +/g, ".")}@example.com`,
+        email: formData.email,
         phone: formData.phone,
         membershipType: formData.category + " Membership",
-        motivation: `Nomination proposing request submitted through web portal. Proposer Code: ${formData.proposerCode || "Under Committee Review"}, Seconder Code: ${formData.seconderCode || "Under Committee Review"}.`,
+        motivation: `Nomination proposing request submitted through web portal. Proposer Code: ${formData.proposerCode || "Under Committee Review"}, Seconder Code: ${formData.seconderCode || "Under Committee Review"}. Facebook: ${formData.facebookLink}, LinkedIn: ${formData.linkedinLink}${formData.websiteLink ? `, Website: ${formData.websiteLink}` : ""}.`,
         organization: formData.org || "Zenith Enterprise",
         designation: formData.designation || "Director",
         dob: formData.dob || "Not specified",
@@ -57,15 +102,23 @@ export default function Membership({ navigate }: MembershipProps) {
         setFormSubmitted(false);
         setFormData({
           fullName: "",
+          email: "",
           category: "Permanent",
           dob: "",
           org: "",
           designation: "",
           phone: "",
+          facebookLink: "",
+          linkedinLink: "",
+          websiteLink: "",
           proposerCode: "",
           seconderCode: ""
         });
       }, 5000);
+    } catch (error: any) {
+      setSubmitError(error.message || "Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -126,12 +179,10 @@ export default function Membership({ navigate }: MembershipProps) {
           </p>
           <div className="pt-2">
             <button
-              onClick={() => {
-                window.location.href = "https://registration.cbbcl.org";
-              }}
+              onClick={scrollToNominationForm}
               className="inline-flex items-center space-x-2 px-6 py-3 bg-gold text-navy hover:bg-navy hover:text-white font-sans text-xs font-extrabold uppercase tracking-widest transition-all shadow-md cursor-pointer"
             >
-              <span>Apply for Nomination</span>
+              <span>Interested in Membership</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -154,56 +205,84 @@ export default function Membership({ navigate }: MembershipProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
             {categories.map((cat, idx) => {
               const isLife = cat.title === "Life Membership";
+              const slug = cat.title.toLowerCase().replace(/ +/g, "-").replace("-membership", "-member");
+              const detail = MEMBERSHIP_DETAILS[slug];
               return (
                 <div
                   key={idx}
-                  className={`bg-white p-6 rounded-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative ${
-                    isLife 
-                      ? "border-2 border-gold md:scale-105 z-15 shadow-md shadow-gold/20 h-[360px]" 
-                      : "border border-slate-150/60 h-[350px]"
-                  }`}
+                  className={`relative ${isLife ? "md:scale-105 z-15" : ""}`}
                 >
                   {isLife && (
-                    <span className="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white font-sans text-[8px] font-extrabold uppercase tracking-widest px-3 py-1 rounded shadow-md border border-amber-600 inline-block whitespace-nowrap z-20">
+                    <span className="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-gold-light via-gold to-gold-dark text-navy font-sans text-[8px] font-extrabold uppercase tracking-widest px-3 py-1 rounded shadow-md border border-gold-dark/40 inline-block whitespace-nowrap z-20">
                       👑 MOST PRESTIGIOUS
                     </span>
                   )}
-                  
-                  <div className="space-y-3">
-                    <div className="bg-bg-secondary p-1.5 w-8 -mt-2 -ml-2 rounded-br-sm border-r border-b border-gold/40 text-center">
-                      <span className="font-sans font-bold text-navy text-[10px]">{idx + 1}</span>
-                    </div>
-                    <h4 className="font-display text-[15px] font-bold text-text-dark leading-tight">{cat.title}</h4>
-                    <p className="font-sans text-[11px] text-text-body leading-relaxed font-light line-clamp-4">
-                      {cat.desc}
-                    </p>
-                  </div>
 
-                  <div className="mt-auto pt-3 space-y-3">
-                    <div className="border-t border-slate-50 pt-2 space-y-1 text-[9px] font-sans text-text-light">
-                      <div className="flex justify-between">
-                        <span>Voting Rights:</span>
-                        <span className="text-navy font-semibold">{cat.voters}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Onboarding Fee:</span>
-                        <span className="text-gold font-semibold">{cat.fee}</span>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => {
-                        const slug = cat.title.toLowerCase().replace(/ +/g, "-").replace("-membership", "-member");
-                        navigate(`/membership/${slug}`);
-                      }}
-                      className={`w-full py-2 text-center font-sans text-[9px] font-extrabold uppercase tracking-widest transition-colors border rounded-none ${
-                        isLife
-                          ? "bg-gold text-navy border-gold hover:bg-navy hover:text-white"
-                          : "bg-navy text-white border-navy hover:bg-gold hover:text-navy hover:border-gold"
+                  {/* Metallic gold frame, echoing the club emblem's gold ring */}
+                  <div
+                    className={`group h-full rounded-md p-[2px] bg-gradient-to-br transition-all duration-300 ${
+                      isLife
+                        ? "from-gold-light via-gold to-gold-dark shadow-[0_0_28px_-4px_rgba(201,168,76,0.55)]"
+                        : "from-gold-light/50 via-gold/30 to-gold-dark/50 hover:from-gold-light hover:via-gold hover:to-gold-dark hover:shadow-[0_0_22px_-6px_rgba(201,168,76,0.4)]"
+                    }`}
+                  >
+                    <div
+                      className={`rounded-[5px] p-6 flex flex-col justify-between bg-gradient-to-b shadow-[0_14px_36px_-10px_rgba(26,39,68,0.28)] group-hover:shadow-[0_18px_44px_-8px_rgba(26,39,68,0.35)] transition-shadow duration-300 ${
+                        isLife ? "from-[#fffdf5] to-white h-[372px]" : "from-white to-slate-50/60 h-[362px]"
                       }`}
                     >
-                      Read Full Details
-                    </button>
+                      <div className="space-y-3">
+                        {/* Embossed medallion-style index badge */}
+                        <div className="p-[2px] w-8 h-8 rounded-full bg-gradient-to-br from-gold-light via-gold to-gold-dark shadow-[inset_0_1px_1px_rgba(255,255,255,0.65),0_2px_8px_rgba(168,135,58,0.45)] -mt-2 -ml-2">
+                          <div className="w-full h-full rounded-full bg-gradient-to-br from-navy via-navy-mid to-navy-light flex items-center justify-center">
+                            <span className="font-sans font-bold text-gold-light text-[10px]">{idx + 1}</span>
+                          </div>
+                        </div>
+                        <h4 className="font-display text-[15px] font-bold text-text-dark leading-tight">{cat.title}</h4>
+                        <p className="font-sans text-[11px] text-text-body leading-relaxed font-light line-clamp-4">
+                          {cat.desc}
+                        </p>
+                      </div>
+
+                      <div className="mt-auto pt-3 space-y-3">
+                        <div className="border-t border-gold/15 pt-2 space-y-1 text-[9px] font-sans text-text-light">
+                          <div className="flex justify-between">
+                            <span>Voting Rights:</span>
+                            <span className="text-navy font-semibold">{cat.voters}</span>
+                          </div>
+                          {detail ? (
+                            <>
+                              <div className="flex justify-between">
+                                <span>Entry Fee:</span>
+                                <span className="font-semibold bg-gradient-to-b from-gold-light via-gold to-gold-dark bg-clip-text text-transparent">{formatEntryFee(detail.fees.admission)}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>Annual Fee:</span>
+                                <span className="font-semibold bg-gradient-to-b from-gold-light via-gold to-gold-dark bg-clip-text text-transparent">{formatAnnualFee(detail.fees.annual)}</span>
+                              </div>
+                            </>
+                          ) : (
+                            <div className="flex justify-between">
+                              <span>Onboarding Fee:</span>
+                              <span className="font-semibold bg-gradient-to-b from-gold-light via-gold to-gold-dark bg-clip-text text-transparent">{cat.fee}</span>
+                            </div>
+                          )}
+                        </div>
+
+                        <button
+                          onClick={() => {
+                            navigate(`/membership/${slug}`);
+                          }}
+                          className={`w-full py-2 text-center font-sans text-[9px] font-extrabold uppercase tracking-widest transition-colors border rounded-none ${
+                            isLife
+                              ? "bg-gradient-to-r from-gold-light via-gold to-gold-dark text-navy border-gold-dark/40 hover:brightness-105"
+                              : "bg-navy text-white border-navy hover:bg-gold hover:text-navy hover:border-gold"
+                          }`}
+                        >
+                          Read Full Details
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               );
@@ -248,28 +327,26 @@ export default function Membership({ navigate }: MembershipProps) {
           </div>
 
           {/* Form Area (Right Side) */}
-          <div className="lg:col-span-6 bg-slate-50/70 p-6 md:p-8 border border-slate-200 rounded-sm shadow-inner">
+          <div id="nomination-form" ref={nominationFormRef} className="lg:col-span-6 bg-slate-50/70 p-6 md:p-8 border border-slate-200 rounded-sm shadow-inner">
             <div className="space-y-3 mb-6">
               <div className="flex items-center space-x-2 text-gold">
                 <FileText className="w-5 h-5" />
                 <span className="font-sans text-[10px] uppercase font-bold tracking-widest mt-0.5">
-                  Registry Nomination Portal
+                  Membership Nomination Portal
                 </span>
               </div>
               <h3 className="font-display text-xl text-text-dark font-semibold">
-                Nomination Proposal Request
+                Interest of Membership Request
               </h3>
               <p className="font-sans text-[11px] text-slate-500 font-light leading-relaxed">
-                If you do not have current proposer references, the Scrutiny Committee may grant temporary clearance upon corporate profile review. You can also apply directly through our official nomination registration portal.
+                If you do not have current proposer references, the Scrutiny Committee may grant temporary clearance upon corporate profile review. Fill out the form below and our Registration Office will follow up directly.
               </p>
               <button
                 type="button"
-                onClick={() => {
-                  window.location.href = "https://registration.cbbcl.org";
-                }}
+                onClick={scrollToNominationForm}
                 className="w-full py-3 bg-gold text-navy hover:bg-navy hover:text-white text-xs font-sans font-extrabold uppercase tracking-widest transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer mt-2"
               >
-                <span>Apply for Nomination</span>
+                <span>Interested in Membership</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -278,7 +355,7 @@ export default function Membership({ navigate }: MembershipProps) {
               <div className="p-6 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-sans rounded-md text-center">
                 <ShieldCheck className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
                 <p className="font-semibold text-sm mb-1">Proposal Dispatched Successfully!</p>
-                <p>An official club prospectus and application packet is dispatched to your office. Verification starts immediately.</p>
+                <p>Your nomination request has been sent to our Registration Office. A member of our team will follow up with you shortly.</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -293,7 +370,22 @@ export default function Membership({ navigate }: MembershipProps) {
                     value={formData.fullName}
                     onChange={handleInputChange}
                     className="w-full bg-white border border-slate-200 px-3 py-2 text-xs focus:ring-1 focus:ring-gold outline-none transition-all"
-                    placeholder="e.g., Saifuddin Khaled Robel"
+                    placeholder="Your Full Name"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full bg-white border border-slate-200 px-3 py-2 text-xs focus:ring-1 focus:ring-gold outline-none transition-all"
+                    placeholder="e.g. name@domain.com"
                   />
                 </div>
 
@@ -312,7 +404,10 @@ export default function Membership({ navigate }: MembershipProps) {
                       <option>Life</option>
                       <option>Permanent</option>
                       <option>Associate</option>
+                      <option>Diplomat</option>
+                      <option>Foreign</option>
                       <option>Corporate</option>
+                      <option>Honorary</option>
                     </select>
                   </div>
                   <div className="space-y-1.5">
@@ -363,7 +458,52 @@ export default function Membership({ navigate }: MembershipProps) {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
-                      Proposer Code (Optional)
+                      Facebook Profile Link *
+                    </label>
+                    <input
+                      type="url"
+                      required
+                      name="facebookLink"
+                      value={formData.facebookLink}
+                      onChange={handleInputChange}
+                      className="w-full bg-white border border-slate-200 px-3 py-2 text-xs focus:border-gold outline-none"
+                      placeholder="https://facebook.com/yourname"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
+                      LinkedIn Profile Link *
+                    </label>
+                    <input
+                      type="url"
+                      required
+                      name="linkedinLink"
+                      value={formData.linkedinLink}
+                      onChange={handleInputChange}
+                      className="w-full bg-white border border-slate-200 px-3 py-2 text-xs focus:border-gold outline-none"
+                      placeholder="https://linkedin.com/in/yourname"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
+                    Website Link (Optional)
+                  </label>
+                  <input
+                    type="url"
+                    name="websiteLink"
+                    value={formData.websiteLink}
+                    onChange={handleInputChange}
+                    className="w-full bg-white border border-slate-200 px-3 py-2 text-xs focus:border-gold outline-none"
+                    placeholder="https://yourcompany.com"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
+                      Reference Name/Code (Optional)
                     </label>
                     <input
                       type="text"
@@ -390,11 +530,16 @@ export default function Membership({ navigate }: MembershipProps) {
                   </div>
                 </div>
 
+                {submitError && (
+                  <p className="text-[11px] font-sans text-red-600 font-medium">{submitError}</p>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full py-3 bg-[#1a2744] hover:bg-gold hover:text-navy text-white text-xs font-sans font-semibold uppercase tracking-widest transition-all mt-4"
+                  disabled={submitting}
+                  className="w-full py-3 bg-[#1a2744] hover:bg-gold hover:text-navy text-white text-xs font-sans font-semibold uppercase tracking-widest transition-all mt-4 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  Confirm and Dispatch Nomination Request
+                  {submitting ? "Submitting..." : "Confirm and Submit Your Interest"}
                 </button>
               </form>
             )}

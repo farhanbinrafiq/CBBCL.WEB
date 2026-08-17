@@ -35,7 +35,7 @@ interface DetailInfo {
   rules: string[];
 }
 
-const MEMBERSHIP_DETAILS: Record<string, DetailInfo> = {
+export const MEMBERSHIP_DETAILS: Record<string, DetailInfo> = {
   "life-member": {
     name: "Life Membership",
     badge: "Cox's Bazar Boat Club Limited",
@@ -292,7 +292,7 @@ export default function MembershipDetail({ categorySlug, navigate }: MembershipD
   const detail = MEMBERSHIP_DETAILS[slug] || MEMBERSHIP_DETAILS["life-member"];
 
   const handleApplyClick = () => {
-    window.location.href = "https://registration.cbbcl.org";
+    navigate("/membership#nomination-form");
   };
 
   return (
@@ -491,7 +491,7 @@ export default function MembershipDetail({ categorySlug, navigate }: MembershipD
                 onClick={handleApplyClick}
                 className="w-full py-3.5 bg-gold text-navy hover:bg-white text-xs font-sans font-extrabold uppercase tracking-widest transition-all shadow-md flex items-center justify-center space-x-2"
               >
-                <span>Apply for Nomination</span>
+                <span>Interested in Membership</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
 

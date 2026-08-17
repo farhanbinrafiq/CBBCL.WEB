@@ -26,11 +26,19 @@ import Dashboard from "./components/pages/Dashboard";
 import AdminDashboard from "./components/pages/AdminDashboard";
 import Members from "./components/pages/Members";
 import MembershipDetail from "./components/pages/MembershipDetail";
-import MembershipApplicationForm from "./components/pages/MembershipApplicationForm";
 import AffiliationDetail from "./components/pages/AffiliationDetail";
 import AffiliationRequestForm from "./components/pages/AffiliationRequestForm";
 import EZBookingPortal from "./components/pages/EZBookingPortal";
 import { motion, AnimatePresence } from "motion/react";
+
+// The standalone membership application form has been retired in favor of the
+// single nomination form on the Membership page; old links/bookmarks land here instead.
+function RedirectToMembership({ navigate }: { navigate: (path: RoutePath) => void }) {
+  useEffect(() => {
+    navigate("/membership#nomination-form");
+  }, []);
+  return null;
+}
 
 function normalizePath(rawPath: string): string {
   if (!rawPath) return "/";
@@ -311,7 +319,7 @@ export default function App() {
         return <Membership navigate={navigate} />;
       case "/membership-application":
       case "/membership-application.html":
-        return <MembershipApplicationForm navigate={navigate} />;
+        return <RedirectToMembership navigate={navigate} />;
       case "/governance":
       case "/governance.html":
         return <Governance initialSection={initialSection || "articles"} />;

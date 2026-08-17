@@ -1,26 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Mail, Phone, MapPin, Clock, Anchor, Send, CheckCircle2, ShieldAlert } from "lucide-react";
 import { motion } from "motion/react";
 import { MASTER_HERO_VIDEO } from "../../data";
 import BackgroundVideo from "../BackgroundVideo";
+import { fetchFooterSettings, getFooterSettingsSync } from "../../utils/cmsStorage";
+import { FooterSettings } from "../../types";
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", subject: "Membership Query", message: "" });
+  const [footerData, setFooterData] = useState<FooterSettings>(() => getFooterSettingsSync());
+
+  useEffect(() => {
+    fetchFooterSettings().then((res) => {
+      if (res && res.contact) {
+        setFooterData(res);
+      }
+    });
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.name && formData.email && formData.message) {
+    if (!formData.name || !formData.email || !formData.message) return;
+
+    setSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const res = await fetch("/api/contact/inquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Failed to send your inquiry.");
+      }
+
       setSubmitted(true);
       setTimeout(() => {
         setSubmitted(false);
         setFormData({ name: "", email: "", phone: "", subject: "Membership Query", message: "" });
       }, 5000);
+    } catch (error: any) {
+      setSubmitError(error.message || "Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -80,8 +113,8 @@ export default function Contact() {
                 </div>
                 <div>
                   <span className="text-[10px] text-slate-400 font-bold tracking-widest block uppercase">CLUB SECRETARIAT & PIER</span>
-                  <p className="text-text-dark font-light block mt-1 leading-relaxed">
-                    Coastal Point Bypass, Marine Drive Boulevard Circle, Cox's Bazar, Bangladesh
+                  <p className="text-text-dark font-light block mt-1 leading-relaxed whitespace-pre-line">
+                    {footerData.contact.address}
                   </p>
                 </div>
               </div>
@@ -93,8 +126,7 @@ export default function Contact() {
                 <div>
                   <span className="text-[10px] text-slate-400 font-bold tracking-widest block uppercase">TELEPHONE HOTLINE</span>
                   <p className="text-text-dark font-light block mt-1 leading-relaxed">
-                    +880 1711-223344 / +880 1812-445566 <br />
-                    (Direct Reception Desk)
+                    {footerData.contact.phone}
                   </p>
                 </div>
               </div>
@@ -106,8 +138,12 @@ export default function Contact() {
                 <div>
                   <span className="text-[10px] text-slate-400 font-bold tracking-widest block uppercase">EMAIL REGISTRIES</span>
                   <p className="text-text-dark font-light block mt-1 leading-relaxed">
-                    registry@cbbcl.org <br />
-                    admin@cbbcl.org (Corporate Operations)
+                    {footerData.contact.email.split(",").map((email) => email.trim()).filter(Boolean).map((email, i, arr) => (
+                      <React.Fragment key={email}>
+                        {email}
+                        {i < arr.length - 1 && <br />}
+                      </React.Fragment>
+                    ))}
                   </p>
                 </div>
               </div>
@@ -132,7 +168,7 @@ export default function Contact() {
           <div className="lg:col-span-7 bg-white p-8 border border-slate-200/80 rounded-sm shadow-xl">
             <h3 className="font-display text-lg text-text-dark font-semibold tracking-wide border-b border-slate-100 pb-3 mb-6 flex items-center space-x-2">
               <Anchor className="w-4.5 h-4.5 text-gold" />
-              <span>Registry Inquiry dispatch ledger</span>
+              <span>Registry Inquiry Portal</span>
             </h3>
 
             {submitted ? (
@@ -155,7 +191,7 @@ export default function Contact() {
                       value={formData.name}
                       onChange={handleInputChange}
                       className="w-full bg-slate-50 border border-slate-200 px-4 py-2.5 text-xs focus:bg-white focus:border-gold outline-none transition-colors"
-                      placeholder="e.g. Humayun Robel"
+                      placeholder="Type your Full Name"
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -222,12 +258,17 @@ export default function Contact() {
                   ></textarea>
                 </div>
 
+                {submitError && (
+                  <p className="text-[11px] font-sans text-red-600 font-medium">{submitError}</p>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full py-3 bg-[#1a2744] hover:bg-gold hover:text-navy text-white text-xs font-sans font-semibold uppercase tracking-widest transition-all mt-4 flex items-center justify-center space-x-2 shadow-lg"
+                  disabled={submitting}
+                  className="w-full py-3 bg-[#1a2744] hover:bg-gold hover:text-navy text-white text-xs font-sans font-semibold uppercase tracking-widest transition-all mt-4 flex items-center justify-center space-x-2 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   <Send className="w-4 h-4" />
-                  <span>Dispatch To Registry Coordinator</span>
+                  <span>{submitting ? "Dispatching..." : "Submit Inquiry"}</span>
                 </button>
               </form>
             )}

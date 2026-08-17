@@ -112,7 +112,7 @@ export default function Register({ navigate }: RegisterProps) {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="w-full bg-slate-50 border border-slate-205 px-4 py-2 text-xs outline-none focus:bg-white focus:border-gold transition-all"
-                placeholder="e.g. Farhan Rafiq"
+                placeholder="Type your Full Name"
               />
             </div>
 

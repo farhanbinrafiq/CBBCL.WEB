@@ -51,7 +51,8 @@ const DEFAULT_USERS: User[] = [
     email: "admin@cbbcl.org",
     passwordHash: "admin123",
     role: "admin",
-    status: "approved"
+    status: "approved",
+    membershipNumber: "CBBCL-ADMIN-001"
   },
   {
     id: "unverified-member-id",

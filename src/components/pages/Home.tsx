@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { RoutePath } from "../../types";
 import { getBoardMembers, getNewsPosts, getDirectorPortrait } from "../../utils/storage";
-import { getPageContent, getCMSFacilities, getCMSEvents, getCMSAffiliations } from "../../utils/cmsStorage";
+import { getPageContent, getCMSFacilities, getCMSEvents, getCMSAffiliations, fetchFooterSettings, getFooterSettingsSync } from "../../utils/cmsStorage";
+import { FooterSettings } from "../../types";
 import BoardProfileCard from "../BoardProfileCard";
 import CardMedia from "../CardMedia";
 import { getHomeLayoutCMS } from "../../utils/homeCmsStorage";
@@ -9,8 +10,14 @@ import { ArrowRight, Quote, Calendar, MapPin, Mail, Phone, Clock, Anchor, Users,
 import { motion } from "motion/react";
 import { PRESIDENT_IMAGE, MASTER_HERO_VIDEO } from "../../data";
 import BackgroundVideo from "../BackgroundVideo";
+import { MEMBERSHIP_DETAILS } from "./MembershipDetail";
 // @ts-ignore
 import cruiseHero from "../../assets/images/cruise_hero_1780825257603.png";
+
+// Strips the parenthetical note from a fee string, e.g. "BDT 800,000 (Onboarding Tariff)" -> "BDT 800,000"
+function formatEntryFee(admission: string): string {
+  return admission.split(" (")[0];
+}
 
 interface HomeProps {
   navigate: (path: RoutePath) => void;
@@ -18,8 +25,72 @@ interface HomeProps {
 
 export default function Home({ navigate }: HomeProps) {
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formSubmitting, setFormSubmitting] = useState(false);
+  const [formSubmitError, setFormSubmitError] = useState<string | null>(null);
   const [formData, setFormData] = useState({ name: "", phone: "", email: "", message: "" });
   const newsCarouselRef = React.useRef<HTMLDivElement>(null);
+  const membershipCarouselRef = React.useRef<HTMLDivElement>(null);
+  const membershipAutoplayPaused = React.useRef(false);
+
+  // Auto-advances the membership carousel; pauses on hover/touch, loops back to start at the end.
+  useEffect(() => {
+    const track = membershipCarouselRef.current;
+    if (!track) return;
+
+    const interval = setInterval(() => {
+      if (membershipAutoplayPaused.current) return;
+      const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 8;
+      if (atEnd) {
+        track.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        track.scrollBy({ left: 300, behavior: "smooth" });
+      }
+    }, 3200);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Applies a coverflow-style 3D tilt to membership cards based on distance from the track's center.
+  useEffect(() => {
+    const track = membershipCarouselRef.current;
+    if (!track) return;
+
+    let rafId: number | null = null;
+
+    const updateTilt = () => {
+      const trackRect = track.getBoundingClientRect();
+      const trackCenter = trackRect.left + trackRect.width / 2;
+      const cards = track.querySelectorAll<HTMLElement>("[data-membership-card]");
+      cards.forEach((card) => {
+        const cardRect = card.getBoundingClientRect();
+        const cardCenter = cardRect.left + cardRect.width / 2;
+        const distance = (cardCenter - trackCenter) / (trackRect.width / 2);
+        const clamped = Math.max(-1, Math.min(1, distance));
+        const rotateY = clamped * -14;
+        const scale = 1 - Math.abs(clamped) * 0.08;
+        const translateZ = -Math.abs(clamped) * 40;
+        card.style.transform = `perspective(1200px) rotateY(${rotateY}deg) scale(${scale}) translateZ(${translateZ}px)`;
+        card.style.opacity = `${1 - Math.abs(clamped) * 0.25}`;
+      });
+      rafId = null;
+    };
+
+    const onScroll = () => {
+      if (rafId === null) {
+        rafId = requestAnimationFrame(updateTilt);
+      }
+    };
+
+    updateTilt();
+    track.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      track.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
+  }, []);
 
   const [cms, setCms] = useState(getPageContent());
   const [news, setNews] = useState(getNewsPosts());
@@ -28,6 +99,7 @@ export default function Home({ navigate }: HomeProps) {
   const [affiliations, setAffiliations] = useState(getCMSAffiliations());
   const [directors, setDirectors] = useState(getBoardMembers());
   const [homeCms, setHomeCms] = useState(getHomeLayoutCMS());
+  const [footerData, setFooterData] = useState<FooterSettings>(() => getFooterSettingsSync());
 
   useEffect(() => {
     // Force active state refresh on component load
@@ -38,6 +110,11 @@ export default function Home({ navigate }: HomeProps) {
     setAffiliations(getCMSAffiliations());
     setDirectors(getBoardMembers());
     setHomeCms(getHomeLayoutCMS());
+    fetchFooterSettings().then((res) => {
+      if (res && res.contact) {
+        setFooterData(res);
+      }
+    });
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -45,14 +122,34 @@ export default function Home({ navigate }: HomeProps) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.name && formData.email) {
+    if (!formData.name || !formData.email || !formData.message) return;
+
+    setFormSubmitting(true);
+    setFormSubmitError(null);
+
+    try {
+      const res = await fetch("/api/contact/inquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, subject: "Homepage Registry Inquiry" })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Failed to send your inquiry.");
+      }
+
       setFormSubmitted(true);
       setTimeout(() => {
         setFormSubmitted(false);
         setFormData({ name: "", phone: "", email: "", message: "" });
       }, 5000);
+    } catch (error: any) {
+      setFormSubmitError(error.message || "Something went wrong. Please try again.");
+    } finally {
+      setFormSubmitting(false);
     }
   };
 
@@ -741,12 +838,23 @@ export default function Home({ navigate }: HomeProps) {
               { title: "Honorary Membership", desc: "By distinct Invitation ONLY to eminent regional statesmen.", icon: Quote }
             ];
 
-            const filteredCategories = allCategories.filter(cat => 
+            const filteredCategories = allCategories.filter(cat =>
               !(mc.hiddenCategories || []).includes(cat.title)
             );
 
+            const scrollMembershipLeft = () => {
+              if (membershipCarouselRef.current) {
+                membershipCarouselRef.current.scrollBy({ left: -320, behavior: "smooth" });
+              }
+            };
+            const scrollMembershipRight = () => {
+              if (membershipCarouselRef.current) {
+                membershipCarouselRef.current.scrollBy({ left: 320, behavior: "smooth" });
+              }
+            };
+
             return (
-              <section key="membership" className="py-24 px-6 bg-bg-primary border-b border-slate-100">
+              <section key="membership" className="py-24 px-6 bg-bg-primary border-b border-slate-100 overflow-hidden">
                 <div className="max-w-6xl mx-auto space-y-16">
                   <div className="text-center space-y-3">
                     <span className="font-sans text-[9px] font-semibold tracking-[0.25em] uppercase text-text-gold block">
@@ -758,48 +866,119 @@ export default function Home({ navigate }: HomeProps) {
                     <div className="w-16 h-[1px] bg-gold mx-auto"></div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                    {filteredCategories.map((cat, index) => {
-                      const IconComp = cat.icon;
-                      const isHighlighted = mc.highlightCategory === cat.title;
-                      return (
-                        <div
-                          key={index}
-                          className={`bg-white p-6 rounded-sm flex flex-col justify-between space-y-4 hover:shadow-xl transition-all duration-300 border ${
-                            isHighlighted 
-                              ? "border-gold ring-2 ring-gold/30 shadow-md scale-[1.03] bg-[#fdfdfc]"
-                              : "border-slate-100 hover:border-gold"
-                          }`}
-                        >
-                          <div className="space-y-3">
-                            <div className={`p-2 w-10 h-10 rounded-full flex items-center justify-center ${
-                              isHighlighted 
-                                ? "bg-gold text-navy" 
-                                : "bg-slate-50 text-gold-dark"
-                            }`}>
-                              <IconComp className="w-5 h-5 animate-subtle-spin" />
-                            </div>
-                            <div className="flex items-center space-x-1.5">
-                              <h4 className="font-display text-sm font-semibold text-text-dark">{cat.title}</h4>
-                              {isHighlighted && (
-                                <span className="bg-gold/15 text-gold text-[8px] font-sans font-bold px-1.5 py-0.5 rounded tracking-wider uppercase">
-                                  Highlight
-                                </span>
-                              )}
-                            </div>
-                            <p className="font-sans text-[10px] text-text-body font-light leading-relaxed">
-                              {cat.desc}
-                            </p>
-                          </div>
-                          <button
-                            onClick={() => navigate("/membership")}
-                            className="text-left font-sans text-[8px] font-semibold tracking-widest uppercase text-navy hover:text-gold cursor-pointer"
+                  {/* Carousel Container */}
+                  <div
+                    className="relative group/carousel px-1"
+                    onMouseEnter={() => { membershipAutoplayPaused.current = true; }}
+                    onMouseLeave={() => { membershipAutoplayPaused.current = false; }}
+                    onTouchStart={() => { membershipAutoplayPaused.current = true; }}
+                    onTouchEnd={() => { membershipAutoplayPaused.current = false; }}
+                  >
+
+                    {/* Navigation Buttons */}
+                    <button
+                      onClick={scrollMembershipLeft}
+                      aria-label="Scroll left"
+                      className="absolute -left-4 md:-left-8 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-white border border-slate-100 shadow-md text-navy hover:text-gold hover:border-gold/40 transition-all cursor-pointer opacity-0 group-hover/carousel:opacity-100 pointer-events-auto shrink-0 md:flex hidden items-center justify-center"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                    </button>
+
+                    <button
+                      onClick={scrollMembershipRight}
+                      aria-label="Scroll right"
+                      className="absolute -right-4 md:-right-8 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-white border border-slate-100 shadow-md text-navy hover:text-gold hover:border-gold/40 transition-all cursor-pointer opacity-0 group-hover/carousel:opacity-100 pointer-events-auto shrink-0 md:flex hidden items-center justify-center"
+                    >
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+
+                    {/* Sliding Track */}
+                    <div
+                      ref={membershipCarouselRef}
+                      className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-6 whitespace-nowrap [perspective:1200px]"
+                      style={{
+                        scrollbarWidth: "none",
+                        msOverflowStyle: "none"
+                      }}
+                    >
+                      {filteredCategories.map((cat, index) => {
+                        const IconComp = cat.icon;
+                        const isHighlighted = mc.highlightCategory === cat.title;
+                        const slug = cat.title.toLowerCase().replace(/ +/g, "-").replace("-membership", "-member");
+                        const detail = MEMBERSHIP_DETAILS[slug];
+                        const entryFee = detail ? formatEntryFee(detail.fees.admission) : null;
+                        return (
+                          <div
+                            key={index}
+                            data-membership-card
+                            className={`w-[80vw] sm:w-[45vw] md:w-[30vw] lg:w-[17rem] shrink-0 snap-start whitespace-normal [transform-style:preserve-3d] [backface-visibility:hidden] will-change-transform ${
+                              isHighlighted ? "h-[372px]" : "h-[362px]"
+                            }`}
+                            style={{ transition: "transform 0.5s ease-out, opacity 0.5s ease-out" }}
                           >
-                            Learn More →
-                          </button>
-                        </div>
-                      );
-                    })}
+                            {/* Metallic gold frame, echoing the club emblem's gold ring */}
+                            <div
+                              className={`group h-full rounded-md p-[2px] bg-gradient-to-br transition-all duration-300 ${
+                                isHighlighted
+                                  ? "from-gold-light via-gold to-gold-dark shadow-[0_0_28px_-4px_rgba(201,168,76,0.55)]"
+                                  : "from-gold-light/50 via-gold/30 to-gold-dark/50 hover:from-gold-light hover:via-gold hover:to-gold-dark hover:shadow-[0_0_22px_-6px_rgba(201,168,76,0.4)]"
+                              }`}
+                            >
+                              <div
+                                className={`h-full rounded-[5px] p-6 flex flex-col justify-between space-y-4 bg-gradient-to-b shadow-[0_14px_36px_-10px_rgba(26,39,68,0.28)] group-hover:shadow-[0_18px_44px_-8px_rgba(26,39,68,0.35)] transition-shadow duration-300 ${
+                                  isHighlighted ? "from-[#fffdf5] to-white" : "from-white to-slate-50/60"
+                                }`}
+                              >
+                                <div className="space-y-3">
+                                  <div className="flex items-center justify-between">
+                                    {/* Embossed medallion-style icon badge */}
+                                    <div className="p-[2px] rounded-full bg-gradient-to-br from-gold-light via-gold to-gold-dark shadow-[inset_0_1px_1px_rgba(255,255,255,0.65),0_2px_8px_rgba(168,135,58,0.45)]">
+                                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-navy via-navy-mid to-navy-light flex items-center justify-center text-gold-light">
+                                        <IconComp className="w-4.5 h-4.5 animate-subtle-spin" />
+                                      </div>
+                                    </div>
+                                    {isHighlighted && (
+                                      <span className="bg-gradient-to-r from-gold-light via-gold to-gold-dark text-navy text-[8px] font-sans font-bold px-1.5 py-0.5 rounded tracking-wider uppercase shadow-sm">
+                                        Highlight
+                                      </span>
+                                    )}
+                                  </div>
+                                  <h4 className="font-display text-sm font-semibold text-text-dark">{cat.title}</h4>
+                                  <p className="font-sans text-[10px] text-text-body font-light leading-relaxed">
+                                    {cat.desc}
+                                  </p>
+                                </div>
+
+                                <div className="space-y-3">
+                                  {entryFee ? (
+                                    <div className="border-t border-gold/15 pt-3">
+                                      <span className="font-sans text-[8px] uppercase tracking-widest text-text-light block mb-1">
+                                        Entry Fee
+                                      </span>
+                                      <span className="font-display text-2xl font-bold leading-none block bg-gradient-to-b from-gold-light via-gold to-gold-dark bg-clip-text text-transparent">
+                                        {entryFee}
+                                      </span>
+                                    </div>
+                                  ) : (
+                                    <div className="border-t border-gold/15 pt-3">
+                                      <span className="font-display text-sm font-bold bg-gradient-to-b from-gold-light via-gold to-gold-dark bg-clip-text text-transparent block">
+                                        On Enquiry
+                                      </span>
+                                    </div>
+                                  )}
+                                  <button
+                                    onClick={() => navigate("/membership")}
+                                    className="text-left font-sans text-[8px] font-semibold tracking-widest uppercase text-navy hover:text-gold cursor-pointer"
+                                  >
+                                    Learn More →
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               </section>
@@ -890,8 +1069,8 @@ export default function Home({ navigate }: HomeProps) {
                         <MapPin className="w-5 h-5 text-gold mt-1 shrink-0" />
                         <div>
                           <span className="text-[9px] text-slate-400 font-bold tracking-wider block uppercase">CLUB SECRETARIAT</span>
-                          <span className="text-text-dark font-light block mt-0.5">
-                            {cc.address}
+                          <span className="text-text-dark font-light block mt-0.5 whitespace-pre-line">
+                            {footerData.contact.address}
                           </span>
                         </div>
                       </div>
@@ -900,7 +1079,7 @@ export default function Home({ navigate }: HomeProps) {
                         <Phone className="w-5 h-5 text-gold mt-1 shrink-0" />
                         <div>
                           <span className="text-[9px] text-slate-400 font-bold tracking-wider block uppercase">TELEPHONE ENQUIRY</span>
-                          <span className="text-text-dark font-light block mt-0.5">{cc.phone}</span>
+                          <span className="text-text-dark font-light block mt-0.5">{footerData.contact.phone}</span>
                         </div>
                       </div>
 
@@ -908,7 +1087,14 @@ export default function Home({ navigate }: HomeProps) {
                         <Mail className="w-5 h-5 text-gold mt-1 shrink-0" />
                         <div>
                           <span className="text-[9px] text-slate-400 font-bold tracking-wider block uppercase">GENERAL REGISTRY</span>
-                          <span className="text-text-dark font-light block mt-0.5">{cc.email}</span>
+                          <span className="text-text-dark font-light block mt-0.5">
+                            {footerData.contact.email.split(",").map((email) => email.trim()).filter(Boolean).map((email, i, arr) => (
+                              <React.Fragment key={email}>
+                                {email}
+                                {i < arr.length - 1 && <br />}
+                              </React.Fragment>
+                            ))}
+                          </span>
                         </div>
                       </div>
 
@@ -948,7 +1134,7 @@ export default function Home({ navigate }: HomeProps) {
                                 value={formData.name}
                                 onChange={handleInputChange}
                                 className="w-full bg-slate-50 border border-slate-200/80 px-4 py-2.5 text-xs focus:bg-white focus:border-gold outline-none transition-colors rounded-xs"
-                                placeholder="e.g., Kazi Farhan Bin Rafiq"
+                                placeholder="Type your Full Name"
                               />
                             </div>
                             <div className="space-y-1.5">
@@ -996,11 +1182,16 @@ export default function Home({ navigate }: HomeProps) {
                             ></textarea>
                           </div>
 
+                          {formSubmitError && (
+                            <p className="text-[11px] font-sans text-red-600 font-medium">{formSubmitError}</p>
+                          )}
+
                           <button
                             type="submit"
-                            className="w-full py-3.5 bg-navy text-white hover:bg-gold hover:text-navy transition-all duration-300 font-sans text-[11px] font-semibold uppercase tracking-widest text-center shadow-md rounded-xs cursor-pointer"
+                            disabled={formSubmitting}
+                            className="w-full py-3.5 bg-navy text-white hover:bg-gold hover:text-navy transition-all duration-300 font-sans text-[11px] font-semibold uppercase tracking-widest text-center shadow-md rounded-xs cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                           >
-                            Submit Official Inquiry
+                            {formSubmitting ? "Dispatching..." : "Submit Official Inquiry"}
                           </button>
                         </form>
                       )}

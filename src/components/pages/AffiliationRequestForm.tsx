@@ -196,7 +196,7 @@ export default function AffiliationRequestForm({ navigate }: AffiliationRequestF
                     required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Enter your registered name"
+                    placeholder="Type your Full Name"
                     className="w-full pl-10 pr-4 py-2.5 border border-slate-200 text-xs font-light text-text-dark focus:outline-none focus:border-gold transition-colors font-sans"
                   />
                 </div>
