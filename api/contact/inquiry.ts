@@ -38,16 +38,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       `Message: ${message}`,
     ];
 
+    const fields = [
+      { label: "Full Name", value: name },
+      { label: "Email", value: email },
+      { label: "Phone", value: phone || "Not provided" },
+      { label: "Inquiry Sphere", value: subject || "Not specified" },
+      { label: "Message", value: message },
+    ];
+
     const html = buildRegistryEmailHtml(
       "Contact Registry Inquiry",
       "A new inquiry has been submitted through the CBBCL Registry contact form.",
-      [
-        { label: "Full Name", value: name },
-        { label: "Email", value: email },
-        { label: "Phone", value: phone || "Not provided" },
-        { label: "Inquiry Sphere", value: subject || "Not specified" },
-        { label: "Message", value: message },
-      ]
+      fields
     );
 
     const { error } = await resend.emails.send({
@@ -62,6 +64,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (error) {
       console.error("Error sending contact inquiry email: ", error);
       return res.status(500).json({ error: "Failed to send your inquiry: " + error.message });
+    }
+
+    // Send the inquirer a copy of their own submission for their records
+    try {
+      const confirmationHtml = buildRegistryEmailHtml(
+        "Your Inquiry Has Been Received",
+        `Dear ${name}, thank you for reaching out to Cox's Bazar Boat Club Ltd. Here is a copy of the inquiry you submitted.`,
+        fields,
+        "This is a system-generated automatic message. Someone from the Cox's Bazar Boat Club Ltd. Secretariat will be in touch with you shortly for further evaluation. In the meantime, you may reach us directly at registration@cbbcl.org."
+      );
+      await resend.emails.send({
+        from: `CBBCL Registry <${NOMINATION_SENDER}>`,
+        to: email,
+        replyTo: NOMINATION_RECIPIENT,
+        subject: "Your Inquiry Has Been Received - CBBCL",
+        text: `${lines.join("\n")}\n\nThis is a system-generated automatic message. Someone from the Cox's Bazar Boat Club Ltd. Secretariat will be in touch with you shortly for further evaluation. In the meantime, you may reach us directly at registration@cbbcl.org.`,
+        html: confirmationHtml,
+      });
+    } catch (copyError) {
+      console.error("Error sending inquiry confirmation copy to sender: ", copyError);
     }
 
     res.status(200).json({ ok: true });

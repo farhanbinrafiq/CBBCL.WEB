@@ -7,7 +7,7 @@ export interface EmailField {
   isLink?: boolean;
 }
 
-export function buildRegistryEmailHtml(heading: string, intro: string, fields: EmailField[]): string {
+export function buildRegistryEmailHtml(heading: string, intro: string, fields: EmailField[], closingNote?: string): string {
   const rows = fields
     .map(
       (f) => `
@@ -56,6 +56,22 @@ export function buildRegistryEmailHtml(heading: string, intro: string, fields: E
                 </table>
               </td>
             </tr>
+            ${
+              closingNote
+                ? `<tr>
+              <td style="padding:0 40px 28px 40px;">
+                <div style="background-color:#fbf6e9;border:1px solid #eee6d3;border-left:3px solid #c9a84c;border-radius:2px;padding:16px 18px;">
+                  <div style="font-family:Arial,Helvetica,sans-serif;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#a8873a;font-weight:700;margin-bottom:6px;">
+                    Automated Notice
+                  </div>
+                  <div style="font-family:Arial,Helvetica,sans-serif;font-size:12.5px;color:#4a4636;line-height:1.6;">
+                    ${closingNote}
+                  </div>
+                </div>
+              </td>
+            </tr>`
+                : ""
+            }
             <tr>
               <td style="background-color:#faf8f2;padding:20px 40px;text-align:center;border-top:1px solid #eee6d3;">
                 <div style="font-family:Arial,Helvetica,sans-serif;font-size:10px;color:#9a9488;letter-spacing:0.5px;">
