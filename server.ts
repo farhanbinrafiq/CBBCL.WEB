@@ -6,6 +6,7 @@ import { createServer as createViteServer } from "vite";
 import multer from "multer";
 import { Resend } from "resend";
 import { generateFavicons } from "./src/utils/generateFavicons";
+import { buildRegistryEmailHtml } from "./src/utils/emailTemplate";
 
 const app = express();
 const PORT = 3000;
@@ -311,13 +312,32 @@ app.post("/api/membership/nominate", async (req, res) => {
       `Seconder Code: ${seconderCode || "Under Committee Review"}`,
     ];
 
+    const html = buildRegistryEmailHtml(
+      "Membership Nomination Request",
+      "A new membership nomination request has been submitted through the CBBCL Registry Portal.",
+      [
+        { label: "Candidate Full Name", value: fullName },
+        { label: "Email", value: email },
+        { label: "Category Preferred", value: category || "Not specified" },
+        { label: "Date of Birth", value: dob || "Not specified" },
+        { label: "Organization", value: org || "Not specified" },
+        { label: "Designation", value: designation || "Not specified" },
+        { label: "Telephone/Phone", value: phone },
+        { label: "Facebook Profile", value: facebookLink, isLink: true },
+        { label: "LinkedIn Profile", value: linkedinLink, isLink: true },
+        { label: "Website", value: websiteLink || "Not provided", isLink: !!websiteLink },
+        { label: "Proposer Code", value: proposerCode || "Under Committee Review" },
+        { label: "Seconder Code", value: seconderCode || "Under Committee Review" },
+      ]
+    );
+
     const { error } = await resend.emails.send({
       from: `CBBCL Registry <${NOMINATION_SENDER}>`,
       to: NOMINATION_RECIPIENT,
       replyTo: email,
       subject: `Membership Nomination Request - ${fullName}`,
       text: lines.join("\n"),
-      html: `<p>${lines.join("<br/>")}</p>`,
+      html,
     });
 
     if (error) {
@@ -360,13 +380,25 @@ app.post("/api/contact/inquiry", async (req, res) => {
       `Message: ${message}`,
     ];
 
+    const html = buildRegistryEmailHtml(
+      "Contact Registry Inquiry",
+      "A new inquiry has been submitted through the CBBCL Registry contact form.",
+      [
+        { label: "Full Name", value: name },
+        { label: "Email", value: email },
+        { label: "Phone", value: phone || "Not provided" },
+        { label: "Inquiry Sphere", value: subject || "Not specified" },
+        { label: "Message", value: message },
+      ]
+    );
+
     const { error } = await resend.emails.send({
       from: `CBBCL Registry <${NOMINATION_SENDER}>`,
       to: NOMINATION_RECIPIENT,
       replyTo: email,
       subject: `Contact Registry Inquiry - ${name}`,
       text: lines.join("\n"),
-      html: `<p>${lines.join("<br/>")}</p>`,
+      html,
     });
 
     if (error) {

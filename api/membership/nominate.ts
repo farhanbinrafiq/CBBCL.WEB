@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { Resend } from "resend";
+import { buildRegistryEmailHtml } from "../../src/utils/emailTemplate";
 
 const NOMINATION_RECIPIENT = "registration@cbbcl.org";
 const NOMINATION_SENDER = "notifications@cbbcl.org";
@@ -51,13 +52,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       `Seconder Code: ${seconderCode || "Under Committee Review"}`,
     ];
 
+    const html = buildRegistryEmailHtml(
+      "Membership Nomination Request",
+      "A new membership nomination request has been submitted through the CBBCL Registry Portal.",
+      [
+        { label: "Candidate Full Name", value: fullName },
+        { label: "Email", value: email },
+        { label: "Category Preferred", value: category || "Not specified" },
+        { label: "Date of Birth", value: dob || "Not specified" },
+        { label: "Organization", value: org || "Not specified" },
+        { label: "Designation", value: designation || "Not specified" },
+        { label: "Telephone/Phone", value: phone },
+        { label: "Facebook Profile", value: facebookLink, isLink: true },
+        { label: "LinkedIn Profile", value: linkedinLink, isLink: true },
+        { label: "Website", value: websiteLink || "Not provided", isLink: !!websiteLink },
+        { label: "Proposer Code", value: proposerCode || "Under Committee Review" },
+        { label: "Seconder Code", value: seconderCode || "Under Committee Review" },
+      ]
+    );
+
     const { error } = await resend.emails.send({
       from: `CBBCL Registry <${NOMINATION_SENDER}>`,
       to: NOMINATION_RECIPIENT,
       replyTo: email,
       subject: `Membership Nomination Request - ${fullName}`,
       text: lines.join("\n"),
-      html: `<p>${lines.join("<br/>")}</p>`,
+      html,
     });
 
     if (error) {

@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { Resend } from "resend";
+import { buildRegistryEmailHtml } from "../../src/utils/emailTemplate";
 
 const NOMINATION_RECIPIENT = "registration@cbbcl.org";
 const NOMINATION_SENDER = "notifications@cbbcl.org";
@@ -37,13 +38,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       `Message: ${message}`,
     ];
 
+    const html = buildRegistryEmailHtml(
+      "Contact Registry Inquiry",
+      "A new inquiry has been submitted through the CBBCL Registry contact form.",
+      [
+        { label: "Full Name", value: name },
+        { label: "Email", value: email },
+        { label: "Phone", value: phone || "Not provided" },
+        { label: "Inquiry Sphere", value: subject || "Not specified" },
+        { label: "Message", value: message },
+      ]
+    );
+
     const { error } = await resend.emails.send({
       from: `CBBCL Registry <${NOMINATION_SENDER}>`,
       to: NOMINATION_RECIPIENT,
       replyTo: email,
       subject: `Contact Registry Inquiry - ${name}`,
       text: lines.join("\n"),
-      html: `<p>${lines.join("<br/>")}</p>`,
+      html,
     });
 
     if (error) {
