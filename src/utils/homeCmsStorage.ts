@@ -210,8 +210,20 @@ export function getHomeLayoutCMS(): HomeCMSLayoutData {
     const parsed = JSON.parse(stored);
     if (parsed && typeof parsed === "object") {
       // Deep merge sections to survive schema upgrades
-      const order = Array.isArray(parsed.order) ? parsed.order : DEFAULT_HOME_LAYOUT.order;
+      let order = Array.isArray(parsed.order) ? parsed.order : DEFAULT_HOME_LAYOUT.order;
       const s = parsed.sections || {};
+
+      // Migration: Membership Class Categories now belongs directly after President's Message.
+      // Re-pin it there if any previously-persisted layout has it elsewhere.
+      const presidentIdx = order.indexOf("president");
+      const membershipIdx = order.indexOf("membership");
+      if (presidentIdx !== -1 && membershipIdx !== -1 && membershipIdx !== presidentIdx + 1) {
+        const reordered = order.filter((key: string) => key !== "membership");
+        const insertAt = reordered.indexOf("president") + 1;
+        reordered.splice(insertAt, 0, "membership");
+        order = reordered;
+        localStorage.setItem(LAYOUT_STORAGE_KEY, JSON.stringify({ ...parsed, order }));
+      }
       
       // Upgrade default title to brand standards
       if (s.hero && s.hero.title === "COX'S BAZAR BOAT CLUB") {

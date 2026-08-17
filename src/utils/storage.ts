@@ -1,5 +1,5 @@
 import { User, Profile, Director, NewsPost } from "../types";
-import { DIRECTORS_DATA, NEWS_DATA, PRESIDENT_IMAGE, AK_RUBEL_IMAGE, MAIMUNAL_KARIM_JISAN_IMAGE, MD_IMRAN_ALAM_IMAGE, MD_REZAUL_KABIR_REZA_IMAGE, MEHEDI_HASAN_IMAGE, MD_ZIAUL_HOQUE, RESHEDUL_EVU_IMAGE } from "../data";
+import { DIRECTORS_DATA, NEWS_DATA, PRESIDENT_IMAGE, AK_RUBEL_IMAGE, MAIMUNAL_KARIM_JISAN_IMAGE, MD_IMRAN_ALAM_IMAGE, MD_REZAUL_KABIR_REZA_IMAGE, MEHEDI_HASAN_IMAGE, MD_ZIAUL_HOQUE, RESHEDUL_EVU_IMAGE, FARHAN_BIN_RAFIQ_IMAGE, SYFUDDIN_KHALED_IMAGE, ARIFUR_RAHMAN_IMAGE, AMZAD_MAHMUD_IMAGE, MOHAMMED_ELIAS_IMAGE, MD_YOUSUF_IMAGE, NURUL_ABSAR_IMAGE } from "../data";
 
 const USERS_KEY = "cbbcl_users";
 const PROFILES_KEY = "cbbcl_profiles";
@@ -300,18 +300,18 @@ export function setLoggedInUser(user: User | null): void {
 
 const DEFAULT_PORTRAITS: Record<string, string> = {
   "humayun-kabir-robel": PRESIDENT_IMAGE,
-  "farhan-bin-rafiq": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/FBR.png",
-  "syfuddin-khaled": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/SFK.png",
-  "arifur-rahman": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ARF.png",
+  "farhan-bin-rafiq": FARHAN_BIN_RAFIQ_IMAGE,
+  "syfuddin-khaled": SYFUDDIN_KHALED_IMAGE,
+  "arifur-rahman": ARIFUR_RAHMAN_IMAGE,
   "mehedi-hasan": MEHEDI_HASAN_IMAGE,
   "md-imran-alam": MD_IMRAN_ALAM_IMAGE,
   "maimunal-karim-jisan": MAIMUNAL_KARIM_JISAN_IMAGE,
   "md-rezaul-kabir-reza": MD_REZAUL_KABIR_REZA_IMAGE,
-  "amzad-mahmud": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/AZM.png",
+  "amzad-mahmud": AMZAD_MAHMUD_IMAGE,
   "ak-rubel": AK_RUBEL_IMAGE,
-  "mohammed-elias": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ELS.png",
-  "md-yousuf": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/YSF.png",
-  "nurul-absar": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/NRA.png",
+  "mohammed-elias": MOHAMMED_ELIAS_IMAGE,
+  "md-yousuf": MD_YOUSUF_IMAGE,
+  "nurul-absar": NURUL_ABSAR_IMAGE,
   "ziaul-haque": MD_ZIAUL_HOQUE.image,
   "reshedul-evu": RESHEDUL_EVU_IMAGE
 };

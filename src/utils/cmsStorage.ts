@@ -317,29 +317,9 @@ const DEFAULT_NAV: NavCMSData = {
   footerLogo: "",
   menuItems: [
     { label: "Home", path: "/" },
-    {
-      label: "About",
-      path: "/about",
-      dropdown: [
-        { label: "Club Introduction", sub: "overview" },
-        { label: "History & Story", sub: "history" },
-        { label: "Vision & Mission", sub: "vision" },
-        { label: "Key Objectives", sub: "objectives" }
-      ]
-    },
+    { label: "About", path: "/about" },
     { label: "Facilities", path: "/facilities" },
-    {
-      label: "Membership",
-      path: "/membership",
-      dropdown: [
-        { label: "Donor Membership", sub: "donor" },
-        { label: "Life Membership", sub: "life" },
-        { label: "Permanent Membership", sub: "permanent" },
-        { label: "Associate Membership", sub: "associate" },
-        { label: "Diplomat & Foreign", sub: "" },
-        { label: "Corporate", sub: "" }
-      ]
-    },
+    { label: "Membership", path: "/membership" },
     {
       label: "Governance",
       path: "/governance",
@@ -401,10 +381,21 @@ export function getNavCMS(): NavCMSData {
     }
     const parsed = JSON.parse(data);
     if (parsed && typeof parsed === "object") {
+      let menuItems = Array.isArray(parsed.menuItems) ? parsed.menuItems : DEFAULT_NAV.menuItems;
+
+      // Migration: the Membership and About nav items' dropdowns were retired in favor of plain links.
+      // Strip them from any previously-persisted navigation data so existing browsers pick up the change.
+      if (menuItems.some((item: any) => (item.label === "Membership" || item.label === "About") && item.dropdown)) {
+        menuItems = menuItems.map((item: any) =>
+          item.label === "Membership" || item.label === "About" ? { label: item.label, path: item.path } : item
+        );
+        localStorage.setItem(NAVIGATION_KEY, JSON.stringify({ ...parsed, menuItems }));
+      }
+
       return {
         ...DEFAULT_NAV,
         ...parsed,
-        menuItems: Array.isArray(parsed.menuItems) ? parsed.menuItems : DEFAULT_NAV.menuItems
+        menuItems
       };
     }
     localStorage.setItem(NAVIGATION_KEY, JSON.stringify(DEFAULT_NAV));

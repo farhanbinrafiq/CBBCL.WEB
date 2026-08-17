@@ -1,6 +1,27 @@
 import { Director, NewsPost, EventItem, Facility, Affiliation } from "./types";
+// @ts-ignore
+import farhanBinRafiqPortrait from "./assets/images/board/FBR.png";
+// @ts-ignore
+import syfuddinKhaledPortrait from "./assets/images/board/SFK.png";
+// @ts-ignore
+import arifurRahmanPortrait from "./assets/images/board/ARF.png";
+// @ts-ignore
+import amzadMahmudPortrait from "./assets/images/board/AZM.png";
+// @ts-ignore
+import mohammedEliasPortrait from "./assets/images/board/ELS.png";
+// @ts-ignore
+import mdYousufPortrait from "./assets/images/board/YSF.png";
+// @ts-ignore
+import nurulAbsarPortrait from "./assets/images/board/NRA.png";
 
 export const PRESIDENT_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781880795/HKR_t7xu7d.png";
+export const FARHAN_BIN_RAFIQ_IMAGE = farhanBinRafiqPortrait;
+export const SYFUDDIN_KHALED_IMAGE = syfuddinKhaledPortrait;
+export const ARIFUR_RAHMAN_IMAGE = arifurRahmanPortrait;
+export const AMZAD_MAHMUD_IMAGE = amzadMahmudPortrait;
+export const MOHAMMED_ELIAS_IMAGE = mohammedEliasPortrait;
+export const MD_YOUSUF_IMAGE = mdYousufPortrait;
+export const NURUL_ABSAR_IMAGE = nurulAbsarPortrait;
 export const AK_RUBEL_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781886344/AKRB_v2_lihuhg.jpg";
 export const MAIMUNAL_KARIM_JISAN_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781894886/IMG-20260619-WA0013_edit_31000412747443_t2sefa.jpg";
 export const MD_IMRAN_ALAM_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781893293/white_bg_20260620_001621_0000_lzshvp.png";

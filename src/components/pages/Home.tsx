@@ -980,6 +980,16 @@ export default function Home({ navigate }: HomeProps) {
                       })}
                     </div>
                   </div>
+
+                  <div className="text-center">
+                    <button
+                      onClick={() => navigate("/membership")}
+                      className="inline-flex items-center space-x-2 px-6 py-3 bg-navy text-white hover:bg-gold hover:text-navy font-sans text-xs font-extrabold uppercase tracking-widest transition-all shadow-md cursor-pointer"
+                    >
+                      <span>View All Membership Categories</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </section>
             );
@@ -1095,14 +1105,6 @@ export default function Home({ navigate }: HomeProps) {
                               </React.Fragment>
                             ))}
                           </span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start space-x-3.5 text-left">
-                        <Clock className="w-5 h-5 text-gold mt-1 shrink-0" />
-                        <div>
-                          <span className="text-[9px] text-slate-400 font-bold tracking-wider block uppercase">CLUB TEMPORARY OUTPOST</span>
-                          <span className="text-text-dark font-light block mt-0.5">{cc.temporaryOffice}</span>
                         </div>
                       </div>
                     </div>

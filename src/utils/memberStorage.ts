@@ -1,5 +1,5 @@
 import { ClubMember, MembershipApplication, AffiliationRequest, EZBookingReservation } from "../types";
-import { PRESIDENT_IMAGE, AK_RUBEL_IMAGE, MD_IMRAN_ALAM_IMAGE, MEHEDI_HASAN_IMAGE, MD_ZIAUL_HOQUE, RESHEDUL_EVU_IMAGE } from "../data";
+import { PRESIDENT_IMAGE, AK_RUBEL_IMAGE, MD_IMRAN_ALAM_IMAGE, MEHEDI_HASAN_IMAGE, MD_ZIAUL_HOQUE, RESHEDUL_EVU_IMAGE, FARHAN_BIN_RAFIQ_IMAGE, SYFUDDIN_KHALED_IMAGE, ARIFUR_RAHMAN_IMAGE, AMZAD_MAHMUD_IMAGE, MOHAMMED_ELIAS_IMAGE, MD_YOUSUF_IMAGE, NURUL_ABSAR_IMAGE } from "../data";
 
 const MEMBERS_KEY = "cbbcl_club_members";
 const APPLICATIONS_KEY = "cbbcl_membership_applications";
@@ -33,7 +33,7 @@ const DEFAULT_MEMBERS: ClubMember[] = [
     bio: "Founding Vice President of Cox's Bazar Boat Club. Expert yachting navigator and sponsor of deep sea fishing expeditions across the Bay of Bengal.",
     achievements: "First place in Bay of Bengal Yachting Regatta of 2023; Championed sustainable fishery projects.",
     clubInvolvement: "Founding Vice President, Member of the Disciplinary & Ethics Panel.",
-    avatarUrl: "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/FBR.png",
+    avatarUrl: FARHAN_BIN_RAFIQ_IMAGE,
     category: "Founding Member",
     roleType: "FoundingMember"
   },
@@ -49,7 +49,7 @@ const DEFAULT_MEMBERS: ClubMember[] = [
     bio: "Founding Director and local marine conservationist. Syfuddin has dedicated over 15 years to coastal development and yacht community engagement.",
     achievements: "Co-developer of the Marine Education Center; Prominent speaker on Blue Economy at the National Oceanographic Assembly.",
     clubInvolvement: "Founding Director, Member of the Coastal Environment Committee.",
-    avatarUrl: "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/SFK.png",
+    avatarUrl: SYFUDDIN_KHALED_IMAGE,
     category: "Founding Member",
     roleType: "FoundingMember"
   },
@@ -65,7 +65,7 @@ const DEFAULT_MEMBERS: ClubMember[] = [
     bio: "Founding Director of CBBCL and serial investor in Cox's Bazar hospitality networks. Arifur combines marine sport passions with elite maritime hospitality.",
     achievements: "Pioneered luxury yacht charters in Cox's Bazar; National Tourism Excellence Award nominee.",
     clubInvolvement: "Founding Director, Head of the Yachting and Leisure Committee.",
-    avatarUrl: "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ARF.png",
+    avatarUrl: ARIFUR_RAHMAN_IMAGE,
     category: "Founding Member",
     roleType: "FoundingMember"
   },
@@ -361,17 +361,17 @@ const DEFAULT_MEMBERS: ClubMember[] = [
 
 const GLOBAL_AVATARS: Record<string, string> = {
   "humayun-kabir-robel": PRESIDENT_IMAGE,
-  "farhan-bin-rafiq": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/FBR.png",
+  "farhan-bin-rafiq": FARHAN_BIN_RAFIQ_IMAGE,
   "ak-rubel": AK_RUBEL_IMAGE,
   "md-imran-alam": MD_IMRAN_ALAM_IMAGE,
-  "arifur-rahman": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ARF.png",
-  "amzad-mahmud": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/AZM.png",
-  "mohammed-elias": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/ELS.png",
+  "arifur-rahman": ARIFUR_RAHMAN_IMAGE,
+  "amzad-mahmud": AMZAD_MAHMUD_IMAGE,
+  "mohammed-elias": MOHAMMED_ELIAS_IMAGE,
   "mehedi-hasan": MEHEDI_HASAN_IMAGE,
-  "nurul-absar": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/NRA.png",
-  "syfuddin-khaled": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/SFK.png",
+  "nurul-absar": NURUL_ABSAR_IMAGE,
+  "syfuddin-khaled": SYFUDDIN_KHALED_IMAGE,
   "ziaul-haque": MD_ZIAUL_HOQUE.image,
-  "md-yousuf": "https://raw.githubusercontent.com/farhanbinrafiq/CBBCL.WEB/4b998dcc9edbac7865c3dcbecf64939a7aebcd9d/YSF.png",
+  "md-yousuf": MD_YOUSUF_IMAGE,
   "reshedul-evu": RESHEDUL_EVU_IMAGE
 };
 

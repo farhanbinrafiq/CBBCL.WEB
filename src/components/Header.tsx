@@ -101,8 +101,8 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
     return (
       cleanCurrent === cleanPath ||
       ((cleanPath === "/" || cleanPath === "/index") && (cleanCurrent === "/" || cleanCurrent === "/index")) ||
-      (cleanPath === "/board" && (cleanCurrent.startsWith("/board") || (profileId && isOnBoard))) ||
-      (cleanPath === "/members" && (cleanCurrent.startsWith("/members") || (profileId && !isOnBoard)))
+      (cleanPath === "/board" && (cleanCurrent.startsWith("/board/") || (profileId && isOnBoard))) ||
+      (cleanPath === "/members" && (cleanCurrent.startsWith("/members/") || (profileId && !isOnBoard)))
     );
   };
 
@@ -126,30 +126,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
     const affiliationsItem = findItem("Affiliations") || { label: "Affiliations", path: "/affiliations" as RoutePath };
     const contactItem = findItem("Contact") || { label: "Contact", path: "/contact" as RoutePath };
     const aboutItem = findItem("About") || { label: "About", path: "/about" as RoutePath };
-    const governanceItem = findItem("Governance");
-
-    let aboutDropdown = aboutItem.dropdown ? [...aboutItem.dropdown] : [];
-    if (governanceItem) {
-      if (!aboutDropdown.some(sub => sub.sub === "governance" || sub.label === "Governance & Constitution")) {
-        aboutDropdown.push({ label: "Governance & Constitution", sub: "", path: "/governance" as RoutePath });
-      }
-      if (governanceItem.dropdown) {
-        governanceItem.dropdown.forEach(gSub => {
-          if (!aboutDropdown.some(sub => sub.label === gSub.label)) {
-            aboutDropdown.push({
-              label: gSub.label,
-              sub: gSub.sub,
-              path: "/governance" as RoutePath
-            });
-          }
-        });
-      }
-    }
-
-    const modifiedAbout = {
-      ...aboutItem,
-      dropdown: aboutDropdown
-    };
+    const plainAbout = { label: aboutItem.label, path: aboutItem.path };
 
     return {
       left: [
@@ -164,7 +141,7 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
         newsItem,
         affiliationsItem,
         contactItem,
-        modifiedAbout
+        plainAbout
       ]
     };
   };
