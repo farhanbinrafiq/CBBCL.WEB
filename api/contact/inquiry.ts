@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { Resend } from "resend";
-import { buildRegistryEmailHtml } from "../_lib/emailTemplate";
+import { buildRegistryEmailHtml } from "../_lib/emailTemplate.js";
 
 const NOMINATION_RECIPIENT = "registration@cbbcl.org";
 const NOMINATION_SENDER = "notifications@cbbcl.org";
