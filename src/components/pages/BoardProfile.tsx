@@ -7,6 +7,9 @@ import { motion } from "motion/react";
 import { RoutePath, Director } from "../../types";
 import BackgroundVideo from "../BackgroundVideo";
 
+// "The Executive's Sailing Chronicles" stock-photo gallery is archived for now. Set true to restore.
+const SHOW_SAILING_CHRONICLES = false;
+
 interface BoardProfileProps {
   directorId?: string;
   navigate?: (path: RoutePath) => void;
@@ -160,6 +163,7 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
   };
 
   const director = enrichDirectorDetails(rawDirector);
+  const companies = (director.businessProfile?.company || "").split(";").map((c) => c.trim()).filter(Boolean);
 
   // 6 Unsplash photo gallery mock URLs
   const gallery = [
@@ -285,18 +289,35 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
                 Merchant Profile
               </h4>
               <div className="font-sans text-xs space-y-2 font-light">
-                <div>
-                  <span className="text-gold block font-semibold text-[10px]">CORPORATION:</span>
-                  <span>{director.businessProfile?.company}</span>
-                </div>
-                <div>
-                  <span className="text-gold block font-semibold text-[10px]">OFFICIAL ROLE:</span>
-                  <span>{director.businessProfile?.role}</span>
-                </div>
-                <div>
-                  <span className="text-gold block font-semibold text-[10px]">INDUSTRY SPHERE:</span>
-                  <span>{director.businessProfile?.industry}</span>
-                </div>
+                {director.businessProfile?.role && (
+                  <div>
+                    <span className="text-gold block font-semibold text-[10px]">OFFICIAL ROLE:</span>
+                    <span>{director.businessProfile.role}</span>
+                  </div>
+                )}
+                {companies.length > 0 && (
+                  <div>
+                    <span className="text-gold block font-semibold text-[10px]">{companies.length > 1 ? "BUSINESSES:" : "CORPORATION:"}</span>
+                    {companies.length > 1 ? (
+                      <ul className="space-y-1 mt-1">
+                        {companies.map((c) => (
+                          <li key={c} className="flex items-start space-x-1.5">
+                            <span className="text-gold">•</span>
+                            <span>{c}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <span>{companies[0]}</span>
+                    )}
+                  </div>
+                )}
+                {director.businessProfile?.industry && (
+                  <div>
+                    <span className="text-gold block font-semibold text-[10px]">INDUSTRY SPHERE:</span>
+                    <span>{director.businessProfile.industry}</span>
+                  </div>
+                )}
               </div>
             </div>
           </aside>
@@ -368,22 +389,24 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
             </div>
 
             {/* 6-Image Photo Gallery Grid */}
-            <div className="bg-white p-6 border border-slate-200/60 rounded-xs shadow-sm space-y-4">
-              <h4 className="font-display text-lg text-text-dark border-b border-slate-100 pb-2">
-                The Executive’s Sailing Chronicles
-              </h4>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {gallery.map((url, idx) => (
-                  <div key={idx} className="h-28 overflow-hidden rounded-xs bg-navy border border-slate-200 relative group">
-                    <img
-                      src={url}
-                      alt="Chronicles snapshot"
-                      className="w-full h-full object-cover filter brightness-95 group-hover:scale-105 group-hover:brightness-100 transition-all duration-300"
-                    />
-                  </div>
-                ))}
+            {SHOW_SAILING_CHRONICLES && (
+              <div className="bg-white p-6 border border-slate-200/60 rounded-xs shadow-sm space-y-4">
+                <h4 className="font-display text-lg text-text-dark border-b border-slate-100 pb-2">
+                  The Executive’s Sailing Chronicles
+                </h4>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {gallery.map((url, idx) => (
+                    <div key={idx} className="h-28 overflow-hidden rounded-xs bg-navy border border-slate-200 relative group">
+                      <img
+                        src={url}
+                        alt="Chronicles snapshot"
+                        className="w-full h-full object-cover filter brightness-95 group-hover:scale-105 group-hover:brightness-100 transition-all duration-300"
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* 5-Milestone Career Timeline */}
             <div className="bg-white p-8 border border-slate-200/60 rounded-xs shadow-sm space-y-6">

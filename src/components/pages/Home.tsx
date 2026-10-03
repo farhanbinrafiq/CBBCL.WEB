@@ -10,14 +10,9 @@ import { ArrowRight, Quote, Calendar, MapPin, Mail, Phone, Clock, Anchor, Users,
 import { motion } from "motion/react";
 import { PRESIDENT_IMAGE, MASTER_HERO_VIDEO } from "../../data";
 import BackgroundVideo from "../BackgroundVideo";
-import { MEMBERSHIP_DETAILS } from "./MembershipDetail";
+import { MEMBERSHIP_CATEGORIES } from "../../membershipCategories";
 // @ts-ignore
 import cruiseHero from "../../assets/images/cruise_hero_1780825257603.png";
-
-// Strips the parenthetical note from a fee string, e.g. "BDT 800,000 (Onboarding Tariff)" -> "BDT 800,000"
-function formatEntryFee(admission: string): string {
-  return admission.split(" (")[0];
-}
 
 interface HomeProps {
   navigate: (path: RoutePath) => void;
@@ -827,16 +822,17 @@ export default function Home({ navigate }: HomeProps) {
             const mc = homeCms.sections.membership;
             if (!mc.enabled) return null;
 
-            const allCategories = [
-              { title: "Donor Membership", desc: "For distinguished patrons donating critical foundation assets.", icon: Award },
-              { title: "Life Membership", desc: "For lifetime residency, enabling perpetual voting rights.", icon: Sparkles },
-              { title: "Permanent Membership", desc: "Our hallmark category standard for established club citizens.", icon: Anchor },
-              { title: "Associate Membership", desc: "Curated entry for early-career executives under 35 years.", icon: Users },
-              { title: "Diplomat Membership", desc: "For representatives of international diplomatic embassies.", icon: Shield },
-              { title: "Foreign Membership", desc: "For non-resident international maritime and trade leaders.", icon: MapPin },
-              { title: "Corporate Membership", desc: "Empowers executive teams to Host oceanfront summits seamlessly.", icon: Clock },
-              { title: "Honorary Membership", desc: "By distinct Invitation ONLY to eminent regional statesmen.", icon: Quote }
-            ];
+            const categoryIcons: Record<string, typeof Award> = {
+              "donor-member": Award,
+              "life-member": Sparkles,
+              "permanent-member": Anchor,
+              "associate-member": Users,
+              "diplomat-member": Shield,
+              "foreign-member": MapPin,
+              "corporate-member": Clock,
+              "honorary-member": Quote
+            };
+            const allCategories = MEMBERSHIP_CATEGORIES.map(c => ({ ...c, icon: categoryIcons[c.slug] || Award }));
 
             const filteredCategories = allCategories.filter(cat =>
               !(mc.hiddenCategories || []).includes(cat.title)
@@ -904,9 +900,6 @@ export default function Home({ navigate }: HomeProps) {
                       {filteredCategories.map((cat, index) => {
                         const IconComp = cat.icon;
                         const isHighlighted = mc.highlightCategory === cat.title;
-                        const slug = cat.title.toLowerCase().replace(/ +/g, "-").replace("-membership", "-member");
-                        const detail = MEMBERSHIP_DETAILS[slug];
-                        const entryFee = detail ? formatEntryFee(detail.fees.admission) : null;
                         return (
                           <div
                             key={index}
@@ -945,29 +938,24 @@ export default function Home({ navigate }: HomeProps) {
                                   </div>
                                   <h4 className="font-display text-sm font-semibold text-text-dark">{cat.title}</h4>
                                   <p className="font-sans text-[10px] text-text-body font-light leading-relaxed">
-                                    {cat.desc}
+                                    {cat.summary}
                                   </p>
                                 </div>
 
                                 <div className="space-y-3">
-                                  {entryFee ? (
-                                    <div className="border-t border-gold/15 pt-3">
-                                      <span className="font-sans text-[8px] uppercase tracking-widest text-text-light block mb-1">
-                                        Entry Fee
-                                      </span>
-                                      <span className="font-display text-2xl font-bold leading-none block bg-gradient-to-b from-gold-light via-gold to-gold-dark bg-clip-text text-transparent">
-                                        {entryFee}
-                                      </span>
-                                    </div>
-                                  ) : (
-                                    <div className="border-t border-gold/15 pt-3">
-                                      <span className="font-display text-sm font-bold bg-gradient-to-b from-gold-light via-gold to-gold-dark bg-clip-text text-transparent block">
-                                        On Enquiry
-                                      </span>
-                                    </div>
-                                  )}
+                                  <div className="border-t border-gold/15 pt-3">
+                                    <span className="font-sans text-[8px] uppercase tracking-widest text-text-light block mb-1">
+                                      Admission Fee
+                                    </span>
+                                    <span className="font-display text-xl font-bold leading-tight block bg-gradient-to-b from-gold-light via-gold to-gold-dark bg-clip-text text-transparent">
+                                      {cat.fees.admissionLabel}
+                                    </span>
+                                    <span className="font-sans text-[9px] text-text-light block mt-1">
+                                      Monthly: {cat.fees.subscriptionLabel}
+                                    </span>
+                                  </div>
                                   <button
-                                    onClick={() => navigate("/membership")}
+                                    onClick={() => navigate(`/membership/${cat.slug}`)}
                                     className="text-left font-sans text-[8px] font-semibold tracking-widest uppercase text-navy hover:text-gold cursor-pointer"
                                   >
                                     Learn More →

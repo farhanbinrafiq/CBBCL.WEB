@@ -8,6 +8,9 @@ import LogoSvg from "./LogoSvg";
 // @ts-ignore
 import cbbclLogo from "../assets/logo.png";
 
+// Sign In is archived from the navbar for now; /login stays reachable directly. Set true to restore.
+const SHOW_SIGN_IN = false;
+
 interface HeaderProps {
   currentPath: string;
   navigate: (path: RoutePath) => void;
@@ -169,11 +172,11 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
       <div id="cbbcl-topbar" className="bg-navy py-2 px-6 text-slate-300 font-sans tracking-wide text-[11px] border-b border-navy-light hidden md:block">
         <div className="container flex justify-between items-center">
           <div className="flex items-center space-x-6">
-            <span>📍 Level 9, House 28, Block A, Kolatoli R/A., 4700 Cox's Bazar, Bangladesh</span>
+            <span>📍 Anderson Road, Cox's Bazar - 4700. Bangladesh</span>
             <span>📞 +880 13328 86688</span>
           </div>
           <div className="flex items-center space-x-6">
-            <span>✉️ registration@cbbcl.org, info@cbbcl.org</span>
+            <span>✉️ membership@cbbcl.org, info@cbbcl.org</span>
             <span>🌐 www.cbbcl.org</span>
           </div>
         </div>
@@ -351,13 +354,15 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
                     </div>
                   ) : (
                     <div className="flex items-center whitespace-nowrap space-x-2">
-                      <button
-                        onClick={() => handleNavClick("/login" as RoutePath)}
-                        className="text-white hover:text-gold px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] xl:text-[10px] 2xl:text-[11px] font-bold uppercase tracking-wider flex items-center space-x-1 whitespace-nowrap transition-colors" /* LAYOUT FIX */
-                      >
-                        <LogIn className="w-3.5 h-3.5 mt-0.5 text-gold shrink-0" />
-                        <span className="whitespace-nowrap">Sign In</span>
-                      </button>
+                      {SHOW_SIGN_IN && (
+                        <button
+                          onClick={() => handleNavClick("/login" as RoutePath)}
+                          className="text-white hover:text-gold px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] xl:text-[10px] 2xl:text-[11px] font-bold uppercase tracking-wider flex items-center space-x-1 whitespace-nowrap transition-colors" /* LAYOUT FIX */
+                        >
+                          <LogIn className="w-3.5 h-3.5 mt-0.5 text-gold shrink-0" />
+                          <span className="whitespace-nowrap">Sign In</span>
+                        </button>
+                      )}
                       <button
                         onClick={() => handleNavClick("/membership" as RoutePath)}
                         className="text-gold hover:text-gold-light border-b border-transparent hover:border-gold-light px-1 xl:px-1 2xl:px-2 py-1 font-sans text-[10px] xl:text-[10px] 2xl:text-[11px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap" /* LAYOUT FIX */
@@ -456,12 +461,14 @@ export default function Header({ currentPath, navigate, currentUser, onLogout }:
               </div>
             ) : (
               <div className="flex flex-col space-y-3 pt-4 border-t border-white/[0.08]">
-                <button
-                  onClick={() => handleNavClick("/login" as RoutePath)}
-                  className="bg-white/[0.03] border border-white/[0.1] text-slate-100 text-xs font-semibold uppercase tracking-wider py-2.5 rounded-xs text-center transition-all hover:bg-white/[0.06]"
-                >
-                  Sign In to Registry
-                </button>
+                {SHOW_SIGN_IN && (
+                  <button
+                    onClick={() => handleNavClick("/login" as RoutePath)}
+                    className="bg-white/[0.03] border border-white/[0.1] text-slate-100 text-xs font-semibold uppercase tracking-wider py-2.5 rounded-xs text-center transition-all hover:bg-white/[0.06]"
+                  >
+                    Sign In to Registry
+                  </button>
+                )}
                 <button
                   onClick={() => handleNavClick("/membership" as RoutePath)}
                   className="bg-gold text-navy text-xs font-semibold uppercase tracking-wider py-2.5 rounded-sm text-center shadow hover:bg-gold-light transition-all"

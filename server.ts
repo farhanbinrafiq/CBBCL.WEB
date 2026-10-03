@@ -66,9 +66,9 @@ function getSiteSettings() {
         twitter: "https://twitter.com"
       },
       contact: {
-        email: "info@cbbcl.org, registration@cbbcl.org",
+        email: "info@cbbcl.org, membership@cbbcl.org",
         phone: "+880 13328 86688",
-        address: "Level 9, House 28, Block A, Kolatoli R/A.\n4700, Cox's Bazar, Bangladesh\nwww.cbbcl.org"
+        address: "Anderson Road, Cox's Bazar - 4700. Bangladesh\nwww.cbbcl.org"
       },
       footerLinks: [
         {

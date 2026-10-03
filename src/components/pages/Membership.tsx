@@ -1,23 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Award, Check, ShieldCheck, HelpCircle, ArrowRight, UserPlus, FileText } from "lucide-react";
-import { motion } from "motion/react";
+import { ShieldCheck, ArrowRight, FileText, Info } from "lucide-react";
 import { RoutePath } from "../../types";
 import { getMembershipApplications, saveMembershipApplications } from "../../utils/memberStorage";
 import { getPageContent } from "../../utils/cmsStorage";
 import { MASTER_HERO_VIDEO } from "../../data";
 import BackgroundVideo from "../BackgroundVideo";
-import { MEMBERSHIP_DETAILS } from "./MembershipDetail";
-
-// Strips the parenthetical note from a fee string, e.g. "BDT 800,000 (Onboarding Tariff)" -> "BDT 800,000"
-function formatEntryFee(admission: string): string {
-  return admission.split(" (")[0];
-}
-
-// "Exempted..." -> "No Annual Fee"; otherwise strips parenthetical and appends "/yr"
-function formatAnnualFee(annual: string): string {
-  if (annual.toLowerCase().startsWith("exempt")) return "No Annual Fee";
-  return `${annual.split(" (")[0]}/yr`;
-}
+import { MEMBERSHIP_CATEGORIES, MEMBERSHIP_FEE_NOTE, MEMBERSHIP_RULES } from "../../membershipCategories";
 
 interface MembershipProps {
   navigate: (path: RoutePath) => void;
@@ -122,16 +110,8 @@ export default function Membership({ navigate }: MembershipProps) {
     }
   };
 
-  const categories = cmsPage.membership.categories || [
-    { title: "Donor Membership", desc: "Reserved for elite supporters directly contributing land dev, boats, or critical physical assets towards the early founding architecture of CBBCL.", voters: "Yes, immediately", fee: "On Enquiry" },
-    { title: "Life Membership", desc: "Designed for individuals looking to lock in permanent residency with lifelong voting rights, club locker reserves, and full reciprocal privileges.", voters: "Yes, fully", fee: "Select Invitation" },
-    { title: "Permanent Membership", desc: "Our cornerstone tier designated for corporate chairpersons, military advisors, legal advocates, and senior merchants over the age of 35.", voters: "Yes, fully", fee: "Standard Tariffs" },
-    { title: "Associate Membership", desc: "Customized young professional portal for emerging coastal entrepreneurs, tech managers, and executives under the age of 35.", voters: "No (Conversion at 35)", fee: "Discounted Tariffs" },
-    { title: "Diplomat Membership", desc: "Open to certified representatives of international consular services, United Nations staff, and foreign delegates in Bangladesh.", voters: "No", fee: "Special Exemption" },
-    { title: "Foreign Membership", desc: "Available exclusively to non-resident foreign nationals of distinction involved in international maritime channels and commercial trade.", voters: "No", fee: "Special Tariffs" },
-    { title: "Corporate Membership", desc: "Empowers reputable companies to nominate up to three of their executive directors or board members for full recreational utility.", voters: "No (Corporate slots)", fee: "Corporate Matrix" },
-    { title: "Honorary Membership", desc: "Conferred exclusively by the unilateral invite of our Board of Directors to distinguished citizens, scientists, or retired military top-brass.", voters: "No", fee: "Fully Exempted" }
-  ];
+  // Categories and fees always come from the Articles of Association source, not the CMS.
+  const categories = MEMBERSHIP_CATEGORIES;
 
   const eligibilitySteps = cmsPage.membership.eligibilitySteps || [
     { title: "Foundational Proposing Nomination", text: "Applicants must find a valid, voting CBBCL Proposer (either Founder, Donor, or Life status) who formally endorses the profile." },
@@ -197,96 +177,96 @@ export default function Membership({ navigate }: MembershipProps) {
               Structure & Tiers
             </span>
             <h3 className="font-display text-2xl md:text-4xl font-light text-text-dark text-center">
-              The Eight Primary <span className="font-serif italic text-gold font-normal">Privilege Tiers</span>
+              The Eight <span className="font-serif italic text-gold font-normal">Membership Categories</span>
             </h3>
             <div className="w-12 h-[1px] bg-gold mx-auto mt-2"></div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
-            {categories.map((cat, idx) => {
-              const isLife = cat.title === "Life Membership";
-              const slug = cat.title.toLowerCase().replace(/ +/g, "-").replace("-membership", "-member");
-              const detail = MEMBERSHIP_DETAILS[slug];
-              return (
-                <div
-                  key={idx}
-                  className={`relative ${isLife ? "md:scale-105 z-15" : ""}`}
-                >
-                  {isLife && (
-                    <span className="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-gold-light via-gold to-gold-dark text-navy font-sans text-[8px] font-extrabold uppercase tracking-widest px-3 py-1 rounded shadow-md border border-gold-dark/40 inline-block whitespace-nowrap z-20">
-                      👑 MOST PRESTIGIOUS
-                    </span>
-                  )}
-
-                  {/* Metallic gold frame, echoing the club emblem's gold ring */}
-                  <div
-                    className={`group h-full rounded-md p-[2px] bg-gradient-to-br transition-all duration-300 ${
-                      isLife
-                        ? "from-gold-light via-gold to-gold-dark shadow-[0_0_28px_-4px_rgba(201,168,76,0.55)]"
-                        : "from-gold-light/50 via-gold/30 to-gold-dark/50 hover:from-gold-light hover:via-gold hover:to-gold-dark hover:shadow-[0_0_22px_-6px_rgba(201,168,76,0.4)]"
-                    }`}
-                  >
-                    <div
-                      className={`rounded-[5px] p-6 flex flex-col justify-between bg-gradient-to-b shadow-[0_14px_36px_-10px_rgba(26,39,68,0.28)] group-hover:shadow-[0_18px_44px_-8px_rgba(26,39,68,0.35)] transition-shadow duration-300 ${
-                        isLife ? "from-[#fffdf5] to-white h-[372px]" : "from-white to-slate-50/60 h-[362px]"
-                      }`}
-                    >
-                      <div className="space-y-3">
-                        {/* Embossed medallion-style index badge */}
-                        <div className="p-[2px] w-8 h-8 rounded-full bg-gradient-to-br from-gold-light via-gold to-gold-dark shadow-[inset_0_1px_1px_rgba(255,255,255,0.65),0_2px_8px_rgba(168,135,58,0.45)] -mt-2 -ml-2">
-                          <div className="w-full h-full rounded-full bg-gradient-to-br from-navy via-navy-mid to-navy-light flex items-center justify-center">
-                            <span className="font-sans font-bold text-gold-light text-[10px]">{idx + 1}</span>
-                          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+            {categories.map((cat, idx) => (
+              <div key={cat.slug} className="relative">
+                {/* Metallic gold frame, echoing the club emblem's gold ring */}
+                <div className="group h-full rounded-md p-[2px] bg-gradient-to-br transition-all duration-300 from-gold-light/50 via-gold/30 to-gold-dark/50 hover:from-gold-light hover:via-gold hover:to-gold-dark hover:shadow-[0_0_22px_-6px_rgba(201,168,76,0.4)]">
+                  <div className="h-full min-h-[340px] rounded-[5px] p-6 flex flex-col justify-between bg-gradient-to-b from-white to-slate-50/60 shadow-[0_14px_36px_-10px_rgba(26,39,68,0.28)] group-hover:shadow-[0_18px_44px_-8px_rgba(26,39,68,0.35)] transition-shadow duration-300">
+                    <div className="space-y-3">
+                      {/* Embossed medallion-style index badge */}
+                      <div className="p-[2px] w-8 h-8 rounded-full bg-gradient-to-br from-gold-light via-gold to-gold-dark shadow-[inset_0_1px_1px_rgba(255,255,255,0.65),0_2px_8px_rgba(168,135,58,0.45)] -mt-2 -ml-2">
+                        <div className="w-full h-full rounded-full bg-gradient-to-br from-navy via-navy-mid to-navy-light flex items-center justify-center">
+                          <span className="font-sans font-bold text-gold-light text-[10px]">{idx + 1}</span>
                         </div>
-                        <h4 className="font-display text-[15px] font-bold text-text-dark leading-tight">{cat.title}</h4>
-                        <p className="font-sans text-[11px] text-text-body leading-relaxed font-light line-clamp-4">
-                          {cat.desc}
-                        </p>
                       </div>
+                      <h4 className="font-display text-[15px] font-bold text-text-dark leading-tight">{cat.title}</h4>
+                      {cat.generalMembership && (
+                        <span className="inline-block font-sans text-[8px] uppercase tracking-widest font-bold text-navy bg-navy/5 px-2 py-0.5 rounded">
+                          General Membership
+                        </span>
+                      )}
+                      <p className="font-sans text-[11px] text-text-body leading-relaxed font-light">
+                        {cat.summary}
+                      </p>
+                    </div>
 
-                      <div className="mt-auto pt-3 space-y-3">
-                        <div className="border-t border-gold/15 pt-2 space-y-1 text-[9px] font-sans text-text-light">
-                          <div className="flex justify-between">
+                    <div className="mt-auto pt-3 space-y-3">
+                      <div className="border-t border-gold/15 pt-2 space-y-1.5 text-[9px] font-sans text-text-light">
+                        <div className="flex justify-between gap-2">
+                          <span>Admission Fee:</span>
+                          <span className="font-semibold text-right bg-gradient-to-b from-gold-light via-gold to-gold-dark bg-clip-text text-transparent">{cat.fees.admissionLabel}</span>
+                        </div>
+                        <div className="flex justify-between gap-2">
+                          <span>Monthly Subscription:</span>
+                          <span className="font-semibold text-right bg-gradient-to-b from-gold-light via-gold to-gold-dark bg-clip-text text-transparent">{cat.fees.subscriptionLabel}</span>
+                        </div>
+                        {cat.votingRights && (
+                          <div className="flex justify-between gap-2">
                             <span>Voting Rights:</span>
-                            <span className="text-navy font-semibold">{cat.voters}</span>
+                            <span className="text-navy font-semibold">{cat.votingRights}</span>
                           </div>
-                          {detail ? (
-                            <>
-                              <div className="flex justify-between">
-                                <span>Entry Fee:</span>
-                                <span className="font-semibold bg-gradient-to-b from-gold-light via-gold to-gold-dark bg-clip-text text-transparent">{formatEntryFee(detail.fees.admission)}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span>Annual Fee:</span>
-                                <span className="font-semibold bg-gradient-to-b from-gold-light via-gold to-gold-dark bg-clip-text text-transparent">{formatAnnualFee(detail.fees.annual)}</span>
-                              </div>
-                            </>
-                          ) : (
-                            <div className="flex justify-between">
-                              <span>Onboarding Fee:</span>
-                              <span className="font-semibold bg-gradient-to-b from-gold-light via-gold to-gold-dark bg-clip-text text-transparent">{cat.fee}</span>
-                            </div>
-                          )}
-                        </div>
-
-                        <button
-                          onClick={() => {
-                            navigate(`/membership/${slug}`);
-                          }}
-                          className={`w-full py-2 text-center font-sans text-[9px] font-extrabold uppercase tracking-widest transition-colors border rounded-none ${
-                            isLife
-                              ? "bg-gradient-to-r from-gold-light via-gold to-gold-dark text-navy border-gold-dark/40 hover:brightness-105"
-                              : "bg-navy text-white border-navy hover:bg-gold hover:text-navy hover:border-gold"
-                          }`}
-                        >
-                          Read Full Details
-                        </button>
+                        )}
                       </div>
+
+                      <button
+                        onClick={() => navigate(`/membership/${cat.slug}`)}
+                        className="w-full py-2 text-center font-sans text-[9px] font-extrabold uppercase tracking-widest transition-colors border rounded-none bg-navy text-white border-navy hover:bg-gold hover:text-navy hover:border-gold"
+                      >
+                        Read Full Details
+                      </button>
                     </div>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
+          </div>
+
+          <p className="max-w-3xl mx-auto font-sans text-[11px] text-text-body font-light leading-relaxed flex items-start space-x-2 bg-white border border-gold/20 p-4 rounded-sm">
+            <Info className="w-4 h-4 text-gold shrink-0 mt-0.5" />
+            <span>{MEMBERSHIP_FEE_NOTE}</span>
+          </p>
+        </div>
+      </section>
+
+      {/* Additional membership rules from the Articles of Association */}
+      <section className="py-16 px-6 bg-white border-t border-slate-100">
+        <div className="max-w-6xl mx-auto space-y-10">
+          <div className="text-center space-y-2">
+            <span className="font-sans text-[9px] uppercase tracking-widest text-gold font-semibold block">
+              Articles of Association
+            </span>
+            <h3 className="font-display text-2xl md:text-3xl font-light text-text-dark">
+              Additional <span className="font-serif italic font-normal text-gold">Membership Rules</span>
+            </h3>
+            <div className="w-12 h-[1px] bg-gold mx-auto mt-2"></div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {MEMBERSHIP_RULES.map((rule) => (
+              <div key={rule.title} className="bg-slate-50/70 border border-slate-200 border-t-2 border-t-gold p-5 rounded-sm space-y-3">
+                <h4 className="font-display text-sm font-semibold text-text-dark">{rule.title}</h4>
+                <ul className="space-y-2">
+                  {rule.points.map((point, i) => (
+                    <li key={i} className="font-sans text-[11px] text-text-body font-light leading-relaxed">{point}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -389,7 +369,7 @@ export default function Membership({ navigate }: MembershipProps) {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
                       Category Preferred *
@@ -424,7 +404,7 @@ export default function Membership({ navigate }: MembershipProps) {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
                       Organization *
@@ -455,7 +435,7 @@ export default function Membership({ navigate }: MembershipProps) {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
                       Facebook Profile Link *
@@ -500,7 +480,7 @@ export default function Membership({ navigate }: MembershipProps) {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
                       Reference Name/Code (Optional)

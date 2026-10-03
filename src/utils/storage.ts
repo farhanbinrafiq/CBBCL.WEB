@@ -164,6 +164,16 @@ export function getBoardMembers(): Director[] {
       updated.photoUrl = mappedPhoto;
       changed = true;
     }
+    // Pick up business details added to the static directory after this list was cached.
+    const staticDirector = DIRECTORS_DATA.find((d) => d.id === updated.id);
+    if (staticDirector?.businessProfile && !updated.businessProfile) {
+      updated.businessProfile = staticDirector.businessProfile;
+      changed = true;
+    }
+    if (globalId === "reshedul-evu" && updated.name === "Reshedul Evu") {
+      updated.name = "Rasadul Maimun Evo";
+      changed = true;
+    }
     if (updated.level === undefined) {
       changed = true;
       if (updated.id === "humayun-kabir-robel") {

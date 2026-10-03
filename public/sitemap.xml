@@ -41,6 +41,26 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://cbbcl.org/membership/diplomat-member</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cbbcl.org/membership/foreign-member</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cbbcl.org/membership/corporate-member</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cbbcl.org/membership/honorary-member</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://cbbcl.org/governance</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

@@ -465,9 +465,9 @@ export const DEFAULT_FOOTER_SETTINGS: FooterSettings = {
     twitter: "https://twitter.com"
   },
   contact: {
-    email: "info@cbbcl.org, registration@cbbcl.org",
+    email: "info@cbbcl.org, membership@cbbcl.org",
     phone: "+880 13328 86688",
-    address: "Level 9, House 28, Block A, Kolatoli R/A.\n4700, Cox's Bazar, Bangladesh\nwww.cbbcl.org"
+    address: "Anderson Road, Cox's Bazar - 4700. Bangladesh\nwww.cbbcl.org"
   },
   footerLinks: [
     {
@@ -510,6 +510,14 @@ export function getFooterSettingsSync(): FooterSettings {
         if (parsed.socialLinks.facebook === "https://facebook.com" || parsed.socialLinks.facebook === "https://facebook.com/") {
           parsed.socialLinks.facebook = "https://www.facebook.com/CoxsBazarBoatClubLtd";
         }
+      }
+      // Replace the retired Kolatoli office address cached in older browsers.
+      if (parsed && parsed.contact && typeof parsed.contact.address === "string" && parsed.contact.address.includes("Kolatoli R/A")) {
+        parsed.contact.address = DEFAULT_FOOTER_SETTINGS.contact.address;
+      }
+      // Footer email moved from registration@ to membership@.
+      if (parsed && parsed.contact && parsed.contact.email === "info@cbbcl.org, registration@cbbcl.org") {
+        parsed.contact.email = DEFAULT_FOOTER_SETTINGS.contact.email;
       }
       return parsed;
     }

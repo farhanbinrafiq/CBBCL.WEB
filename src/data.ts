@@ -14,7 +14,7 @@ import mdYousufPortrait from "./assets/images/board/YSF.png";
 // @ts-ignore
 import nurulAbsarPortrait from "./assets/images/board/NRA.png";
 
-export const PRESIDENT_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781880795/HKR_t7xu7d.png";
+export const PRESIDENT_IMAGE = "https://res.cloudinary.com/u6f3l1qm/image/upload/v1791044752/HKR.png";
 export const FARHAN_BIN_RAFIQ_IMAGE = farhanBinRafiqPortrait;
 export const SYFUDDIN_KHALED_IMAGE = syfuddinKhaledPortrait;
 export const ARIFUR_RAHMAN_IMAGE = arifurRahmanPortrait;
@@ -22,17 +22,17 @@ export const AMZAD_MAHMUD_IMAGE = amzadMahmudPortrait;
 export const MOHAMMED_ELIAS_IMAGE = mohammedEliasPortrait;
 export const MD_YOUSUF_IMAGE = mdYousufPortrait;
 export const NURUL_ABSAR_IMAGE = nurulAbsarPortrait;
-export const AK_RUBEL_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781886344/AKRB_v2_lihuhg.jpg";
-export const MAIMUNAL_KARIM_JISAN_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781894886/IMG-20260619-WA0013_edit_31000412747443_t2sefa.jpg";
-export const MD_IMRAN_ALAM_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781893293/white_bg_20260620_001621_0000_lzshvp.png";
-export const MD_REZAUL_KABIR_REZA_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781895223/white_bg_20260620_005151_0000_geiljj.png";
-export const MEHEDI_HASAN_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781945122/IMG_1928_l2m81l.jpg";
-export const RESHEDUL_EVU_IMAGE = "https://res.cloudinary.com/djdyqr8yd/image/upload/v1785186153/Untitled_design_lkmkvr.png";
+export const AK_RUBEL_IMAGE = "https://res.cloudinary.com/u6f3l1qm/image/upload/v1791044746/AKRB_v2.jpg";
+export const MAIMUNAL_KARIM_JISAN_IMAGE = "https://res.cloudinary.com/u6f3l1qm/image/upload/v1791044749/WhatsApp_Image_2026-06-19_at_10.52.46_PM.jpg";
+export const MD_IMRAN_ALAM_IMAGE = "https://res.cloudinary.com/u6f3l1qm/image/upload/v1791044752/Untitled_design_1.png";
+export const MD_REZAUL_KABIR_REZA_IMAGE = "https://res.cloudinary.com/u6f3l1qm/image/upload/v1791044748/Untitled_design_2.png";
+export const MEHEDI_HASAN_IMAGE = "https://res.cloudinary.com/u6f3l1qm/image/upload/v1791044751/Untitled_design_4.png";
+export const RESHEDUL_EVU_IMAGE = "https://res.cloudinary.com/u6f3l1qm/image/upload/v1791046971/WhatsApp_Image_2026-10-03_at_10.44.16_PM.jpg";
 export const MD_ZIAUL_HOQUE = {
   name: "MD. Ziaul Hoque",
-  image: "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781934394/white_bg_on1dfi.png"
+  image: "https://res.cloudinary.com/u6f3l1qm/image/upload/v1791046228/ZUQ.png"
 };
-export const MASTER_HERO_VIDEO = "https://res.cloudinary.com/djdyqr8yd/video/upload/v1781881396/14818372_3840_2160_24fps_pa7yjz.mp4";
+export const MASTER_HERO_VIDEO = "https://res.cloudinary.com/u6f3l1qm/video/upload/v1791046804/15818830_1920_1080_30fps.mp4";
 
 export const DIRECTORS_DATA: Director[] = [
   {
@@ -154,10 +154,16 @@ export const DIRECTORS_DATA: Director[] = [
   },
   {
     id: "reshedul-evu",
-    name: "Reshedul Evu",
+    name: "Rasadul Maimun Evo",
     designation: "Founding Director",
     membershipCode: "CBBCL-FOUNDER-015",
-    photoUrl: RESHEDUL_EVU_IMAGE
+    photoUrl: RESHEDUL_EVU_IMAGE,
+    businessProfile: {
+      // Multiple businesses are separated by "; " so they survive the admin form's single-line company field.
+      company: "Rasad Filling Station; Rasad LPG Filling Station; M/S Mijab Traders; M/S Mawa LPG Cylinder Refilling Station; M/S RMM Brick Manufacturing; M/S RMM Salt Crushing Industry; M/S RMM Rubber Plantation",
+      role: "Proprietor",
+      industry: ""
+    }
   }
 ];
 

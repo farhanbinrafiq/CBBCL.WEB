@@ -42,9 +42,9 @@ export default function Members({ navigate, selectedMemberId = null }: MembersPr
     } else if (activeTypeFilter === "Executive Officers") {
       return category === "Executive Officer";
     } else {
-      // Founding Members and Executive Officers are ROLE-BASED categories, not membership categories.
-      // Therefore, they must be excluded from “All” and other membership tabs.
-      if (category === "Founding Member" || category === "Executive Officer") {
+      // Executive Officers are a role-based category and stay out of membership tabs.
+      // Founding Members also hold a membership (e.g. Life Member), so they appear in that tab too.
+      if (category === "Executive Officer") {
         return false;
       }
 
@@ -180,10 +180,12 @@ export default function Members({ navigate, selectedMemberId = null }: MembersPr
                   </p>
 
                   <div className="flex items-center text-xs text-slate-500 font-light space-x-4 pt-1">
-                    <span className="flex items-center space-x-1">
-                      <Calendar className="w-4 h-4 shrink-0 text-slate-400" />
-                      <span>Admitted: {new Date(member.joinDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                    </span>
+                    {member.joinDate ? (
+                      <span className="flex items-center space-x-1">
+                        <Calendar className="w-4 h-4 shrink-0 text-slate-400" />
+                        <span>Admitted: {new Date(member.joinDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                      </span>
+                    ) : <span />}
                     {member.email && (
                       <span className="flex items-center space-x-1">
                         <Mail className="w-4 h-4 shrink-0 text-slate-400" />
@@ -430,10 +432,12 @@ export default function Members({ navigate, selectedMemberId = null }: MembersPr
                       </div>
 
                       <div className="border-t border-slate-100 pt-3 flex items-center justify-between text-[11px] font-mono text-slate-400 group-hover:text-gold transition-colors mt-auto">
-                        <span className="flex items-center space-x-1 font-light">
-                          <Calendar className="w-3.5 h-3.5" />
-                          <span>Joined: {new Date(member.joinDate).getFullYear()}</span>
-                        </span>
+                        {member.joinDate ? (
+                          <span className="flex items-center space-x-1 font-light">
+                            <Calendar className="w-3.5 h-3.5" />
+                            <span>Joined: {new Date(member.joinDate).getFullYear()}</span>
+                          </span>
+                        ) : <span />}
                         <span className="text-[10px] font-bold uppercase tracking-wider group-hover:translate-x-1.5 transition-transform flex items-center space-x-0.5 text-gold-dark">
                           <span>View Profile</span>
                           <span>→</span>
@@ -500,10 +504,12 @@ export default function Members({ navigate, selectedMemberId = null }: MembersPr
                       </div>
 
                       <div className="border-t border-slate-100 pt-3 flex items-center justify-between text-[11px] font-mono text-slate-400 group-hover:text-navy transition-colors mt-auto">
-                        <span className="flex items-center space-x-1 font-light">
-                          <Calendar className="w-3.5 h-3.5" />
-                          <span>Joined: {new Date(member.joinDate).getFullYear()}</span>
-                        </span>
+                        {member.joinDate ? (
+                          <span className="flex items-center space-x-1 font-light">
+                            <Calendar className="w-3.5 h-3.5" />
+                            <span>Joined: {new Date(member.joinDate).getFullYear()}</span>
+                          </span>
+                        ) : <span />}
                         <span className="text-[10px] font-semibold uppercase tracking-wider group-hover:translate-x-1.5 transition-transform flex items-center space-x-0.5 text-navy">
                           <span>View Profile</span>
                           <span>→</span>
@@ -564,10 +570,12 @@ export default function Members({ navigate, selectedMemberId = null }: MembersPr
                       </div>
 
                       <div className="border-t border-slate-100 pt-3 flex items-center justify-between text-[11px] font-mono text-slate-400 group-hover:text-[#c9a84c] transition-colors mt-auto">
-                        <span className="flex items-center space-x-1 font-light">
-                          <Calendar className="w-3.5 h-3.5" />
-                          <span>Joined: {new Date(member.joinDate).getFullYear()}</span>
-                        </span>
+                        {member.joinDate ? (
+                          <span className="flex items-center space-x-1 font-light">
+                            <Calendar className="w-3.5 h-3.5" />
+                            <span>Joined: {new Date(member.joinDate).getFullYear()}</span>
+                          </span>
+                        ) : <span />}
                         <span className="text-[10px] font-semibold uppercase tracking-wider group-hover:translate-x-1.5 transition-transform flex items-center space-x-0.5">
                           <span>View Profile</span>
                           <span>→</span>
