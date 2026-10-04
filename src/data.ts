@@ -2,8 +2,6 @@ import { Director, NewsPost, EventItem, Facility, Affiliation } from "./types";
 // @ts-ignore
 import farhanBinRafiqPortrait from "./assets/images/board/FBR.png";
 // @ts-ignore
-import arifurRahmanPortrait from "./assets/images/board/ARF.png";
-// @ts-ignore
 import amzadMahmudPortrait from "./assets/images/board/AZM.png";
 // @ts-ignore
 import mohammedEliasPortrait from "./assets/images/board/ELS.png";
@@ -14,7 +12,7 @@ import nurulAbsarPortrait from "./assets/images/board/NRA.png";
 
 export const PRESIDENT_IMAGE = "https://res.cloudinary.com/u6f3l1qm/image/upload/v1791044752/HKR.png";
 export const FARHAN_BIN_RAFIQ_IMAGE = farhanBinRafiqPortrait;
-export const ARIFUR_RAHMAN_IMAGE = arifurRahmanPortrait;
+export const ARIFUR_RAHMAN_IMAGE = "https://res.cloudinary.com/u6f3l1qm/image/upload/v1791146710/Untitled_design.png";
 export const AMZAD_MAHMUD_IMAGE = amzadMahmudPortrait;
 export const MOHAMMED_ELIAS_IMAGE = mohammedEliasPortrait;
 export const MD_YOUSUF_IMAGE = mdYousufPortrait;
