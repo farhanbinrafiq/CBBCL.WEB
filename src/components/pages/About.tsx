@@ -106,7 +106,7 @@ export default function About({ initialSection = "overview" }: AboutProps) {
                 </p>
               </div>
               <span className="font-sans text-[9px] text-gold uppercase tracking-widest font-semibold block">
-                📞 +880 1711-223344
+                📞 +880 13328 86688
               </span>
             </div>
           </aside>

@@ -26,8 +26,10 @@ export default function Board({ navigate }: BoardProps) {
 
   const president = level1Arr[0] || boardList.find((d) => d.id === "humayun-kabir-robel") || DIRECTORS_DATA[0];
   const vicePresident = level2Arr[0] || boardList.find((d) => d.id === "farhan-bin-rafiq") || DIRECTORS_DATA[1];
-  const secretariatDirectors = level3Arr.length > 0 ? level3Arr : boardList.filter((d) => d.id === "syfuddin-khaled" || d.id === "arifur-rahman");
-  const rawFounding = level4Arr.length > 0 ? level4Arr : boardList.filter((d) => d.level === 4 || (d.id !== "humayun-kabir-robel" && d.id !== "farhan-bin-rafiq" && d.id !== "syfuddin-khaled" && d.id !== "arifur-rahman"));
+  const secretariatDirectors = level3Arr.length > 0 ? level3Arr : boardList.filter((d) => d.id === "arifur-rahman");
+  // The Director Administration seat is currently vacant; show a blank card in its place.
+  const adminSeatVacant = !secretariatDirectors.some((d) => /administration/i.test(d.designation));
+  const rawFounding = level4Arr.length > 0 ? level4Arr : boardList.filter((d) => d.level === 4 || (d.id !== "humayun-kabir-robel" && d.id !== "farhan-bin-rafiq" && d.id !== "arifur-rahman"));
   const foundingDirectors = [...rawFounding].sort((a, b) => a.name.localeCompare(b.name));
 
   const getPortrait = (dir: Director) => {
@@ -103,13 +105,25 @@ export default function Board({ navigate }: BoardProps) {
           </div>
         </div>
 
-        {/* ROW 3: TWO CARDS (Syfuddin Khaled Administration + Arifur Rahman Finance) */}
+        {/* ROW 3: TWO CARDS (Director Administration + Director Finance) */}
         <div className="space-y-6">
           <h5 className="font-sans text-[10px] text-[#1a2744] uppercase tracking-[0.2em] font-bold text-center block">
             Row III: Core Secretariat Directors
           </h5>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center max-w-3xl mx-auto w-full">
+            {adminSeatVacant && (
+              <div className="inline-block bg-white p-6 border border-dashed border-slate-300 rounded-sm w-[290px] sm:w-[320px] shadow-sm text-center">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-full border-2 border-gold/30 bg-slate-50 mx-auto flex items-center justify-center">
+                  <User className="w-10 h-10 text-slate-300" />
+                </div>
+                <h4 className="font-display text-base sm:text-lg font-bold text-slate-800 tracking-tight mt-3">&nbsp;</h4>
+                <p className="font-sans text-[9px] sm:text-[10px] text-text-gold uppercase tracking-[0.15em] font-semibold mt-1">
+                  Director Administration
+                </p>
+                <div className="mt-4 pt-3 border-t border-slate-100 h-[30px]" />
+              </div>
+            )}
             {secretariatDirectors.map((dir) => (
               <BoardProfileCard key={dir.id} director={dir} navigate={navigate} variant="main" />
             ))}

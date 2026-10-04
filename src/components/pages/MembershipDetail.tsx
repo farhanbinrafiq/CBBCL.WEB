@@ -1,7 +1,7 @@
 import React from "react";
 import { RoutePath } from "../../types";
 import {
-  Award, ShieldCheck, Check, Key, ArrowLeft, ArrowRight, DollarSign, Scale, Info
+  Award, ShieldCheck, Check, Key, ArrowLeft, ArrowRight, Banknote, Scale, Info
 } from "lucide-react";
 import { MASTER_HERO_VIDEO } from "../../data";
 import BackgroundVideo from "../BackgroundVideo";
@@ -94,7 +94,7 @@ export default function MembershipDetail({ categorySlug, navigate }: MembershipD
             {/* SECTION 1: FEES */}
             <div className="space-y-3">
               <h3 className="font-display text-lg font-bold text-text-dark flex items-center space-x-2">
-                <DollarSign className="w-5 h-5 text-gold shrink-0" />
+                <Banknote className="w-5 h-5 text-gold shrink-0" />
                 <span>Fees &amp; Subscription</span>
               </h3>
               <div className="font-sans text-xs sm:text-[13px] text-text-body font-light leading-relaxed pt-1">

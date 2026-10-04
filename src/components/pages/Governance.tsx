@@ -37,7 +37,7 @@ export default function Governance({ initialSection = "articles" }: GovernancePr
   };
 
   const committees = [
-    { title: "Executive Administration Board", chair: "Syfuddin Khaled (Director Administration)", duty: "Oversees general operations, recruitment of security staff, and reciprocal tie-ups." },
+    { title: "Executive Administration Board", chair: "Director Administration", duty: "Oversees general operations, recruitment of security staff, and reciprocal tie-ups." },
     { title: "Finance & Audit Committee", chair: "Arifur Rahman (Director Finance)", duty: "Enforces financial discipline, issues audited spreadsheets, manages treasury balances." },
     { title: "Membership Scrutiny Committee", chair: "Humayun Kabir Robel (Founding President)", duty: "Evaluates candidates, runs compliance background checks, confirms nomination registry entries." },
     { title: "Marine Safety & Sailing Council", chair: "Founding Director Ahmedul Karim Rubel", duty: "Sets yacht docking safety procedures, handles slipway protocols, certifies sailing dinghy licenses." },

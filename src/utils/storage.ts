@@ -1,5 +1,5 @@
 import { User, Profile, Director, NewsPost } from "../types";
-import { DIRECTORS_DATA, NEWS_DATA, PRESIDENT_IMAGE, AK_RUBEL_IMAGE, MAIMUNAL_KARIM_JISAN_IMAGE, MD_IMRAN_ALAM_IMAGE, MD_REZAUL_KABIR_REZA_IMAGE, MEHEDI_HASAN_IMAGE, MD_ZIAUL_HOQUE, RESHEDUL_EVU_IMAGE, FARHAN_BIN_RAFIQ_IMAGE, SYFUDDIN_KHALED_IMAGE, ARIFUR_RAHMAN_IMAGE, AMZAD_MAHMUD_IMAGE, MOHAMMED_ELIAS_IMAGE, MD_YOUSUF_IMAGE, NURUL_ABSAR_IMAGE } from "../data";
+import { DIRECTORS_DATA, NEWS_DATA, PRESIDENT_IMAGE, AK_RUBEL_IMAGE, MAIMUNAL_KARIM_JISAN_IMAGE, MD_IMRAN_ALAM_IMAGE, MD_REZAUL_KABIR_REZA_IMAGE, MEHEDI_HASAN_IMAGE, MD_ZIAUL_HOQUE, RESHEDUL_EVU_IMAGE, FARHAN_BIN_RAFIQ_IMAGE, ARIFUR_RAHMAN_IMAGE, AMZAD_MAHMUD_IMAGE, MOHAMMED_ELIAS_IMAGE, MD_YOUSUF_IMAGE, NURUL_ABSAR_IMAGE } from "../data";
 
 const USERS_KEY = "cbbcl_users";
 const PROFILES_KEY = "cbbcl_profiles";
@@ -140,6 +140,9 @@ export function saveProfiles(profiles: Profile[]): void {
   safeLocalSet(PROFILES_KEY, JSON.stringify(profiles));
 }
 
+// Directors removed from the board; filtered out of any cached board list.
+const RETIRED_DIRECTOR_IDS = ["syfuddin-khaled"];
+
 export function getBoardMembers(): Director[] {
   let list: Director[] = DIRECTORS_DATA;
   let data: string | null = null;
@@ -156,6 +159,11 @@ export function getBoardMembers(): Director[] {
   }
 
   let changed = false;
+  const activeList = list.filter((item) => item && !RETIRED_DIRECTOR_IDS.includes(item.id));
+  if (activeList.length !== list.length) {
+    list = activeList;
+    changed = true;
+  }
   const normalized = list.map((item, idx) => {
     const updated = { ...item };
     const globalId = updated.id.toLowerCase();
@@ -181,9 +189,6 @@ export function getBoardMembers(): Director[] {
         updated.orderIndex = 0;
       } else if (updated.id === "farhan-bin-rafiq") {
         updated.level = 2;
-        updated.orderIndex = 0;
-      } else if (updated.id === "syfuddin-khaled") {
-        updated.level = 3;
         updated.orderIndex = 0;
       } else if (updated.id === "arifur-rahman") {
         updated.level = 3;
@@ -311,7 +316,6 @@ export function setLoggedInUser(user: User | null): void {
 const DEFAULT_PORTRAITS: Record<string, string> = {
   "humayun-kabir-robel": PRESIDENT_IMAGE,
   "farhan-bin-rafiq": FARHAN_BIN_RAFIQ_IMAGE,
-  "syfuddin-khaled": SYFUDDIN_KHALED_IMAGE,
   "arifur-rahman": ARIFUR_RAHMAN_IMAGE,
   "mehedi-hasan": MEHEDI_HASAN_IMAGE,
   "md-imran-alam": MD_IMRAN_ALAM_IMAGE,

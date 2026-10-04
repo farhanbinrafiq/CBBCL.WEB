@@ -1,5 +1,5 @@
 import { ClubMember, MembershipApplication, AffiliationRequest, EZBookingReservation } from "../types";
-import { DIRECTORS_DATA, PRESIDENT_IMAGE, AK_RUBEL_IMAGE, MAIMUNAL_KARIM_JISAN_IMAGE, MD_REZAUL_KABIR_REZA_IMAGE, MD_IMRAN_ALAM_IMAGE, MEHEDI_HASAN_IMAGE, MD_ZIAUL_HOQUE, RESHEDUL_EVU_IMAGE, FARHAN_BIN_RAFIQ_IMAGE, SYFUDDIN_KHALED_IMAGE, ARIFUR_RAHMAN_IMAGE, AMZAD_MAHMUD_IMAGE, MOHAMMED_ELIAS_IMAGE, MD_YOUSUF_IMAGE, NURUL_ABSAR_IMAGE } from "../data";
+import { DIRECTORS_DATA, PRESIDENT_IMAGE, AK_RUBEL_IMAGE, MAIMUNAL_KARIM_JISAN_IMAGE, MD_REZAUL_KABIR_REZA_IMAGE, MD_IMRAN_ALAM_IMAGE, MEHEDI_HASAN_IMAGE, MD_ZIAUL_HOQUE, RESHEDUL_EVU_IMAGE, FARHAN_BIN_RAFIQ_IMAGE, ARIFUR_RAHMAN_IMAGE, AMZAD_MAHMUD_IMAGE, MOHAMMED_ELIAS_IMAGE, MD_YOUSUF_IMAGE, NURUL_ABSAR_IMAGE } from "../data";
 
 const MEMBERS_KEY = "cbbcl_club_members";
 const APPLICATIONS_KEY = "cbbcl_membership_applications";
@@ -16,7 +16,6 @@ const GLOBAL_AVATARS: Record<string, string> = {
   "mohammed-elias": MOHAMMED_ELIAS_IMAGE,
   "mehedi-hasan": MEHEDI_HASAN_IMAGE,
   "nurul-absar": NURUL_ABSAR_IMAGE,
-  "syfuddin-khaled": SYFUDDIN_KHALED_IMAGE,
   "ziaul-haque": MD_ZIAUL_HOQUE.image,
   "md-yousuf": MD_YOUSUF_IMAGE,
   "reshedul-evu": RESHEDUL_EVU_IMAGE
@@ -43,10 +42,12 @@ const DEMO_MEMBER_IDS = [
   "tanvir-hasan", "nusrat-jahan", "shahriar-rahman", "ayesha-rahman", "rakib-hossain",
   "jannatul-ferdous", "mahmudul-karim", "saima-akter", "chief-guest-one", "distinguished-guest-two",
   "md-rezaul-karim", "admin-officer-example", "dr-sofia-kamal", "tasnim-jahan", "raymond-vance",
-  "kaiser-chowdhury"
+  "kaiser-chowdhury",
+  // Removed from the board
+  "syfuddin-khaled"
 ];
 const MEMBERS_SEED_KEY = "cbbcl_club_members_seed";
-const MEMBERS_SEED_VERSION = "founding-directors-v1";
+const MEMBERS_SEED_VERSION = "founding-directors-v2";
 
 
 export function getClubMembers(): ClubMember[] {
@@ -85,7 +86,7 @@ export function getClubMembers(): ClubMember[] {
         changed = true;
       }
       if (!item.category) {
-        if (item.id === "md-imran-alam" || item.id === "kaiser-chowdhury" || item.id === "humayun-kabir-robel" || item.id === "farhan-bin-rafiq" || item.id === "syfuddin-khaled" || item.id === "arifur-rahman") {
+        if (item.id === "md-imran-alam" || item.id === "kaiser-chowdhury" || item.id === "humayun-kabir-robel" || item.id === "farhan-bin-rafiq" || item.id === "arifur-rahman") {
           item.category = "Founding Member";
         } else if (item.id === "dr-sofia-kamal" || item.id === "tasnim-jahan" || item.id === "md-rezaul-karim" || item.id === "admin-officer-example") {
           item.category = "Executive Officer";

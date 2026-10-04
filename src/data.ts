@@ -2,8 +2,6 @@ import { Director, NewsPost, EventItem, Facility, Affiliation } from "./types";
 // @ts-ignore
 import farhanBinRafiqPortrait from "./assets/images/board/FBR.png";
 // @ts-ignore
-import syfuddinKhaledPortrait from "./assets/images/board/SFK.png";
-// @ts-ignore
 import arifurRahmanPortrait from "./assets/images/board/ARF.png";
 // @ts-ignore
 import amzadMahmudPortrait from "./assets/images/board/AZM.png";
@@ -16,7 +14,6 @@ import nurulAbsarPortrait from "./assets/images/board/NRA.png";
 
 export const PRESIDENT_IMAGE = "https://res.cloudinary.com/u6f3l1qm/image/upload/v1791044752/HKR.png";
 export const FARHAN_BIN_RAFIQ_IMAGE = farhanBinRafiqPortrait;
-export const SYFUDDIN_KHALED_IMAGE = syfuddinKhaledPortrait;
 export const ARIFUR_RAHMAN_IMAGE = arifurRahmanPortrait;
 export const AMZAD_MAHMUD_IMAGE = amzadMahmudPortrait;
 export const MOHAMMED_ELIAS_IMAGE = mohammedEliasPortrait;
@@ -79,12 +76,6 @@ export const DIRECTORS_DATA: Director[] = [
     name: "Farhan Bin Rafiq",
     designation: "Founding Vice President",
     membershipCode: "CBBCL-FOUNDER-002"
-  },
-  {
-    id: "syfuddin-khaled",
-    name: "Syfuddin Khaled",
-    designation: "Director Administration",
-    membershipCode: "CBBCL-FOUNDER-003"
   },
   {
     id: "arifur-rahman",
@@ -276,7 +267,7 @@ export const NEWS_DATA: NewsPost[] = [
     year: "2026",
     month: "May",
     excerpt: "The newly formed Board of Directors successfully passed the master blueprint and designated the first administrative task-forces.",
-    content: "The inaugural meeting of the Board of Directors of Cox’s Bazar Boat Club Limited was convened on May 25, 2026, under the chairmanship of Founding President Humayun Kabir Robel. The session saw the active attendance of Founding Vice President Farhan Bin Rafiq, Director Administration Syfuddin Khaled, Director Finance Arifur Rahman, and all 11 Founding Directors. The board approved the pre-development master plans for our landmark clubhouse and formalised the appointment of the Executive Sub-Committees for Rules, Membership Scrutiny, and Sports.",
+    content: "The inaugural meeting of the Board of Directors of Cox’s Bazar Boat Club Limited was convened on May 25, 2026, under the chairmanship of Founding President Humayun Kabir Robel. The session saw the active attendance of Founding Vice President Farhan Bin Rafiq, Director Finance Arifur Rahman, and all 11 Founding Directors. The board approved the pre-development master plans for our landmark clubhouse and formalised the appointment of the Executive Sub-Committees for Rules, Membership Scrutiny, and Sports.",
     tags: ["board", "meeting", "governance", "blueprints"],
     image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=800",
     likes: 98,
