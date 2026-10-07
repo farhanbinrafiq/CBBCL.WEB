@@ -170,7 +170,7 @@ export const DIRECTORS_DATA: Director[] = [
     designation: "Founding Director",
     membershipCode: "CBBCL-FOUNDER-010",
     profileSubmitted: true,
-    profileRevision: 2,
+    profileRevision: 3,
     photoAlt: "Official portrait of Ahmedul Karim Rubel, Member of the Board of Directors, Cox's Bazar Boat Club Ltd.",
     bio: [
       "Ahmedul Karim Rubel is a successful businessman and entrepreneur. He completed his Master of Business Administration (MBA) at International Islamic University Chittagong (IIUC) in 2016.",
@@ -190,7 +190,7 @@ export const DIRECTORS_DATA: Director[] = [
     ],
     socials: {
       facebook: "https://www.facebook.com/rubel.rf",
-      email: "ak.rubel1989@gmail.com"
+      email: "ak.rubel1989@gmail.com, ak.rubel91@gmail.com"
     },
     timeline: [
       { year: "2016", event: "Successfully completed an MBA at International Islamic University Chittagong (IIUC)." },

@@ -188,7 +188,8 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
         ["facebook", "https://facebook.com", Facebook, "Facebook"],
         ["twitter", "https://twitter.com", Twitter, "X / Twitter"]
       ] as const);
-  const contactEmail = director.socials?.email;
+  // One or more addresses, comma-separated.
+  const contactEmails = splitList((director.socials?.email || "").replace(/,/g, ";"));
   const BulletList = ({ items }: { items: string[] }) => (
     <ul className="space-y-1 mt-1">
       {items.map((c) => (
@@ -296,7 +297,7 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
               </div>
 
               {/* Social Channels Links */}
-              {(socialLinks.length > 0 || contactEmail) && (
+              {(socialLinks.length > 0 || contactEmails.length > 0) && (
                 <div className="border-t border-slate-100 pt-6">
                   <span className="block text-[9px] font-sans text-slate-400 font-bold uppercase tracking-widest mb-3 text-center">
                     Social Registries
@@ -313,16 +314,19 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
                       ))}
                     </div>
                   )}
-                  {contactEmail && (
-                    <a
-                      href={`mailto:${contactEmail}`}
-                      className={`flex items-center justify-center space-x-1.5 font-sans text-xs text-slate-600 hover:text-navy transition-colors break-all ${
-                        socialLinks.length > 0 ? "mt-4 pt-4 border-t border-slate-100" : ""
-                      }`}
-                    >
-                      <Mail className="w-3.5 h-3.5 text-gold shrink-0" />
-                      <span>{contactEmail}</span>
-                    </a>
+                  {contactEmails.length > 0 && (
+                    <div className={`space-y-1.5 ${socialLinks.length > 0 ? "mt-4 pt-4 border-t border-slate-100" : ""}`}>
+                      {contactEmails.map((email) => (
+                        <a
+                          key={email}
+                          href={`mailto:${email}`}
+                          className="flex items-center justify-center space-x-1.5 font-sans text-xs text-slate-600 hover:text-navy transition-colors break-all"
+                        >
+                          <Mail className="w-3.5 h-3.5 text-gold shrink-0" />
+                          <span>{email}</span>
+                        </a>
+                      ))}
+                    </div>
                   )}
                 </div>
               )}
