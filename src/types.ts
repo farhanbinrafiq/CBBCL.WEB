@@ -26,6 +26,8 @@ export interface Director {
   name: string;
   designation: string;
   photoUrl?: string; // or placeholder
+  /** Descriptive alt text for the portrait. */
+  photoAlt?: string;
   bio?: string[];
   membershipCode?: string;
   appointed?: string;

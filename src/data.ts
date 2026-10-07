@@ -168,7 +168,35 @@ export const DIRECTORS_DATA: Director[] = [
     id: "ak-rubel",
     name: "Ahmedul Karim Rubel",
     designation: "Founding Director",
-    membershipCode: "CBBCL-FOUNDER-010"
+    membershipCode: "CBBCL-FOUNDER-010",
+    profileSubmitted: true,
+    profileRevision: 2,
+    photoAlt: "Official portrait of Ahmedul Karim Rubel, Member of the Board of Directors, Cox's Bazar Boat Club Ltd.",
+    bio: [
+      "Ahmedul Karim Rubel is a successful businessman and entrepreneur. He completed his Master of Business Administration (MBA) at International Islamic University Chittagong (IIUC) in 2016.",
+      "Immediately after completing his education, he stepped into the business sector and founded M/S Shara Traders as its proprietor in 2017. Through this enterprise, he has been operating successfully as a contractor and supplier for various government development projects, delivering quality goods.",
+      "Expanding his business horizon, he entered the automobile sector in 2024 as a partner in Maher Trading, which imports and sells Japanese reconditioned cars, earning a reputable position in the market.",
+      "As a dedicated member of Cox's Bazar Boat Club Limited, he actively contributes to the overall development of the Club, the promotion of marine tourism and water sports, and the enhancement of social engagement."
+    ],
+    businessProfile: {
+      // Multiple entries are separated by "; ".
+      role: "Proprietor, M/S Shara Traders; Managing Partner, Maher Trading",
+      company: "M/S Shara Traders; Maher Trading",
+      industry: "Contracting; Supplying; Automobile Import",
+      interests: "Public Contracting & Supply Chain; Japanese Car Import & Sales"
+    },
+    memberships: [
+      "Cox's Bazar Boat Club Limited — Board of Directors / Executive Member"
+    ],
+    socials: {
+      facebook: "https://www.facebook.com/rubel.rf",
+      email: "ak.rubel1989@gmail.com"
+    },
+    timeline: [
+      { year: "2016", event: "Successfully completed an MBA at International Islamic University Chittagong (IIUC)." },
+      { year: "2017", event: "Established M/S Shara Traders as proprietor in the contracting and supplying business and commenced operations." },
+      { year: "2024", event: "Expanded into the automobile industry as a partner in Maher Trading, starting a Japanese reconditioned car import and showroom business." }
+    ]
   },
   {
     id: "mohammed-elias",

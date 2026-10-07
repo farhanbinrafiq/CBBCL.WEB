@@ -2,7 +2,7 @@ import React from "react";
 import { DIRECTORS_DATA, MASTER_HERO_VIDEO } from "../../data";
 import { getBoardMembers, getDirectorPortrait } from "../../utils/storage";
 import { getClubMembers } from "../../utils/memberStorage";
-import { User, Award, Briefcase, Calendar, Globe, Linkedin, Facebook, Twitter, Mail, Anchor, Compass, CheckCircle, ArrowLeft } from "lucide-react";
+import { User, Award, Briefcase, Calendar, Globe, Linkedin, Facebook, Twitter, Instagram, Mail, Anchor, Compass, CheckCircle, ArrowLeft } from "lucide-react";
 import { motion } from "motion/react";
 import { RoutePath, Director } from "../../types";
 import BackgroundVideo from "../BackgroundVideo";
@@ -180,6 +180,7 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
         ["linkedin", director.socials?.linkedin, Linkedin, "LinkedIn"],
         ["facebook", director.socials?.facebook, Facebook, "Facebook"],
         ["twitter", director.socials?.twitter, Twitter, "X / Twitter"],
+        ["instagram", director.socials?.instagram, Instagram, "Instagram"],
         ["website", website, Globe, (website || "").replace(/^https?:\/\//, "").replace(/\/$/, "")]
       ] as const).filter(([, url]) => !!url)
     : ([
@@ -265,7 +266,7 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
               <div className="relative w-44 h-44 mx-auto rounded-full border border-gold overflow-hidden">
                 <img
                   src={getPortraitUrl(director)}
-                  alt={director.name}
+                  alt={director.photoAlt || director.name}
                   className="w-full h-full object-cover transition-all duration-500"
                   referrerPolicy="no-referrer"
                   onError={handleImageError}

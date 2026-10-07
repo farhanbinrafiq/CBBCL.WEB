@@ -186,8 +186,8 @@ export function getBoardMembers(): Director[] {
     }
     // A director who has submitted their profile form: take their real profile whenever its revision is newer.
     if (staticDirector?.profileSubmitted && (updated.profileRevision ?? 0) < (staticDirector.profileRevision ?? 1)) {
-      const { bio, vision, businessProfile, achievements, memberships, community, timeline, socials, appointed, profileRevision } = staticDirector;
-      Object.assign(updated, { bio, vision, businessProfile, achievements, memberships, community, timeline, socials, appointed, profileSubmitted: true, profileRevision: profileRevision ?? 1 });
+      const { bio, vision, businessProfile, achievements, memberships, community, timeline, socials, appointed, photoAlt, profileRevision } = staticDirector;
+      Object.assign(updated, { bio, vision, businessProfile, achievements, memberships, community, timeline, socials, appointed, photoAlt, profileSubmitted: true, profileRevision: profileRevision ?? 1 });
       changed = true;
     }
     const correctedName = RENAMED_DIRECTORS[globalId];
