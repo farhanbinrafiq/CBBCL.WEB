@@ -107,7 +107,7 @@ export const DIRECTORS_DATA: Director[] = [
     designation: "Founding Director",
     membershipCode: "CBBCL-FOUNDER-005",
     profileSubmitted: true,
-    profileRevision: 2,
+    profileRevision: 3,
     bio: [
       "Mehedi Hasan is a Founder Director of Cox's Bazar Boat Club Limited (CBBCL). His professional experience brings together business leadership, teaching, and training in the tourism and hospitality sector.",
       "He is the Managing Director of M I Enterprise and the Owner of Humasa Fashion Gallery. His business activities also include importing products from China and Pakistan.",
@@ -121,8 +121,8 @@ export const DIRECTORS_DATA: Director[] = [
     ],
     businessProfile: {
       // Multiple entries are separated by "; ".
-      role: "Founder Director, Cox's Bazar Boat Club Limited; Managing Director, M I Enterprise; Owner, Humasa Fashion Gallery; Guest Teacher, Cox's Bazar Government Polytechnic Institute; Trainer in the Tourism and Hospitality Sector",
-      company: "Cox's Bazar Boat Club Limited; M I Enterprise; Humasa Fashion Gallery; Cox's Bazar Government Polytechnic Institute",
+      role: "Managing Director, M I Enterprise; Owner, Humasa Fashion Gallery; Guest Teacher, Cox's Bazar Government Polytechnic Institute; Trainer in the Tourism and Hospitality Sector",
+      company: "M I Enterprise; Humasa Fashion Gallery; Cox's Bazar Government Polytechnic Institute",
       industry: "Tourism and Hospitality; Education and Training; Enterprise",
       interests: "Import and trading; Enterprise; Tourism and Hospitality; Education and Training",
       website: "https://mienterprise.shop"
