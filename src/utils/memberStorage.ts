@@ -194,32 +194,7 @@ export function saveMembershipApplications(applications: MembershipApplication[]
 
 const AFF_REQUESTS_KEY = "cbbcl_affiliation_requests";
 
-const DEFAULT_AFF_REQUESTS: AffiliationRequest[] = [
-  {
-    id: "affreq-1",
-    fullName: "Md Imran Alam",
-    membershipId: "CBBCL-LIFEMEMBER-006",
-    membershipType: "Life Member",
-    selectedClub: "Royal Yacht Club of Bangladesh",
-    purpose: "Attending annual marine logistics and sailing forum as guest speaker representing CBBCL.",
-    preferredDates: "2026-07-20 to 2026-07-25",
-    additionalNotes: "Requesting VIP pass introduction letter.",
-    status: "pending",
-    submittedAt: "2026-06-05T10:15:00.000Z"
-  },
-  {
-    id: "affreq-2",
-    fullName: "Tasnim Jahan",
-    membershipId: "CBBCL-ASSOCIATE-022",
-    membershipType: "Associate Member",
-    selectedClub: "The Dhaka Oceanfront Recreational League",
-    purpose: "Weekend training access to internal Olympic rowing pool facilities.",
-    preferredDates: "2026-06-15 to 2026-06-18",
-    additionalNotes: "All coordination processed with pool supervisor.",
-    status: "pending",
-    submittedAt: "2026-06-07T09:00:00.000Z"
-  }
-];
+const DEFAULT_AFF_REQUESTS: AffiliationRequest[] = [];
 
 export function getAffiliationRequests(): AffiliationRequest[] {
   try {
