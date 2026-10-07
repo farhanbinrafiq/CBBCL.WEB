@@ -213,13 +213,14 @@ export const DIRECTORS_DATA: Director[] = [
     designation: "Founding Director",
     membershipCode: "CBBCL-FOUNDER-010",
     profileSubmitted: true,
-    profileRevision: 3,
+    profileRevision: 4,
     photoAlt: "Official portrait of Ahmedul Karim Rubel, Member of the Board of Directors, Cox's Bazar Boat Club Ltd.",
     bio: [
-      "Ahmedul Karim Rubel is a successful businessman and entrepreneur. He completed his Master of Business Administration (MBA) at International Islamic University Chittagong (IIUC) in 2016.",
-      "Immediately after completing his education, he stepped into the business sector and founded M/S Shara Traders as its proprietor in 2017. Through this enterprise, he has been operating successfully as a contractor and supplier for various government development projects, delivering quality goods.",
-      "Expanding his business horizon, he entered the automobile sector in 2024 as a partner in Maher Trading, which imports and sells Japanese reconditioned cars, earning a reputable position in the market.",
-      "As a dedicated member of Cox's Bazar Boat Club Limited, he actively contributes to the overall development of the Club, the promotion of marine tourism and water sports, and the enhancement of social engagement."
+      "Ahmedul Karim Rubel is a dynamic business leader, entrepreneur, and a founding member of Cox's Bazar Boat Club Limited. He completed his Master of Business Administration (MBA) from the International Islamic University Chittagong (IIUC) in 2016.",
+      "Embarking on his entrepreneurial journey in 2017, he established M/S Shara Traders as its sole proprietor. Under his leadership, the firm has built a strong reputation as a trusted government contractor and supplier, delivering high-quality products and services across various development projects.",
+      "Expanding his business horizons in 2024, he entered the automobile industry as a Managing Partner at Maher Trading. Specializing in the import and retail of Japanese reconditioned vehicles, he has rapidly established a strong presence in the automotive market.",
+      "From the inception of Cox's Bazar Boat Club Limited, Mr. Rubel has been deeply involved in shaping its vision, planning, and execution. As a founding member of the Board of Directors, he plays a key role in structuring the club's organization, operations, and long-term strategic initiatives.",
+      "Driven by a passion to unlock the immense potential of marine and water-based tourism in Cox's Bazar, his goal is to establish a modern, safe, and world-class boat club. He is actively dedicated to advancing marine tourism, yachting, water sports, eco-friendly coastal recreation, and building a prestigious, sustainable club community."
     ],
     businessProfile: {
       // Multiple entries are separated by "; ".
