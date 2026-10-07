@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getNewsPosts } from "../../utils/storage";
+import { withoutPlaceholderComments } from "../../utils/newsComments";
 import { NewsPost, RoutePath } from "../../types";
 import CardMedia from "../CardMedia";
 import { Search, Heart, MessageSquare, Tag, X, Send, Calendar, Anchor, ShieldAlert } from "lucide-react";
@@ -25,10 +26,7 @@ export default function NewsFeed({ navigate }: NewsFeedProps) {
 
     const initialStates = list.reduce((acc, p) => {
       let likesVal = p.likes;
-      let commentsVal = [
-        { author: "Kazi Farhan (Founder VP)", text: "This is indeed an outstanding hallmark. Proud of the board's dedication.", date: "June 06" },
-        { author: "Zafar Chowdury (Life Member)", text: "Magnificent progress! Can't wait for the Clubhouse opening.", date: "June 05" }
-      ].slice(0, p.id === "1" ? 2 : 1);
+      let commentsVal: { author: string; text: string; date: string }[] = [];
       let likedVal = false;
 
       try {
@@ -36,7 +34,7 @@ export default function NewsFeed({ navigate }: NewsFeedProps) {
         if (stored) {
           const parsed = JSON.parse(stored);
           likesVal = parsed.likes ?? p.likes;
-          commentsVal = parsed.comments ?? commentsVal;
+          commentsVal = withoutPlaceholderComments(parsed.comments);
           likedVal = parsed.liked ?? false;
         }
       } catch (e) {
@@ -213,6 +211,7 @@ export default function NewsFeed({ navigate }: NewsFeedProps) {
                       <div className="h-32 overflow-hidden bg-slate-100 rounded-xs border border-slate-100">
                         <CardMedia
                           media={post.image}
+                          objectPosition={post.imagePosition}
                           alt={post.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 saturate-75"
                         />

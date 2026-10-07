@@ -11,6 +11,7 @@ import { motion } from "motion/react";
 import { PRESIDENT_IMAGE, MASTER_HERO_VIDEO } from "../../data";
 import BackgroundVideo from "../BackgroundVideo";
 import { MEMBERSHIP_CATEGORIES } from "../../membershipCategories";
+import { hasTextSelection } from "../../utils/selection";
 // @ts-ignore
 import cruiseHero from "../../assets/images/cruise_hero_1780825257603.png";
 
@@ -435,7 +436,7 @@ export default function Home({ navigate }: HomeProps) {
           case "facilities": {
             const fc = homeCms.sections.facilities;
             if (!fc.enabled) return null;
-            const showcaseCount = fc.limit || 6;
+            const showcaseCount = fc.limit || 9;
             const selectedFacilities = facilities.slice(0, showcaseCount);
 
             return (
@@ -686,6 +687,7 @@ export default function Home({ navigate }: HomeProps) {
                               <div className="h-40 overflow-hidden rounded-xs bg-slate-50 border border-slate-100">
                                 <CardMedia
                                   media={post.image}
+                          objectPosition={post.imagePosition}
                                   alt={post.title}
                                   className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500 saturate-75"
                                 />
@@ -904,7 +906,12 @@ export default function Home({ navigate }: HomeProps) {
                           <div
                             key={index}
                             data-membership-card
-                            className={`w-[80vw] sm:w-[45vw] md:w-[30vw] lg:w-[17rem] shrink-0 snap-start whitespace-normal [transform-style:preserve-3d] [backface-visibility:hidden] will-change-transform ${
+                            role="link"
+                            tabIndex={0}
+                            aria-label={`View ${cat.title} details`}
+                            onClick={() => { if (!hasTextSelection()) navigate(`/membership/${cat.slug}`); }}
+                            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); navigate(`/membership/${cat.slug}`); } }}
+                            className={`cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-md w-[80vw] sm:w-[45vw] md:w-[30vw] lg:w-[17rem] shrink-0 snap-start whitespace-normal [transform-style:preserve-3d] [backface-visibility:hidden] will-change-transform ${
                               isHighlighted ? "h-[372px]" : "h-[362px]"
                             }`}
                             style={{ transition: "transform 0.5s ease-out, opacity 0.5s ease-out" }}
@@ -930,9 +937,13 @@ export default function Home({ navigate }: HomeProps) {
                                         <IconComp className="w-4.5 h-4.5 animate-subtle-spin" />
                                       </div>
                                     </div>
-                                    {isHighlighted && (
-                                      <span className="bg-gradient-to-r from-gold-light via-gold to-gold-dark text-navy text-[8px] font-sans font-bold px-1.5 py-0.5 rounded tracking-wider uppercase shadow-sm">
-                                        Highlight
+                                    {(cat.badge || isHighlighted) && (
+                                      <span className={`text-[8px] font-sans font-bold px-1.5 py-0.5 rounded tracking-wider uppercase shadow-sm ${
+                                        cat.featured || (!cat.badge && isHighlighted)
+                                          ? "bg-gradient-to-r from-gold-light via-gold to-gold-dark text-navy"
+                                          : "bg-navy text-gold-light"
+                                      }`}>
+                                        {cat.badge || "Highlight"}
                                       </span>
                                     )}
                                   </div>
@@ -955,7 +966,7 @@ export default function Home({ navigate }: HomeProps) {
                                     </span>
                                   </div>
                                   <button
-                                    onClick={() => navigate(`/membership/${cat.slug}`)}
+                                    onClick={(e) => { e.stopPropagation(); navigate(`/membership/${cat.slug}`); }}
                                     className="text-left font-sans text-[8px] font-semibold tracking-widest uppercase text-navy hover:text-gold cursor-pointer"
                                   >
                                     Learn More →
@@ -985,7 +996,7 @@ export default function Home({ navigate }: HomeProps) {
 
           case "affiliations": {
             const ac = homeCms.sections.affiliations;
-            if (!ac.enabled) return null;
+            if (!ac.enabled || affiliations.length === 0) return null;
 
             return (
               <section key="affiliations" className="py-24 px-6 bg-white border-b border-slate-100">

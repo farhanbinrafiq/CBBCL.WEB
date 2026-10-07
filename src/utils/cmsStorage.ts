@@ -189,6 +189,11 @@ export function savePageContent(content: PageCMSContent): void {
 }
 
 // FACILITIES GET / SET
+// Facilities added after visitors may have cached the list; placed at the top once.
+const ADDED_FACILITY_IDS = ["private-hotel", "boating-yacht"];
+const FACILITIES_SEED_KEY = "cbbcl_cms_facilities_seed";
+const FACILITIES_SEED_VERSION = "hotel-yacht-top-v2";
+
 export function getCMSFacilities(): Facility[] {
   try {
     const data = localStorage.getItem(FACILITIES_KEY);
@@ -198,6 +203,15 @@ export function getCMSFacilities(): Facility[] {
     }
     const parsed = JSON.parse(data);
     if (Array.isArray(parsed)) {
+      if (localStorage.getItem(FACILITIES_SEED_KEY) !== FACILITIES_SEED_VERSION) {
+        const top = ADDED_FACILITY_IDS
+          .map((id) => parsed.find((p: Facility) => p && p.id === id) || FACILITIES_DATA.find((f) => f.id === id))
+          .filter(Boolean) as Facility[];
+        const rest = parsed.filter((p: Facility) => p && !ADDED_FACILITY_IDS.includes(p.id));
+        parsed.splice(0, parsed.length, ...top, ...rest);
+        localStorage.setItem(FACILITIES_KEY, JSON.stringify(parsed));
+        localStorage.setItem(FACILITIES_SEED_KEY, FACILITIES_SEED_VERSION);
+      }
       return parsed;
     }
     localStorage.setItem(FACILITIES_KEY, JSON.stringify(FACILITIES_DATA));
@@ -244,6 +258,8 @@ export function saveCMSEvents(events: EventItem[]): void {
 }
 
 // AFFILIATIONS GET / SET
+const RETIRED_AFFILIATION_IDS = ["af1","af2","af3","af4","af5","af6","ezbooking"];
+
 export function getCMSAffiliations(): Affiliation[] {
   try {
     const data = localStorage.getItem(AFFILIATIONS_KEY);
@@ -251,14 +267,12 @@ export function getCMSAffiliations(): Affiliation[] {
       localStorage.setItem(AFFILIATIONS_KEY, JSON.stringify(AFFILIATIONS_DATA));
       return AFFILIATIONS_DATA;
     }
-    const list: Affiliation[] = JSON.parse(data);
-    if (Array.isArray(list)) {
-      if (!list.some(aff => aff && (aff.id === "ezbooking" || aff.name?.toLowerCase() === "ezbooking"))) {
-        const ez = AFFILIATIONS_DATA.find(aff => aff.id === "ezbooking");
-        if (ez) {
-          list.push(ez);
-          localStorage.setItem(AFFILIATIONS_KEY, JSON.stringify(list));
-        }
+    const parsed: Affiliation[] = JSON.parse(data);
+    if (Array.isArray(parsed)) {
+      // Drop the prototype affiliations cached by earlier builds; keep any added in the admin dashboard.
+      const list = parsed.filter((aff) => aff && !RETIRED_AFFILIATION_IDS.includes(aff.id));
+      if (list.length !== parsed.length) {
+        localStorage.setItem(AFFILIATIONS_KEY, JSON.stringify(list));
       }
       return list;
     }
@@ -484,10 +498,14 @@ export const DEFAULT_FOOTER_SETTINGS: FooterSettings = {
     {
       title: "Membership Tiers",
       links: [
-        { name: "🏆 Donor Membership", url: "/membership" },
-        { name: "🏵️ Life Membership", url: "/membership" },
-        { name: "🛡️ Permanent Membership", url: "/membership" },
-        { name: "⚓ Associate Membership", url: "/membership" }
+        { name: "🏆 Donor Membership", url: "/membership/donor-member" },
+        { name: "🏵️ Life Membership", url: "/membership/life-member" },
+        { name: "🛡️ Permanent Membership", url: "/membership/permanent-member" },
+        { name: "⚓ Associate Membership", url: "/membership/associate-member" },
+        { name: "🌐 Diplomat Membership", url: "/membership/diplomat-member" },
+        { name: "✈️ Foreign Membership", url: "/membership/foreign-member" },
+        { name: "🏢 Corporate Membership", url: "/membership/corporate-member" },
+        { name: "🎖️ Honorary Membership", url: "/membership/honorary-member" }
       ]
     }
   ],
@@ -514,6 +532,15 @@ export function getFooterSettingsSync(): FooterSettings {
       // Replace the retired Kolatoli office address cached in older browsers.
       if (parsed && parsed.contact && typeof parsed.contact.address === "string" && parsed.contact.address.includes("Kolatoli R/A")) {
         parsed.contact.address = DEFAULT_FOOTER_SETTINGS.contact.address;
+      }
+      // Footer "Membership Tiers" used to list 4 categories, all linking to /membership.
+      if (parsed && Array.isArray(parsed.footerLinks)) {
+        const defaultTiers = DEFAULT_FOOTER_SETTINGS.footerLinks.find((g) => g.title === "Membership Tiers");
+        parsed.footerLinks = parsed.footerLinks.map((g: { title: string; links?: { url: string }[] }) =>
+          g && g.title === "Membership Tiers" && defaultTiers && Array.isArray(g.links) && g.links.length <= 4 && g.links.every((l) => l.url === "/membership")
+            ? defaultTiers
+            : g
+        );
       }
       // Footer email moved from registration@ to membership@.
       if (parsed && parsed.contact && parsed.contact.email === "info@cbbcl.org, registration@cbbcl.org") {

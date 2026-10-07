@@ -674,6 +674,8 @@ export default function AdminDashboard({ navigate, onLogout, initialActiveTab }:
     }
 
     const newDirector: Director = {
+      // Keep fields the form does not edit (vision, timeline, submitted-profile flag, ...).
+      ...(editingBoardItem || {}),
       id: boardForm.id || "bd-" + Date.now(),
       name: boardForm.name,
       designation: boardForm.designation,

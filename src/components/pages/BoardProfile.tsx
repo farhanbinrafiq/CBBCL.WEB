@@ -2,7 +2,7 @@ import React from "react";
 import { DIRECTORS_DATA, MASTER_HERO_VIDEO } from "../../data";
 import { getBoardMembers, getDirectorPortrait } from "../../utils/storage";
 import { getClubMembers } from "../../utils/memberStorage";
-import { User, Award, Briefcase, Calendar, Globe, Linkedin, Facebook, Twitter, Anchor, Compass, CheckCircle, ArrowLeft } from "lucide-react";
+import { User, Award, Briefcase, Calendar, Globe, Linkedin, Facebook, Twitter, Mail, Anchor, Compass, CheckCircle, ArrowLeft } from "lucide-react";
 import { motion } from "motion/react";
 import { RoutePath, Director } from "../../types";
 import BackgroundVideo from "../BackgroundVideo";
@@ -93,6 +93,11 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
   const enrichDirectorDetails = (dir: Director) => {
     const d = { ...dir };
 
+    // Submitted profiles show only real data; empty sections are hidden below.
+    if (d.profileSubmitted) {
+      return d;
+    }
+
     if (!d.appointed) {
       d.appointed = "January 2026";
     }
@@ -163,7 +168,36 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
   };
 
   const director = enrichDirectorDetails(rawDirector);
-  const companies = (director.businessProfile?.company || "").split(";").map((c) => c.trim()).filter(Boolean);
+  const splitList = (value?: string) => (value || "").split(";").map((c) => c.trim()).filter(Boolean);
+  const companies = splitList(director.businessProfile?.company);
+  const roles = splitList(director.businessProfile?.role);
+  const industries = splitList(director.businessProfile?.industry);
+  const interests = splitList(director.businessProfile?.interests);
+  const website = director.businessProfile?.website;
+  // Placeholder social icons are only kept for profiles that haven't been submitted yet.
+  const socialLinks = director.profileSubmitted
+    ? ([
+        ["linkedin", director.socials?.linkedin, Linkedin, "LinkedIn"],
+        ["facebook", director.socials?.facebook, Facebook, "Facebook"],
+        ["twitter", director.socials?.twitter, Twitter, "X / Twitter"],
+        ["website", website, Globe, (website || "").replace(/^https?:\/\//, "").replace(/\/$/, "")]
+      ] as const).filter(([, url]) => !!url)
+    : ([
+        ["linkedin", "https://linkedin.com", Linkedin, "LinkedIn"],
+        ["facebook", "https://facebook.com", Facebook, "Facebook"],
+        ["twitter", "https://twitter.com", Twitter, "X / Twitter"]
+      ] as const);
+  const contactEmail = director.socials?.email;
+  const BulletList = ({ items }: { items: string[] }) => (
+    <ul className="space-y-1 mt-1">
+      {items.map((c) => (
+        <li key={c} className="flex items-start space-x-1.5">
+          <span className="text-gold">•</span>
+          <span>{c}</span>
+        </li>
+      ))}
+    </ul>
+  );
 
   // 6 Unsplash photo gallery mock URLs
   const gallery = [
@@ -248,10 +282,12 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
                   <span className="text-slate-400 font-light">Designation:</span>
                   <span className="text-navy font-semibold">{director.designation}</span>
                 </div>
-                <div className="flex justify-between border-b border-slate-50 pb-2">
-                  <span className="text-slate-400 font-light">Appointed:</span>
-                  <span className="text-navy font-semibold">{director.appointed}</span>
-                </div>
+                {director.appointed && (
+                  <div className="flex justify-between border-b border-slate-50 pb-2">
+                    <span className="text-slate-400 font-light">Appointed:</span>
+                    <span className="text-navy font-semibold">{director.appointed}</span>
+                  </div>
+                )}
                 <div className="flex justify-between pb-1">
                   <span className="text-slate-400 font-light">Residency Seat:</span>
                   <span className="text-gold-dark font-semibold">Founding Seat #{director.membershipCode?.split("-").pop()}</span>
@@ -259,135 +295,187 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
               </div>
 
               {/* Social Channels Links */}
-              <div className="border-t border-slate-100 pt-6">
-                <span className="block text-[9px] font-sans text-slate-400 font-bold uppercase tracking-widest mb-3 text-center">
-                  Social Registries
-                </span>
-                <div className="flex justify-center space-x-3">
-                  <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="p-2 border border-slate-200 text-slate-600 hover:text-navy hover:border-navy transition-colors rounded-full">
-                    <Linkedin className="w-4 h-4" />
-                  </a>
-                  <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="p-2 border border-slate-200 text-slate-600 hover:text-navy hover:border-navy transition-colors rounded-full">
-                    <Facebook className="w-4 h-4" />
-                  </a>
-                  <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="p-2 border border-slate-200 text-slate-600 hover:text-navy hover:border-navy transition-colors rounded-full font-bold">
-                    <Twitter className="w-4 h-4" />
-                  </a>
+              {(socialLinks.length > 0 || contactEmail) && (
+                <div className="border-t border-slate-100 pt-6">
+                  <span className="block text-[9px] font-sans text-slate-400 font-bold uppercase tracking-widest mb-3 text-center">
+                    Social Registries
+                  </span>
+                  {socialLinks.length > 0 && (
+                    <div className="flex flex-wrap justify-center gap-x-5 gap-y-3">
+                      {socialLinks.map(([key, url, Icon, label]) => (
+                        <a key={key} href={url} target="_blank" rel="noopener noreferrer" aria-label={label} className="group flex flex-col items-center space-y-1.5 text-slate-600 hover:text-navy transition-colors">
+                          <span className="p-2 border border-slate-200 group-hover:border-navy transition-colors rounded-full">
+                            <Icon className="w-4 h-4" />
+                          </span>
+                          <span className="font-sans text-[10px] leading-none">{label}</span>
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                  {contactEmail && (
+                    <a
+                      href={`mailto:${contactEmail}`}
+                      className={`flex items-center justify-center space-x-1.5 font-sans text-xs text-slate-600 hover:text-navy transition-colors break-all ${
+                        socialLinks.length > 0 ? "mt-4 pt-4 border-t border-slate-100" : ""
+                      }`}
+                    >
+                      <Mail className="w-3.5 h-3.5 text-gold shrink-0" />
+                      <span>{contactEmail}</span>
+                    </a>
+                  )}
                 </div>
-              </div>
+              )}
             </div>
 
-            {/* Business Card specifications */}
-            <div className="bg-navy text-slate-300 p-6 rounded-xs border border-gold/20 space-y-4">
-              <div className="flex items-center space-x-2 text-gold">
-                <Briefcase className="w-5 h-5 animate-pulse" />
-                <span className="font-sans text-[10px] font-bold uppercase tracking-widest">
-                  Business Standing
-                </span>
-              </div>
-              <h4 className="font-display text-lg text-white font-medium border-b border-navy-light pb-2">
-                Merchant Profile
-              </h4>
-              <div className="font-sans text-xs space-y-2 font-light">
-                {director.businessProfile?.role && (
-                  <div>
-                    <span className="text-gold block font-semibold text-[10px]">OFFICIAL ROLE:</span>
-                    <span>{director.businessProfile.role}</span>
+            {(roles.length > 0 || companies.length > 0 || industries.length > 0 || interests.length > 0 || !!website) && (
+              <>
+                {/* Business Card specifications */}
+                <div className="bg-navy text-slate-300 p-6 rounded-xs border border-gold/20 space-y-4">
+                  <div className="flex items-center space-x-2 text-gold">
+                    <Briefcase className="w-5 h-5 animate-pulse" />
+                    <span className="font-sans text-[10px] font-bold uppercase tracking-widest">
+                      Business Standing
+                    </span>
                   </div>
-                )}
-                {companies.length > 0 && (
-                  <div>
-                    <span className="text-gold block font-semibold text-[10px]">{companies.length > 1 ? "BUSINESSES:" : "CORPORATION:"}</span>
-                    {companies.length > 1 ? (
-                      <ul className="space-y-1 mt-1">
-                        {companies.map((c) => (
-                          <li key={c} className="flex items-start space-x-1.5">
-                            <span className="text-gold">•</span>
-                            <span>{c}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <span>{companies[0]}</span>
+                  <h4 className="font-display text-lg text-white font-medium border-b border-navy-light pb-2">
+                    Merchant Profile
+                  </h4>
+                  <div className="font-sans text-xs space-y-2 font-light">
+                    {roles.length > 0 && (
+                      <div>
+                        <span className="text-gold block font-semibold text-[10px]">{roles.length > 1 ? "OFFICIAL ROLES:" : "OFFICIAL ROLE:"}</span>
+                        {roles.length > 1 ? <BulletList items={roles} /> : <span>{roles[0]}</span>}
+                      </div>
+                    )}
+                    {companies.length > 0 && (
+                      <div>
+                        <span className="text-gold block font-semibold text-[10px]">{companies.length > 1 ? "BUSINESSES:" : "CORPORATION:"}</span>
+                        {companies.length > 1 ? <BulletList items={companies} /> : <span>{companies[0]}</span>}
+                      </div>
+                    )}
+                    {industries.length > 0 && (
+                      <div>
+                        <span className="text-gold block font-semibold text-[10px]">INDUSTRY SPHERE:</span>
+                        {industries.length > 1 ? <BulletList items={industries} /> : <span>{industries[0]}</span>}
+                      </div>
+                    )}
+                    {interests.length > 0 && (
+                      <div>
+                        <span className="text-gold block font-semibold text-[10px]">KEY BUSINESS INTERESTS:</span>
+                        <BulletList items={interests} />
+                      </div>
+                    )}
+                    {website && (
+                      <div>
+                        <span className="text-gold block font-semibold text-[10px]">COMPANY WEBSITE:</span>
+                        <a href={website} target="_blank" rel="noopener noreferrer" className="text-white underline decoration-gold/60 hover:text-gold break-all">
+                          {website.replace(/^https?:\/\//, "")}
+                        </a>
+                      </div>
                     )}
                   </div>
-                )}
-                {director.businessProfile?.industry && (
-                  <div>
-                    <span className="text-gold block font-semibold text-[10px]">INDUSTRY SPHERE:</span>
-                    <span>{director.businessProfile.industry}</span>
-                  </div>
-                )}
-              </div>
-            </div>
+                </div>
+              </>
+            )}
           </aside>
 
           {/* Right Side: Narrative Details Area */}
           <div className="lg:col-span-8 space-y-12">
             
-            {/* Biography */}
-            <div className="bg-white p-8 md:p-10 border border-slate-200/60 rounded-xs shadow-sm space-y-6">
-              <h3 className="font-display text-2xl text-text-dark font-light pb-3 border-b border-slate-100 flex items-center space-x-3">
-                <Compass className="w-5 h-5 text-gold" />
-                <span>Executive Narrative Biography</span>
-              </h3>
-              <div className="space-y-4 font-sans text-xs sm:text-[13px] text-text-body leading-relaxed font-light">
-                {director.bio?.map((paragraph, index) => (
-                  <p key={index}>{paragraph}</p>
-                ))}
+            {director.bio && director.bio.length > 0 && (
+              <>
+                {/* Biography */}
+                <div className="bg-white p-8 md:p-10 border border-slate-200/60 rounded-xs shadow-sm space-y-6">
+                  <h3 className="font-display text-2xl text-text-dark font-light pb-3 border-b border-slate-100 flex items-center space-x-3">
+                    <Compass className="w-5 h-5 text-gold" />
+                    <span>Executive Narrative Biography</span>
+                  </h3>
+                  <div className="space-y-4 font-sans text-xs sm:text-[13px] text-text-body leading-relaxed font-light">
+                    {director.bio?.map((paragraph, index) => (
+                      <p key={index}>{paragraph}</p>
+                    ))}
+                  </div>
+                </div>
+
+              </>
+            )}
+            {/* Vision */}
+            {director.vision && director.vision.length > 0 && (
+              <div className="bg-white p-8 md:p-10 border border-slate-200/60 rounded-xs shadow-sm space-y-6">
+                <h3 className="font-display text-2xl text-text-dark font-light pb-3 border-b border-slate-100 flex items-center space-x-3">
+                  <Anchor className="w-5 h-5 text-gold" />
+                  <span>Vision for CBBCL</span>
+                </h3>
+                <div className="space-y-4 font-sans text-xs sm:text-[13px] text-text-body leading-relaxed font-light">
+                  {director.vision.map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Awards & Professional Memberships Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Achievements Column */}
-              <div className="bg-white p-6 border border-slate-200/60 rounded-xs shadow-sm space-y-4">
-                <h4 className="font-display text-lg text-text-dark border-b border-slate-100 pb-2 flex items-center space-x-2">
-                  <Award className="w-4 h-4 text-gold" />
-                  <span>Awards & Achievements</span>
-                </h4>
-                <ul className="space-y-3 font-sans text-xs text-text-body font-light leading-relaxed">
-                  {director.achievements?.map((ach, idx) => (
-                    <li key={idx} className="flex items-start space-x-2">
-                      <CheckCircle className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
-                      <span>{ach}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            <div className={`grid grid-cols-1 ${(director.achievements?.length || 0) > 0 && (director.memberships?.length || 0) > 0 ? "md:grid-cols-2" : ""} gap-6`}>
+              {director.achievements && director.achievements.length > 0 && (
+                <>
+                  {/* Achievements Column */}
+                  <div className="bg-white p-6 border border-slate-200/60 rounded-xs shadow-sm space-y-4">
+                    <h4 className="font-display text-lg text-text-dark border-b border-slate-100 pb-2 flex items-center space-x-2">
+                      <Award className="w-4 h-4 text-gold" />
+                      <span>Awards & Achievements</span>
+                    </h4>
+                    <ul className="space-y-3 font-sans text-xs text-text-body font-light leading-relaxed">
+                      {director.achievements?.map((ach, idx) => (
+                        <li key={idx} className="flex items-start space-x-2">
+                          <CheckCircle className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
+                          <span>{ach}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
 
-              {/* Memberships Column */}
-              <div className="bg-white p-6 border border-slate-200/60 rounded-xs shadow-sm space-y-4">
-                <h4 className="font-display text-lg text-text-dark border-b border-slate-100 pb-2 flex items-center space-x-2">
-                  <Anchor className="w-4 h-4 text-gold" />
-                  <span>Social Memberships</span>
-                </h4>
-                <ul className="space-y-3 font-sans text-xs text-text-body font-light leading-relaxed">
-                  {director.memberships?.map((mem, idx) => (
-                    <li key={idx} className="flex items-start space-x-2">
-                      <span className="text-gold font-bold">🏵️</span>
-                      <span>{mem}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                </>
+              )}
+              {director.memberships && director.memberships.length > 0 && (
+                <>
+                  {/* Memberships Column */}
+                  <div className="bg-white p-6 border border-slate-200/60 rounded-xs shadow-sm space-y-4">
+                    <h4 className="font-display text-lg text-text-dark border-b border-slate-100 pb-2 flex items-center space-x-2">
+                      <Anchor className="w-4 h-4 text-gold" />
+                      <span>Social Memberships</span>
+                    </h4>
+                    <ul className="space-y-3 font-sans text-xs text-text-body font-light leading-relaxed">
+                      {director.memberships?.map((mem, idx) => (
+                        <li key={idx} className="flex items-start space-x-2">
+                          <span className="text-gold font-bold">🏵️</span>
+                          <span>{mem}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </>
+              )}
             </div>
 
-            {/* Community Engagement */}
-            <div className="bg-white p-6 border border-slate-200/60 rounded-xs shadow-sm space-y-4">
-              <h4 className="font-display text-lg text-text-dark border-b border-slate-100 pb-2">
-                Philanthropy & Environmental CSR Engagement
-              </h4>
-              <ul className="grid grid-cols-1 md:grid-cols-3 gap-4 font-sans text-xs text-text-body font-light leading-relaxed">
-                {director.community?.map((comm, idx) => (
-                  <li key={idx} className="p-4 bg-bg-secondary rounded-xs border border-slate-150">
-                    <span className="text-gold font-bold block mb-1">Activism {idx + 1}</span>
-                    <span>{comm}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {director.community && director.community.length > 0 && (
+              <>
+                {/* Community Engagement */}
+                <div className="bg-white p-6 border border-slate-200/60 rounded-xs shadow-sm space-y-4">
+                  <h4 className="font-display text-lg text-text-dark border-b border-slate-100 pb-2">
+                    Philanthropy & Environmental CSR Engagement
+                  </h4>
+                  <ul className="grid grid-cols-1 md:grid-cols-3 gap-4 font-sans text-xs text-text-body font-light leading-relaxed">
+                    {director.community?.map((comm, idx) => (
+                      <li key={idx} className="p-4 bg-bg-secondary rounded-xs border border-slate-150">
+                        <span className="text-gold font-bold block mb-1">Activism {idx + 1}</span>
+                        <span>{comm}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
+              </>
+            )}
             {/* 6-Image Photo Gallery Grid */}
             {SHOW_SAILING_CHRONICLES && (
               <div className="bg-white p-6 border border-slate-200/60 rounded-xs shadow-sm space-y-4">
@@ -408,32 +496,36 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
               </div>
             )}
 
-            {/* 5-Milestone Career Timeline */}
-            <div className="bg-white p-8 border border-slate-200/60 rounded-xs shadow-sm space-y-6">
-              <h4 className="font-display text-lg text-text-dark border-b border-slate-100 pb-2 flex items-center space-x-2">
-                <Calendar className="w-4 h-4 text-gold" />
-                <span>Chronological Career Milestones</span>
-              </h4>
+            {director.timeline && director.timeline.length > 0 && (
+              <>
+                {/* 5-Milestone Career Timeline */}
+                <div className="bg-white p-8 border border-slate-200/60 rounded-xs shadow-sm space-y-6">
+                  <h4 className="font-display text-lg text-text-dark border-b border-slate-100 pb-2 flex items-center space-x-2">
+                    <Calendar className="w-4 h-4 text-gold" />
+                    <span>Chronological Career Milestones</span>
+                  </h4>
 
-              <div className="relative border-l border-gold-dark/40 ml-4 pl-6 space-y-6">
-                {director.timeline?.map((step, idx) => (
-                  <div key={idx} className="relative">
-                    {/* Circle marker */}
-                    <div className="absolute -left-[31px] top-1 bg-navy text-gold font-sans font-bold text-[8px] border border-gold w-4 h-4 rounded-full flex items-center justify-center">
-                      •
-                    </div>
-                    <div className="space-y-1">
-                      <span className="font-display text-sm font-semibold text-gold-dark font-mono block">
-                        Year {step.year}
-                      </span>
-                      <p className="font-sans text-xs text-text-body font-light leading-relaxed">
-                        {step.event}
-                      </p>
-                    </div>
+                  <div className="relative border-l border-gold-dark/40 ml-4 pl-6 space-y-6">
+                    {director.timeline?.map((step, idx) => (
+                      <div key={idx} className="relative">
+                        {/* Circle marker */}
+                        <div className="absolute -left-[31px] top-1 bg-navy text-gold font-sans font-bold text-[8px] border border-gold w-4 h-4 rounded-full flex items-center justify-center">
+                          •
+                        </div>
+                        <div className="space-y-1">
+                          <span className="font-display text-sm font-semibold text-gold-dark font-mono block">
+                            Year {step.year}
+                          </span>
+                          <p className="font-sans text-xs text-text-body font-light leading-relaxed">
+                            {step.event}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
+                </div>
+              </>
+            )}
 
           </div>
         </div>

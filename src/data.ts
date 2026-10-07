@@ -105,7 +105,40 @@ export const DIRECTORS_DATA: Director[] = [
     id: "mehedi-hasan",
     name: "Mehedi Hasan",
     designation: "Founding Director",
-    membershipCode: "CBBCL-FOUNDER-005"
+    membershipCode: "CBBCL-FOUNDER-005",
+    profileSubmitted: true,
+    profileRevision: 2,
+    bio: [
+      "Mehedi Hasan is a Founder Director of Cox's Bazar Boat Club Limited (CBBCL). His professional experience brings together business leadership, teaching, and training in the tourism and hospitality sector.",
+      "He is the Managing Director of M I Enterprise and the Owner of Humasa Fashion Gallery. His business activities also include importing products from China and Pakistan.",
+      "From 2012 to 2026, he worked in teaching. Between 2017 and 2023, he served as Coordinator and Trainer in the Tourism and Hospitality Sector at SEIP under the Ministry of Finance. He also serves as a Guest Teacher at Cox's Bazar Government Polytechnic Institute.",
+      "His professional development includes training in the methodology of CBTA and an international course in food safety and hygiene completed at Nanyang Polytechnic Institute in Singapore. These roles reflect his involvement in enterprise, education, and hospitality-related professional development."
+    ],
+    vision: [
+      "His vision for CBBCL is to build a welcoming, well-managed boat club where members and guests can enjoy safe, high-quality boating and hospitality experiences. He wants the Club to contribute positively to Cox's Bazar through responsible use of coastal and marine resources, care for the environment, and strong connections with the local community.",
+      "He sees tourism, hospitality, and professional learning as areas that can support one another, creating opportunities for young people and local businesses while respecting the coast that makes the region distinctive. He also aims to promote awareness of coastal responsibility among members and visitors, supporting a Club culture that values both leisure and stewardship.",
+      "Through member participation and responsible development, he hopes CBBCL will become a respected destination for recreation, community connection, and sustainable coastal tourism."
+    ],
+    businessProfile: {
+      // Multiple entries are separated by "; ".
+      role: "Founder Director, Cox's Bazar Boat Club Limited; Managing Director, M I Enterprise; Owner, Humasa Fashion Gallery; Guest Teacher, Cox's Bazar Government Polytechnic Institute; Trainer in the Tourism and Hospitality Sector",
+      company: "Cox's Bazar Boat Club Limited; M I Enterprise; Humasa Fashion Gallery; Cox's Bazar Government Polytechnic Institute",
+      industry: "Tourism and Hospitality; Education and Training; Enterprise",
+      interests: "Import and trading; Enterprise; Tourism and Hospitality; Education and Training",
+      website: "https://mienterprise.shop"
+    },
+    socials: {
+      facebook: "https://www.facebook.com/mehedihasan546",
+      email: "mehedihasan546@gmail.com"
+    },
+    achievements: [
+      "2018 — International course in Food Safety and Hygiene, Nanyang Polytechnic Institute, Singapore",
+      "2016 — Training in the methodology of CBTA, BTEB"
+    ],
+    timeline: [
+      { year: "2012–2026", event: "Teaching" },
+      { year: "2017–2023", event: "Coordinator and Trainer in the Tourism and Hospitality Sector at SEIP, Ministry of Finance" }
+    ]
   },
   {
     id: "md-imran-alam",
@@ -139,7 +172,7 @@ export const DIRECTORS_DATA: Director[] = [
   },
   {
     id: "mohammed-elias",
-    name: "Mohammed Elias",
+    name: "Mohammad Eliyas",
     designation: "Founding Director",
     membershipCode: "CBBCL-FOUNDER-011"
   },
@@ -177,6 +210,22 @@ export const DIRECTORS_DATA: Director[] = [
 ];
 
 export const FACILITIES_DATA: Facility[] = [
+  {
+    id: "private-hotel",
+    name: "Private Hotel",
+    description: "Private guest accommodation within the club for members and their invited guests, offering a quiet, comfortable stay close to the club's dining, lounge, and marine facilities.",
+    features: ["Private guest rooms", "For members & invited guests", "Steps from club dining & lounge", "Advance reservation"],
+    capacity: "By reservation",
+    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=1200"
+  },
+  {
+    id: "boating-yacht",
+    name: "Boating & Yacht",
+    description: "Boating and yachting experiences on the Bay of Bengal for members and their guests, with an emphasis on safe, well-managed outings and responsible use of the coast.",
+    features: ["Boating excursions", "Yacht outings", "Safety-first operations", "For members & guests"],
+    capacity: "By reservation",
+    image: "https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?auto=format&fit=crop&q=80&w=1200"
+  },
   {
     id: "lounge",
     name: "Club Lounge",
@@ -237,20 +286,6 @@ export const FACILITIES_DATA: Facility[] = [
 
 export const NEWS_DATA: NewsPost[] = [
   {
-    id: "gazette-niigata-2026",
-    title: "Esteemed Sponsorship Announcement — Cox’s Bazar Boat Club Ltd.",
-    date: "June 20, 2026",
-    category: "Official Gazette Release",
-    year: "2026",
-    month: "June",
-    excerpt: "The Cox’s Bazar Boat Club Ltd. (CBBCL) is proud to formally announce its esteemed sponsorship engagement with JCI Bangladesh during the ASPAC 2026 gathering in Niigata, Japan.",
-    content: "The Cox’s Bazar Boat Club Ltd. (CBBCL) is proud to formally announce its esteemed sponsorship engagement with JCI Bangladesh during the prestigious international gathering at NIIGATA, Japan, held in conjunction with the JCI Asia-Pacific Conference (ASPAC) 2026.\n\nThis milestone reflects the Club’s continued commitment to fostering international cooperation, youth leadership development, and global networking across the Asia-Pacific region. The partnership highlights Bangladesh’s growing presence on the international stage, particularly in platforms that promote leadership excellence, entrepreneurship, and cross-cultural collaboration.\n\nThrough this sponsorship, Cox’s Bazar Boat Club Ltd. reinforces its dedication to supporting initiatives that connect Bangladesh with the global JCI community, strengthening diplomatic and organizational ties beyond borders.\n\nThe Club extends its sincere appreciation to JCI Bangladesh for representing the nation at such a prestigious international forum and for advancing Bangladesh’s visibility at ASPAC 2026 in Niigata, Japan.\n\nThis collaboration stands as a testament to shared values of leadership, service, and global unity.",
-    tags: ["sponsorship", "gazette", "jci", "niigata", "aspac"],
-    image: "https://res.cloudinary.com/djdyqr8yd/image/upload/v1781952035/CBBCL_sponsor_chlygi.jpg",
-    likes: 312,
-    commentsCount: 14
-  },
-  {
     id: "2",
     title: "Welcome Message from Founding President Humayun Kabir Robel",
     date: "June 01, 2026",
@@ -261,155 +296,10 @@ export const NEWS_DATA: NewsPost[] = [
     content: "Dear Founding Members and Guests, as we embark on this exciting journey, I welcome you to Cox’s Bazar Boat Club Limited. Our club represents more than just a leisure resort. It is a long-awaited vision to anchor the elite social, maritime, and philanthropic networks of Bangladesh on the longest natural sea beach in the world. CBBCL will act as a luxurious maritime haven that promotes yachting, water sports, and environmental preservation while fostering tight-knit camaraderie. Our board is committed to developing state-of-the-art facilities and securing reciprocal arrangements with elite global clubs.",
     tags: ["president", "welcome", "vision", "cbbcl"],
     image: PRESIDENT_IMAGE,
-    likes: 245,
-    commentsCount: 32
-  },
-  {
-    id: "1",
-    title: "Official Incorporation of Cox’s Bazar Boat Club Limited",
-    date: "June 05, 2026",
-    category: "News",
-    year: "2026",
-    month: "June",
-    excerpt: "Cox’s Bazar Boat Club Limited has been officially registered and incorporated under The Companies Act, 1994, as a premier private socio-cultural non-profit entity.",
-    content: "We are immensely proud to announce the formal registration and incorporation of Cox’s Bazar Boat Club Limited (CBBCL). Duly recognized by the Registrar of Joint Stock Companies and Firms (RJSC) under The Companies Act, 1994, Bangladesh, as a Company Limited by Guarantee, CBBCL is structuralized as an elite non-profit. This establishes our statutory foundation to deliver world-class nautical facilities, social spaces, and marine conservation programs to our exclusive members, setting a benchmark parallel to the prestigious historic clubs across South Asia.",
-    tags: ["incorporation", "legal", "official", "governance"],
-    likes: 124,
-    commentsCount: 18
-  },
-  {
-    id: "3",
-    title: "Inaugural Session of the CBBCL Board of Directors",
-    date: "May 25, 2026",
-    category: "Governance",
-    year: "2026",
-    month: "May",
-    excerpt: "The newly formed Board of Directors successfully passed the master blueprint and designated the first administrative task-forces.",
-    content: "The inaugural meeting of the Board of Directors of Cox’s Bazar Boat Club Limited was convened on May 25, 2026, under the chairmanship of Founding President Humayun Kabir Robel. The session saw the active attendance of Founding Vice President Farhan Bin Rafiq, Director Finance Arifur Rahman, and all 11 Founding Directors. The board approved the pre-development master plans for our landmark clubhouse and formalised the appointment of the Executive Sub-Committees for Rules, Membership Scrutiny, and Sports.",
-    tags: ["board", "meeting", "governance", "blueprints"],
-    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=800",
-    likes: 98,
-    commentsCount: 6
-  },
-  {
-    id: "4",
-    title: "Groundbreaking Construction Updates on Clubhouse & Slipway",
-    date: "May 18, 2026",
-    category: "News",
-    year: "2026",
-    month: "May",
-    excerpt: "Piling operations and safety slipway construction have commenced on the club's scenic shoreline site.",
-    content: "Civil engineering consultants have initiated ground trials and foundation piling operations on CBBCL's ocean-facing land site. The first phase includes building a heavy-grade maritime slipway designed to facilitate safe, direct launch and recovery operations for recreational motorboats and sailboats. Environmental mitigation boundaries have been fortified using bio-engineering geotextiles to protect the fragile coastal sand dunes, emphasizing our commitment to ecological responsibility.",
-    tags: ["construction", "infrastructure", "marina", "clubhouse"],
-    image: "https://images.unsplash.com/photo-1504150558553-0bbe79316bb0?auto=format&fit=crop&q=80&w=800",
-    likes: 156,
-    commentsCount: 22
-  },
-  {
-    id: "5",
-    title: "CBBCL Launch of the Executive Membership Drive 2026",
-    date: "April 29, 2026",
-    category: "Announcements",
-    year: "2026",
-    month: "April",
-    excerpt: "Exclusive invitations are now being dispatched to distinguished citizens, corporate chiefs, and diplomatic missions.",
-    content: "The Membership Committee of Cox’s Bazar Boat Club Limited is thrilled to announce that applications are open for our inaugural founding membership cycle. Since CBBCL is structured to sustain an intimate and high-profile community, admissions will undergo highly protective, multi-tier vetting by our Scrutiny Committee. Interested patrons may request the official Club Prospectus directly via corporate invitation or verified members' proposals in Donor, Life, and Permanent categories.",
-    tags: ["membership", "drive", "admissions", "exclusive"],
-    likes: 182,
-    commentsCount: 41
-  },
-  {
-    id: "6",
-    title: "Inaugural Gala Dinner & Charter Presentation Set for July",
-    date: "April 15, 2026",
-    category: "Events",
-    year: "2026",
-    month: "April",
-    excerpt: "CBBCL will host its grand formal charter presentation at the Grand Ballroom, welcoming global nautical ambassadors.",
-    content: "The social highlight of the season, our Inaugural Charter Gala Dinner, will take place on Saturday evening in July 2026. The black-tie affair will officially salute our Founding Members. The night features a customized five-course symphonic menu, live chamber orchestration, and a symbolic anchor-raising toast led by our executive committee to declare the club's social calendar active.",
-    tags: ["gala", "dinner", "charter", "blacktie"],
-    likes: 310,
-    commentsCount: 56
-  },
-  {
-    id: "7",
-    title: "Cox's Bazar Beach Cleanup: Corporate Social Responsibility Initiative",
-    date: "March 22, 2026",
-    category: "CSR",
-    year: "2026",
-    month: "March",
-    excerpt: "CBBCL directors, patrons, and volunteers successfully cleared beach zones in a coordinated eco-campaign.",
-    content: "Demonstrating our core belief that luxury and ecological stewardship must sail together, CBBCL successfully organized its first Quarterly Beach Cleanup Campaign. Over eighty volunteers, led actively by the founding directors, gathered at the sunrise light to remove plastic wastes and discarded fishing gear from surrounding dune habitats. Coordinated in collaboration with regional conservationists, the campaign highlights our lasting focus on preserving the beauty of Cox's Bazar.",
-    tags: ["csr", "beach", "cleanup", "eco", "volunteer"],
-    image: "https://images.unsplash.com/photo-1621451537084-482c7307370f?auto=format&fit=crop&q=80&w=800",
-    likes: 201,
-    commentsCount: 29
-  },
-  {
-    id: "8",
-    title: "Executive Standing Committee Appointed for Sports & Safety",
-    date: "March 10, 2026",
-    category: "Governance",
-    year: "2026",
-    month: "March",
-    excerpt: "The Board announced the formation of eight primary standing committees to guide club divisions.",
-    content: "To support flawless operations, the Board of Directors of Cox’s Bazar Boat Club Limited has structuralized eight dedicated Standing Committees under special provisions of the Articles of Association. These include the Administration Committee, Finance Control Board, Marine Safety & Sailing Council, and Sports & Recreation Board. Each committee will be headed by an executive director to enforce rigorous safety regulations, design sports leagues, and ensure transparent capital allocation.",
-    tags: ["governance", "committee", "sports", "safety", "board"],
-    likes: 74,
-    commentsCount: 4
-  },
-  {
-    id: "9",
-    title: "Annual Nautical Snooker & Billiard Championship Announced",
-    date: "February 25, 2026",
-    category: "Sports",
-    year: "2026",
-    month: "February",
-    excerpt: "The sports desk announced the premier internal Snooker Cup to be hosted in our newly completed Billiard Hall.",
-    content: "Prepare for competitive camaraderie! The CBBCL Sports Committee is launching our inaugural Nautical Snooker Championship. Our premium Billiard tables, manufactured in premium mahogany and competitive wool, will play host to a multi-bracket knock-out championship among elite members. Trophies and exclusive custom jacket blazers will be presented by the Founding President at the closing ceremony.",
-    tags: ["sports", "snooker", "championship", "billiards"],
-    likes: 112,
-    commentsCount: 15
-  },
-  {
-    id: "10",
-    title: "Evening of Classical Symphony & Nautical Poetry",
-    date: "February 12, 2026",
-    category: "Cultural",
-    year: "2026",
-    month: "February",
-    excerpt: "An exclusive acoustic musical evening hosted inside the Club Library for members and spouses.",
-    content: "Celebrating Bengali classical literature and global sea shanties, CBBCL hosted an elegant acoustic recital in the Club Library. Featuring performances on classical sarod, flute, and piano, the intimate evening was accompanied by historical readings of Rabindranath Tagore and maritime poets. Guests enjoyed fine hot refreshments and gourmet canapés during the candlelit intermission.",
-    tags: ["cultural", "symphony", "poetry", "music", "library"],
-    likes: 121,
-    commentsCount: 10
-  },
-  {
-    id: "11",
-    title: "CBBCL Signs Historic Reciprocal Affiliation MoU",
-    date: "January 20, 2026",
-    category: "News",
-    year: "2026",
-    month: "January",
-    excerpt: "CBBCL establishes structural pathways to provide national reciprocal privileges with premium clubs.",
-    content: "We are thrilled to report the signing of reciprocal intent MoUs with several respected private members' clubs in Dhaka and Chittagong. This establishes a framework where verified CBBCL members will enjoy access to prime sports rooms, meeting rooms, and guest suites during regional travel. Our affiliation cell continues to expand partnerships to major clubs in India, Thailand, and Singapore, boosting our global prestige.",
-    tags: ["affiliations", "mou", "travel", "privileges"],
-    image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=800",
-    likes: 189,
-    commentsCount: 25
-  },
-  {
-    id: "12",
-    title: "A Cordial Welcome to Our First Batch of Elected Members",
-    date: "January 05, 2026",
-    category: "Announcements",
-    year: "2026",
-    month: "January",
-    excerpt: "Following meticulous scrutiny, the club formalizes the registry of our initial corporate and life patrons.",
-    content: "The Board of Directors extends its deepest congratulations and a warm welcome to the thirty-five distinguished applicants whose memberships were confirmed during the very first Scrutiny cycle. Comprising top CEOs, legal advocates, diplomats, and retired general staff officers, this foundational community anchors our identity. A private induction tea will be hosted at the club secretariat to present membership insignia pins.",
-    tags: ["newmembers", "welcome", "induction", "registry"],
-    likes: 140,
-    commentsCount: 12
+    // Wide news cards crop the centre; frame from the top so his face stays in view.
+    imagePosition: "center 12%",
+    likes: 0,
+    commentsCount: 0
   }
 ];
 
@@ -494,54 +384,5 @@ export const PAST_EVENTS_DATA: EventItem[] = [
   }
 ];
 
-export const AFFILIATIONS_DATA: Affiliation[] = [
-  {
-    id: "af1",
-    name: "Royal Yacht Club of Bangladesh",
-    description: "The peak naval sailing association in the nation, providing premium sailboat logs, youth navigation, and standard sailing licensure.",
-    website: "https://royalyachtclub.bd",
-    partnershipType: "Reciprocal & Training Ally"
-  },
-  {
-    id: "af2",
-    name: "The Dhaka Oceanfront Recreational League",
-    description: "An elite alliance bringing special land and pool amenities, access to private tennis clubs, and reciprocal dining access to travelers in internal districts.",
-    website: "https://dhakaoceanfront.org",
-    partnershipType: "Full Reciprocal Partner"
-  },
-  {
-    id: "af3",
-    name: "Chittagong Mariners Club Limited",
-    description: "Richly historical commercial shipping and yacht harbor based in Chittagong, enabling yacht dockage and reciprocal lounge entry during commercial transit.",
-    website: "https://ctgmariners.com.bd",
-    partnershipType: "Full Reciprocal Partner"
-  },
-  {
-    id: "af4",
-    name: "Sylhet Valley Leisure Sanctuary",
-    description: "An exclusive inland golf resort, empowering members of CBBCL to pre-book 18-hole courses and premium luxury bungalow layouts at discounted tariffs.",
-    website: "https://sylhetvalleyresort.bd",
-    partnershipType: "Recreational Affiliate"
-  },
-  {
-    id: "af5",
-    name: "Grand Beach Resort & Golf, Cox's Bazar",
-    description: "An elite resort neighbor of the Boat Club, offering temporary accommodation and wellness spas to touring members before the clubhouse villa completions.",
-    website: "https://grandgolfresort.com",
-    partnershipType: "Lodge & Wellness Partner"
-  },
-  {
-    id: "af6",
-    name: "Bengal Ocean Yachting Federation",
-    description: "The regulatory body governing security, international yacht clearances, sailing regattas, and marine bio-protection policies in regional waters.",
-    website: "https://bengalyachting.org",
-    partnershipType: "Strategic Maritime Affiliate"
-  },
-  {
-    id: "ezbooking",
-    name: "EZBOOKING",
-    description: "Official Online Travel Agency (OTA) partner of Cox's Bazar Boat Club Limited. Offering exclusive member discounts on global travel bookings, flights, and waterfront lodging catalogs.",
-    website: "https://ezbooking.com",
-    partnershipType: "Official OTA Partner"
-  }
-];
+// No affiliations are published until real ones are confirmed.
+export const AFFILIATIONS_DATA: Affiliation[] = [];

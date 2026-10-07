@@ -2,8 +2,8 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { Resend } from "resend";
 import { buildRegistryEmailHtml } from "../_lib/emailTemplate.js";
 
-const NOMINATION_RECIPIENT = "registration@cbbcl.org";
-const NOMINATION_SENDER = "notifications@cbbcl.org";
+const INQUIRY_RECIPIENT = "info@cbbcl.org";
+const INQUIRY_SENDER = "notifications@cbbcl.org";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {
@@ -53,8 +53,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     );
 
     const { error } = await resend.emails.send({
-      from: `CBBCL Registry <${NOMINATION_SENDER}>`,
-      to: NOMINATION_RECIPIENT,
+      from: `CBBCL Registry <${INQUIRY_SENDER}>`,
+      to: INQUIRY_RECIPIENT,
       replyTo: email,
       subject: `Contact Registry Inquiry - ${name}`,
       text: lines.join("\n"),
@@ -72,14 +72,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         "Your Inquiry Has Been Received",
         `Dear ${name}, thank you for reaching out to Cox's Bazar Boat Club Ltd. Here is a copy of the inquiry you submitted.`,
         fields,
-        "This is a system-generated automatic message. Someone from the Cox's Bazar Boat Club Ltd. Secretariat will be in touch with you shortly for further evaluation. In the meantime, you may reach us directly at registration@cbbcl.org."
+        "This is a system-generated automatic message. Someone from the Cox's Bazar Boat Club Ltd. Secretariat will be in touch with you shortly for further evaluation. In the meantime, you may reach us directly at info@cbbcl.org."
       );
       await resend.emails.send({
-        from: `CBBCL Registry <${NOMINATION_SENDER}>`,
+        from: `CBBCL Registry <${INQUIRY_SENDER}>`,
         to: email,
-        replyTo: NOMINATION_RECIPIENT,
+        replyTo: INQUIRY_RECIPIENT,
         subject: "Your Inquiry Has Been Received - CBBCL",
-        text: `${lines.join("\n")}\n\nThis is a system-generated automatic message. Someone from the Cox's Bazar Boat Club Ltd. Secretariat will be in touch with you shortly for further evaluation. In the meantime, you may reach us directly at registration@cbbcl.org.`,
+        text: `${lines.join("\n")}\n\nThis is a system-generated automatic message. Someone from the Cox's Bazar Boat Club Ltd. Secretariat will be in touch with you shortly for further evaluation. In the meantime, you may reach us directly at info@cbbcl.org.`,
         html: confirmationHtml,
       });
     } catch (copyError) {

@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { Resend } from "resend";
 import { buildRegistryEmailHtml } from "../_lib/emailTemplate.js";
 
-const NOMINATION_RECIPIENT = "registration@cbbcl.org";
+const NOMINATION_RECIPIENT = "membership@cbbcl.org";
 const NOMINATION_SENDER = "notifications@cbbcl.org";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -26,8 +26,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const linkedinLink = (body.linkedinLink || "").toString().trim();
     const websiteLink = (body.websiteLink || "").toString().trim();
 
-    if (!fullName || !email || !phone || !facebookLink || !linkedinLink) {
-      return res.status(400).json({ error: "Full name, email, phone, Facebook link, and LinkedIn link are required." });
+    if (!fullName || !email || !phone || !facebookLink) {
+      return res.status(400).json({ error: "Full name, email, phone, and Facebook link are required." });
     }
 
     const apiKey = process.env.RESEND_API_KEY;
@@ -46,7 +46,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       `Designation: ${designation || "Not specified"}`,
       `Telephone/Phone: ${phone}`,
       `Facebook Profile: ${facebookLink}`,
-      `LinkedIn Profile: ${linkedinLink}`,
+      `LinkedIn Profile: ${linkedinLink || "Not provided"}`,
       `Website: ${websiteLink || "Not provided"}`,
       `Proposer Code: ${proposerCode || "Under Committee Review"}`,
       `Seconder Code: ${seconderCode || "Under Committee Review"}`,
@@ -61,7 +61,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       { label: "Designation", value: designation || "Not specified" },
       { label: "Telephone/Phone", value: phone },
       { label: "Facebook Profile", value: facebookLink, isLink: true },
-      { label: "LinkedIn Profile", value: linkedinLink, isLink: true },
+      { label: "LinkedIn Profile", value: linkedinLink || "Not provided", isLink: !!linkedinLink },
       { label: "Website", value: websiteLink || "Not provided", isLink: !!websiteLink },
       { label: "Proposer Code", value: proposerCode || "Under Committee Review" },
       { label: "Seconder Code", value: seconderCode || "Under Committee Review" },
@@ -93,14 +93,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         "Your Nomination Request Has Been Received",
         `Dear ${fullName}, thank you for submitting your membership nomination request to Cox's Bazar Boat Club Ltd. Here is a copy of the details you submitted.`,
         fields,
-        "This is a system-generated automatic message. Someone from the Cox's Bazar Boat Club Ltd. Secretariat will be in touch with you shortly for further evaluation. In the meantime, you may reach us directly at registration@cbbcl.org."
+        "This is a system-generated automatic message. Someone from the Cox's Bazar Boat Club Ltd. Secretariat will be in touch with you shortly for further evaluation. In the meantime, you may reach us directly at membership@cbbcl.org."
       );
       await resend.emails.send({
         from: `CBBCL Registry <${NOMINATION_SENDER}>`,
         to: email,
         replyTo: NOMINATION_RECIPIENT,
         subject: "Your Membership Nomination Request Has Been Received - CBBCL",
-        text: `${lines.join("\n")}\n\nThis is a system-generated automatic message. Someone from the Cox's Bazar Boat Club Ltd. Secretariat will be in touch with you shortly for further evaluation. In the meantime, you may reach us directly at registration@cbbcl.org.`,
+        text: `${lines.join("\n")}\n\nThis is a system-generated automatic message. Someone from the Cox's Bazar Boat Club Ltd. Secretariat will be in touch with you shortly for further evaluation. In the meantime, you may reach us directly at membership@cbbcl.org.`,
         html: confirmationHtml,
       });
     } catch (copyError) {

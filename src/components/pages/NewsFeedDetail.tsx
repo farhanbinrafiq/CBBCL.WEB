@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getNewsPosts } from "../../utils/storage";
+import { withoutPlaceholderComments } from "../../utils/newsComments";
 import { NewsPost, RoutePath } from "../../types";
 import CardMedia from "../CardMedia";
 import { Heart, MessageSquare, Tag, Send, Calendar, Anchor, ArrowLeft, ShieldAlert } from "lucide-react";
@@ -33,17 +34,11 @@ export default function NewsFeedDetail({ newsId, navigate }: NewsFeedDetailProps
           const parsed = JSON.parse(storedEngagement);
           setLikes(parsed.likes ?? found.likes);
           setLiked(parsed.liked ?? false);
-          setComments(parsed.comments ?? [
-            { author: "Kazi Farhan (Founder VP)", text: "This is indeed an outstanding hallmark. Proud of the board's dedication.", date: "June 06" },
-            { author: "Zafar Chowdury (Life Member)", text: "Magnificent progress! Can't wait for the Clubhouse opening.", date: "June 05" }
-          ].slice(0, newsId === "1" ? 2 : 1));
+          setComments(withoutPlaceholderComments(parsed.comments));
         } else {
           setLikes(found.likes);
           setLiked(false);
-          setComments([
-            { author: "Kazi Farhan (Founder VP)", text: "This is indeed an outstanding hallmark. Proud of the board's dedication.", date: "June 06" },
-            { author: "Zafar Chowdury (Life Member)", text: "Magnificent progress! Can't wait for the Clubhouse opening.", date: "June 05" }
-          ].slice(0, newsId === "1" ? 2 : 1));
+          setComments([]);
         }
       } catch (e) {
         setLikes(found.likes);

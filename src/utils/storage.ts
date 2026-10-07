@@ -140,6 +140,12 @@ export function saveProfiles(profiles: Profile[]): void {
   safeLocalSet(PROFILES_KEY, JSON.stringify(profiles));
 }
 
+// Directors whose name spelling was corrected; cached board lists still holding an old spelling are updated.
+const RENAMED_DIRECTORS: Record<string, { name: string; oldNames: string[] }> = {
+  "reshedul-evu": { name: "Rasadul Maimun Evo", oldNames: ["Reshedul Evu"] },
+  "mohammed-elias": { name: "Mohammad Eliyas", oldNames: ["Mohammed Elias"] }
+};
+
 // Directors removed from the board; filtered out of any cached board list.
 const RETIRED_DIRECTOR_IDS = ["syfuddin-khaled"];
 
@@ -178,8 +184,15 @@ export function getBoardMembers(): Director[] {
       updated.businessProfile = staticDirector.businessProfile;
       changed = true;
     }
-    if (globalId === "reshedul-evu" && updated.name === "Reshedul Evu") {
-      updated.name = "Rasadul Maimun Evo";
+    // A director who has submitted their profile form: take their real profile whenever its revision is newer.
+    if (staticDirector?.profileSubmitted && (updated.profileRevision ?? 0) < (staticDirector.profileRevision ?? 1)) {
+      const { bio, vision, businessProfile, achievements, memberships, community, timeline, socials, appointed, profileRevision } = staticDirector;
+      Object.assign(updated, { bio, vision, businessProfile, achievements, memberships, community, timeline, socials, appointed, profileSubmitted: true, profileRevision: profileRevision ?? 1 });
+      changed = true;
+    }
+    const correctedName = RENAMED_DIRECTORS[globalId];
+    if (correctedName && correctedName.oldNames.includes(updated.name)) {
+      updated.name = correctedName.name;
       changed = true;
     }
     if (updated.level === undefined) {
@@ -223,6 +236,9 @@ export function saveBoardMembers(members: Director[]): void {
   safeLocalSet(BOARD_MEMBERS_KEY, JSON.stringify(normalized));
 }
 
+// Prototype posts shipped with earlier builds; removed from cached lists (admin-written posts are kept).
+const RETIRED_NEWS_IDS = ["gazette-niigata-2026","1","3","4","5","6","7","8","9","10","11","12"];
+
 export function getNewsPosts(): NewsPost[] {
   try {
     const data = localStorage.getItem(NEWS_POSTS_KEY);
@@ -230,8 +246,13 @@ export function getNewsPosts(): NewsPost[] {
       safeLocalSet(NEWS_POSTS_KEY, JSON.stringify(NEWS_DATA));
       return NEWS_DATA;
     }
-    const parsed = JSON.parse(data);
+    let parsed = JSON.parse(data);
     if (Array.isArray(parsed)) {
+      const withoutRetired = parsed.filter((p: NewsPost) => p && !RETIRED_NEWS_IDS.includes(p.id));
+      if (withoutRetired.length !== parsed.length) {
+        parsed = withoutRetired;
+        safeLocalSet(NEWS_POSTS_KEY, JSON.stringify(parsed));
+      }
       // Merge: any post hardcoded in NEWS_DATA that is missing in localStorage's parsed is added
       const merged = [...parsed];
       for (const defaultPost of NEWS_DATA) {
@@ -266,7 +287,8 @@ export function getNewsPosts(): NewsPost[] {
             title: corresponding.title,
             category: corresponding.category,
             content: corresponding.content,
-            excerpt: corresponding.excerpt
+            excerpt: corresponding.excerpt,
+            imagePosition: corresponding.imagePosition
           };
         }
         return post;

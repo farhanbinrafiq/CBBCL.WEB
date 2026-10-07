@@ -4,9 +4,10 @@ interface CardMediaProps {
   media: string | undefined;
   alt?: string;
   className?: string;
+  objectPosition?: string;
 }
 
-export default function CardMedia({ media, alt = "", className = "" }: CardMediaProps) {
+export default function CardMedia({ media, alt = "", className = "", objectPosition }: CardMediaProps) {
   if (!media) return null;
 
   const trimmed = media.trim();
@@ -69,6 +70,7 @@ export default function CardMedia({ media, alt = "", className = "" }: CardMedia
       src={media}
       alt={alt}
       className={className}
+      style={objectPosition ? { objectPosition } : undefined}
       referrerPolicy="no-referrer"
     />
   );

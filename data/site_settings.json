@@ -33,10 +33,14 @@
       {
         "title": "Membership Tiers",
         "links": [
-          { "name": "🏆 Donor Membership", "url": "/membership" },
-          { "name": "🏵️ Life Membership", "url": "/membership" },
-          { "name": "🛡️ Permanent Membership", "url": "/membership" },
-          { "name": "⚓ Associate Membership", "url": "/membership" }
+          { "name": "🏆 Donor Membership", "url": "/membership/donor-member" },
+          { "name": "🏵️ Life Membership", "url": "/membership/life-member" },
+          { "name": "🛡️ Permanent Membership", "url": "/membership/permanent-member" },
+          { "name": "⚓ Associate Membership", "url": "/membership/associate-member" },
+          { "name": "🌐 Diplomat Membership", "url": "/membership/diplomat-member" },
+          { "name": "✈️ Foreign Membership", "url": "/membership/foreign-member" },
+          { "name": "🏢 Corporate Membership", "url": "/membership/corporate-member" },
+          { "name": "🎖️ Honorary Membership", "url": "/membership/honorary-member" }
         ]
       }
     ],

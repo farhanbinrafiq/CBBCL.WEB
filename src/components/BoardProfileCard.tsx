@@ -1,6 +1,7 @@
 import React from "react";
 import { Director, RoutePath } from "../types";
 import { getDirectorPortrait } from "../utils/storage";
+import { hasTextSelection } from "../utils/selection";
 import { ArrowRight } from "lucide-react";
 
 interface BoardProfileCardProps {
@@ -15,6 +16,8 @@ export default function BoardProfileCard({ director, navigate, variant = "main" 
   const isPresident = variant === "president";
 
   const handleCardClick = () => {
+    // Selecting the name to copy it should not open the profile.
+    if (hasTextSelection()) return;
     navigate(`/profile/${director.id}` as RoutePath);
   };
 

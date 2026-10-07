@@ -97,7 +97,7 @@ export default function About({ initialSection = "overview" }: AboutProps) {
             </div>
 
             {/* Side Callout */}
-            <div className="bg-navy text-white p-6 rounded-xs border border-gold/20 flex flex-col justify-between h-48">
+            <div className="bg-navy text-white p-6 rounded-xs border border-gold/20 flex flex-col justify-between min-h-48 space-y-4">
               <div className="space-y-2">
                 <Anchor className="w-5 h-5 text-gold" />
                 <h4 className="font-display text-base text-gold-light">Need Assistance?</h4>
@@ -105,9 +105,17 @@ export default function About({ initialSection = "overview" }: AboutProps) {
                   Our Registrar answers corporate membership nominations from Mon to Sat.
                 </p>
               </div>
-              <span className="font-sans text-[9px] text-gold uppercase tracking-widest font-semibold block">
-                📞 +880 13328 86688
-              </span>
+              <div className="space-y-1.5">
+                <span className="font-sans text-[9px] text-gold uppercase tracking-widest font-semibold block">
+                  📞 +880 13328 86688
+                </span>
+                <a
+                  href="mailto:info@cbbcl.org"
+                  className="font-sans text-[10px] text-gold tracking-widest font-semibold block hover:text-gold-light transition-colors"
+                >
+                  ✉️ info@cbbcl.org
+                </a>
+              </div>
             </div>
           </aside>
 

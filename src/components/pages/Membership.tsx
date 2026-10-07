@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { ShieldCheck, ArrowRight, FileText, Info } from "lucide-react";
+import { ArrowRight, FileText, Info } from "lucide-react";
 import { RoutePath } from "../../types";
-import { getMembershipApplications, saveMembershipApplications } from "../../utils/memberStorage";
 import { getPageContent } from "../../utils/cmsStorage";
 import { MASTER_HERO_VIDEO } from "../../data";
 import BackgroundVideo from "../BackgroundVideo";
+import MembershipInterestForm from "../MembershipInterestForm";
 import { MEMBERSHIP_CATEGORIES, MEMBERSHIP_FEE_NOTE, MEMBERSHIP_RULES } from "../../membershipCategories";
 
 interface MembershipProps {
@@ -13,25 +13,7 @@ interface MembershipProps {
 
 export default function Membership({ navigate }: MembershipProps) {
   const [activeFAQ, setActiveFAQ] = useState<number | null>(null);
-  const [formSubmitted, setFormSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
   const nominationFormRef = React.useRef<HTMLDivElement | null>(null);
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    category: "Permanent",
-    dob: "",
-    org: "",
-    designation: "",
-    phone: "",
-    facebookLink: "",
-    linkedinLink: "",
-    websiteLink: "",
-    proposerCode: "",
-    seconderCode: ""
-  });
-
   const [cmsPage] = useState(getPageContent());
 
   useEffect(() => {
@@ -40,74 +22,8 @@ export default function Membership({ navigate }: MembershipProps) {
     }
   }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
   const scrollToNominationForm = () => {
     nominationFormRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.fullName || !formData.email || !formData.phone || !formData.facebookLink || !formData.linkedinLink) return;
-
-    setSubmitting(true);
-    setSubmitError(null);
-
-    try {
-      const res = await fetch("/api/membership/nominate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
-      });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || "Failed to send nomination request.");
-      }
-
-      const currentList = getMembershipApplications();
-      const newAppId = "app-" + Date.now();
-      const newApp = {
-        id: newAppId,
-        fullName: formData.fullName,
-        email: formData.email,
-        phone: formData.phone,
-        membershipType: formData.category + " Membership",
-        motivation: `Nomination proposing request submitted through web portal. Proposer Code: ${formData.proposerCode || "Under Committee Review"}, Seconder Code: ${formData.seconderCode || "Under Committee Review"}. Facebook: ${formData.facebookLink}, LinkedIn: ${formData.linkedinLink}${formData.websiteLink ? `, Website: ${formData.websiteLink}` : ""}.`,
-        organization: formData.org || "Zenith Enterprise",
-        designation: formData.designation || "Director",
-        dob: formData.dob || "Not specified",
-        status: "pending" as const,
-        submittedAt: new Date().toISOString()
-      };
-      saveMembershipApplications([...currentList, newApp]);
-
-      setFormSubmitted(true);
-      setTimeout(() => {
-        setFormSubmitted(false);
-        setFormData({
-          fullName: "",
-          email: "",
-          category: "Permanent",
-          dob: "",
-          org: "",
-          designation: "",
-          phone: "",
-          facebookLink: "",
-          linkedinLink: "",
-          websiteLink: "",
-          proposerCode: "",
-          seconderCode: ""
-        });
-      }, 5000);
-    } catch (error: any) {
-      setSubmitError(error.message || "Something went wrong. Please try again.");
-    } finally {
-      setSubmitting(false);
-    }
   };
 
   // Categories and fees always come from the Articles of Association source, not the CMS.
@@ -185,8 +101,21 @@ export default function Membership({ navigate }: MembershipProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
             {categories.map((cat, idx) => (
               <div key={cat.slug} className="relative">
+                {cat.badge && (
+                  <span className={`absolute -top-3 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap font-sans text-[8px] font-extrabold uppercase tracking-widest px-3 py-1 rounded shadow-md border ${
+                    cat.featured
+                      ? "bg-gradient-to-r from-gold-light via-gold to-gold-dark text-navy border-gold-dark/40"
+                      : "bg-navy text-gold-light border-gold/40"
+                  }`}>
+                    {cat.badge}
+                  </span>
+                )}
                 {/* Metallic gold frame, echoing the club emblem's gold ring */}
-                <div className="group h-full rounded-md p-[2px] bg-gradient-to-br transition-all duration-300 from-gold-light/50 via-gold/30 to-gold-dark/50 hover:from-gold-light hover:via-gold hover:to-gold-dark hover:shadow-[0_0_22px_-6px_rgba(201,168,76,0.4)]">
+                <div className={`group h-full rounded-md p-[2px] bg-gradient-to-br transition-all duration-300 ${
+                  cat.featured
+                    ? "from-gold-light via-gold to-gold-dark shadow-[0_0_28px_-4px_rgba(201,168,76,0.55)]"
+                    : "from-gold-light/50 via-gold/30 to-gold-dark/50 hover:from-gold-light hover:via-gold hover:to-gold-dark hover:shadow-[0_0_22px_-6px_rgba(201,168,76,0.4)]"
+                }`}>
                   <div className="h-full min-h-[340px] rounded-[5px] p-6 flex flex-col justify-between bg-gradient-to-b from-white to-slate-50/60 shadow-[0_14px_36px_-10px_rgba(26,39,68,0.28)] group-hover:shadow-[0_18px_44px_-8px_rgba(26,39,68,0.35)] transition-shadow duration-300">
                     <div className="space-y-3">
                       {/* Embossed medallion-style index badge */}
@@ -331,198 +260,7 @@ export default function Membership({ navigate }: MembershipProps) {
               </button>
             </div>
 
-            {formSubmitted ? (
-              <div className="p-6 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-sans rounded-md text-center">
-                <ShieldCheck className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
-                <p className="font-semibold text-sm mb-1">Proposal Dispatched Successfully!</p>
-                <p>Your nomination request has been sent to our Registration Office. A member of our team will follow up with you shortly.</p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-1.5">
-                  <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
-                    Candidate Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    name="fullName"
-                    value={formData.fullName}
-                    onChange={handleInputChange}
-                    className="w-full bg-white border border-slate-200 px-3 py-2 text-xs focus:ring-1 focus:ring-gold outline-none transition-all"
-                    placeholder="Your Full Name"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-full bg-white border border-slate-200 px-3 py-2 text-xs focus:ring-1 focus:ring-gold outline-none transition-all"
-                    placeholder="e.g. name@domain.com"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
-                      Category Preferred *
-                    </label>
-                    <select
-                      name="category"
-                      value={formData.category}
-                      onChange={handleInputChange}
-                      className="w-full bg-white border border-slate-200 px-3 py-2 text-xs outline-none focus:border-gold"
-                    >
-                      <option>Donor</option>
-                      <option>Life</option>
-                      <option>Permanent</option>
-                      <option>Associate</option>
-                      <option>Diplomat</option>
-                      <option>Foreign</option>
-                      <option>Corporate</option>
-                      <option>Honorary</option>
-                    </select>
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
-                      Date of Birth
-                    </label>
-                    <input
-                      type="date"
-                      name="dob"
-                      value={formData.dob}
-                      onChange={handleInputChange}
-                      className="w-full bg-white border border-slate-200 px-3 py-2 text-xs outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
-                      Organization *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      name="org"
-                      value={formData.org}
-                      onChange={handleInputChange}
-                      className="w-full bg-white border border-slate-200 px-3 py-2 text-xs focus:border-gold outline-none"
-                      placeholder="Company Name"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
-                      Designation *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      name="designation"
-                      value={formData.designation}
-                      onChange={handleInputChange}
-                      className="w-full bg-white border border-slate-200 px-3 py-2 text-xs focus:border-gold outline-none"
-                      placeholder="Corporate Title"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
-                      Facebook Profile Link *
-                    </label>
-                    <input
-                      type="url"
-                      required
-                      name="facebookLink"
-                      value={formData.facebookLink}
-                      onChange={handleInputChange}
-                      className="w-full bg-white border border-slate-200 px-3 py-2 text-xs focus:border-gold outline-none"
-                      placeholder="https://facebook.com/yourname"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
-                      LinkedIn Profile Link *
-                    </label>
-                    <input
-                      type="url"
-                      required
-                      name="linkedinLink"
-                      value={formData.linkedinLink}
-                      onChange={handleInputChange}
-                      className="w-full bg-white border border-slate-200 px-3 py-2 text-xs focus:border-gold outline-none"
-                      placeholder="https://linkedin.com/in/yourname"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
-                    Website Link (Optional)
-                  </label>
-                  <input
-                    type="url"
-                    name="websiteLink"
-                    value={formData.websiteLink}
-                    onChange={handleInputChange}
-                    className="w-full bg-white border border-slate-200 px-3 py-2 text-xs focus:border-gold outline-none"
-                    placeholder="https://yourcompany.com"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
-                      Reference Name/Code (Optional)
-                    </label>
-                    <input
-                      type="text"
-                      name="proposerCode"
-                      value={formData.proposerCode}
-                      onChange={handleInputChange}
-                      className="w-full bg-white border border-slate-200 px-3 py-2 text-xs focus:border-gold outline-none font-mono"
-                      placeholder="CBBCL-FOUNDER-XXX"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
-                      Telephone/Phone *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      className="w-full bg-white border border-slate-200 px-3 py-2 text-xs focus:border-gold outline-none"
-                      placeholder="e.g. +880 1711223344"
-                    />
-                  </div>
-                </div>
-
-                {submitError && (
-                  <p className="text-[11px] font-sans text-red-600 font-medium">{submitError}</p>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="w-full py-3 bg-[#1a2744] hover:bg-gold hover:text-navy text-white text-xs font-sans font-semibold uppercase tracking-widest transition-all mt-4 disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  {submitting ? "Submitting..." : "Confirm and Submit Your Interest"}
-                </button>
-              </form>
-            )}
+            <MembershipInterestForm />
           </div>
 
         </div>

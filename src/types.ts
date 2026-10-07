@@ -33,11 +33,20 @@ export interface Director {
     company: string;
     role: string;
     industry: string;
+    interests?: string;
+    website?: string;
   };
   achievements?: string[];
   memberships?: string[];
   community?: string[];
   timeline?: { year: string; event: string }[];
+  vision?: string[];
+  socials?: { linkedin?: string; facebook?: string; twitter?: string; instagram?: string; email?: string };
+  // Set once the director has submitted their profile form: only their real data is shown,
+  // and sections they left empty are hidden instead of being filled with placeholder text.
+  profileSubmitted?: boolean;
+  // Bump whenever a submitted profile changes so browsers with a cached copy refresh it.
+  profileRevision?: number;
   level?: number;      // 1: President, 2: VP, 3: Core Secretariat, 4: Founding Director
   orderIndex?: number; // Sorting rank within the tier
 }
@@ -53,6 +62,8 @@ export interface NewsPost {
   content: string;
   tags: string[];
   image?: string;
+  /** CSS object-position for the image in cropped cards, e.g. "center 12%". */
+  imagePosition?: string;
   likes: number;
   commentsCount: number;
   status?: "Published" | "Draft" | "Scheduled";

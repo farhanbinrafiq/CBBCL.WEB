@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ClubMember, RoutePath } from "../../types";
 import { getClubMembers } from "../../utils/memberStorage";
+import { hasTextSelection } from "../../utils/selection";
 import { motion } from "motion/react";
 import { Search, Anchor, Calendar, Award, User, ArrowLeft, ShieldCheck, Mail, BookOpen } from "lucide-react";
 import { MASTER_HERO_VIDEO } from "../../data";
@@ -395,7 +396,7 @@ export default function Members({ navigate, selectedMemberId = null }: MembersPr
                   {foundingMembers.map((member) => (
                     <div
                       key={member.id}
-                      onClick={() => navigate(`/profile/${member.id}`)}
+                      onClick={() => { if (!hasTextSelection()) navigate(`/profile/${member.id}`); }}
                       className="bg-white border-2 border-gold/40 p-5 rounded-sm hover:border-gold hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group flex flex-col justify-between space-y-4 relative overflow-hidden"
                     >
                       {/* Subtle premium gold badge */}
@@ -469,7 +470,7 @@ export default function Members({ navigate, selectedMemberId = null }: MembersPr
                   {executiveOfficers.map((member) => (
                     <div
                       key={member.id}
-                      onClick={() => navigate(`/profile/${member.id}`)}
+                      onClick={() => { if (!hasTextSelection()) navigate(`/profile/${member.id}`); }}
                       className="bg-white border border-slate-200/80 p-5 rounded-xs hover:border-[#1a2744] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between space-y-4"
                     >
                       <div className="flex items-start space-x-4 min-w-0">
@@ -538,7 +539,7 @@ export default function Members({ navigate, selectedMemberId = null }: MembersPr
                   {generalMembers.map((member) => (
                     <div
                       key={member.id}
-                      onClick={() => navigate(`/profile/${member.id}`)}
+                      onClick={() => { if (!hasTextSelection()) navigate(`/profile/${member.id}`); }}
                       className="bg-white border border-slate-200/80 p-5 rounded-xs hover:border-[#c9a84c] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between space-y-4"
                     >
                       <div className="flex items-start space-x-4 min-w-0">

@@ -165,7 +165,7 @@ const DEFAULT_HOME_LAYOUT: HomeCMSLayoutData = {
     },
     facilities: {
       enabled: true,
-      limit: 6
+      limit: 9
     },
     events: {
       enabled: true,
@@ -235,7 +235,15 @@ export function getHomeLayoutCMS(): HomeCMSLayoutData {
         stats: { ...DEFAULT_HOME_LAYOUT.sections.stats, ...(s.stats || {}) },
         president: { ...DEFAULT_HOME_LAYOUT.sections.president, ...(s.president || {}) },
         overview: { ...DEFAULT_HOME_LAYOUT.sections.overview, ...(s.overview || {}) },
-        facilities: { ...DEFAULT_HOME_LAYOUT.sections.facilities, ...(s.facilities || {}) },
+        // The old default showed 6 facilities; raise cached layouts to 9 once so the new facilities appear.
+        facilities: (() => {
+          const merged = { ...DEFAULT_HOME_LAYOUT.sections.facilities, ...(s.facilities || {}) };
+          if (merged.limit === 6 && localStorage.getItem("cbbcl_home_facilities_limit_v2") !== "1") {
+            merged.limit = 9;
+            try { localStorage.setItem("cbbcl_home_facilities_limit_v2", "1"); } catch (e) {}
+          }
+          return merged;
+        })(),
         events: { ...DEFAULT_HOME_LAYOUT.sections.events, ...(s.events || {}) },
         news: { ...DEFAULT_HOME_LAYOUT.sections.news, ...(s.news || {}) },
         board: { ...DEFAULT_HOME_LAYOUT.sections.board, ...(s.board || {}) },
@@ -243,6 +251,9 @@ export function getHomeLayoutCMS(): HomeCMSLayoutData {
         affiliations: { ...DEFAULT_HOME_LAYOUT.sections.affiliations, ...(s.affiliations || {}) },
         contact: { ...DEFAULT_HOME_LAYOUT.sections.contact, ...(s.contact || {}) }
       };
+      if (sections.facilities.limit === 9 && s.facilities && s.facilities.limit === 6) {
+        try { localStorage.setItem(LAYOUT_STORAGE_KEY, JSON.stringify({ order, sections })); } catch (e) {}
+      }
       return { order, sections };
     }
     localStorage.setItem(LAYOUT_STORAGE_KEY, JSON.stringify(DEFAULT_HOME_LAYOUT));

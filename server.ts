@@ -85,10 +85,14 @@ function getSiteSettings() {
         {
           title: "Membership Tiers",
           links: [
-            { name: "🏆 Donor Membership", url: "/membership" },
-            { name: "🏵️ Life Membership", url: "/membership" },
-            { name: "🛡️ Permanent Membership", url: "/membership" },
-            { name: "⚓ Associate Membership", url: "/membership" }
+            { name: "🏆 Donor Membership", url: "/membership/donor-member" },
+            { name: "🏵️ Life Membership", url: "/membership/life-member" },
+            { name: "🛡️ Permanent Membership", url: "/membership/permanent-member" },
+            { name: "⚓ Associate Membership", url: "/membership/associate-member" },
+            { name: "🌐 Diplomat Membership", url: "/membership/diplomat-member" },
+            { name: "✈️ Foreign Membership", url: "/membership/foreign-member" },
+            { name: "🏢 Corporate Membership", url: "/membership/corporate-member" },
+            { name: "🎖️ Honorary Membership", url: "/membership/honorary-member" }
           ]
         }
       ],
@@ -167,7 +171,8 @@ const isAdmin = (req: express.Request, res: express.Response, next: express.Next
 };
 
 // Nominations recipient inbox (Registration Office)
-const NOMINATION_RECIPIENT = "registration@cbbcl.org";
+const NOMINATION_RECIPIENT = "membership@cbbcl.org";
+const INQUIRY_RECIPIENT = "info@cbbcl.org";
 // Verified sender identity for outbound mail via Resend
 const NOMINATION_SENDER = "notifications@cbbcl.org";
 
@@ -287,8 +292,8 @@ app.post("/api/membership/nominate", async (req, res) => {
     const linkedinLink = (body.linkedinLink || "").toString().trim();
     const websiteLink = (body.websiteLink || "").toString().trim();
 
-    if (!fullName || !email || !phone || !facebookLink || !linkedinLink) {
-      return res.status(400).json({ error: "Full name, email, phone, Facebook link, and LinkedIn link are required." });
+    if (!fullName || !email || !phone || !facebookLink) {
+      return res.status(400).json({ error: "Full name, email, phone, and Facebook link are required." });
     }
 
     const resend = getResendClient();
@@ -306,7 +311,7 @@ app.post("/api/membership/nominate", async (req, res) => {
       `Designation: ${designation || "Not specified"}`,
       `Telephone/Phone: ${phone}`,
       `Facebook Profile: ${facebookLink}`,
-      `LinkedIn Profile: ${linkedinLink}`,
+      `LinkedIn Profile: ${linkedinLink || "Not provided"}`,
       `Website: ${websiteLink || "Not provided"}`,
       `Proposer Code: ${proposerCode || "Under Committee Review"}`,
       `Seconder Code: ${seconderCode || "Under Committee Review"}`,
@@ -321,7 +326,7 @@ app.post("/api/membership/nominate", async (req, res) => {
       { label: "Designation", value: designation || "Not specified" },
       { label: "Telephone/Phone", value: phone },
       { label: "Facebook Profile", value: facebookLink, isLink: true },
-      { label: "LinkedIn Profile", value: linkedinLink, isLink: true },
+      { label: "LinkedIn Profile", value: linkedinLink || "Not provided", isLink: !!linkedinLink },
       { label: "Website", value: websiteLink || "Not provided", isLink: !!websiteLink },
       { label: "Proposer Code", value: proposerCode || "Under Committee Review" },
       { label: "Seconder Code", value: seconderCode || "Under Committee Review" },
@@ -353,14 +358,14 @@ app.post("/api/membership/nominate", async (req, res) => {
         "Your Nomination Request Has Been Received",
         `Dear ${fullName}, thank you for submitting your membership nomination request to Cox's Bazar Boat Club Ltd. Here is a copy of the details you submitted.`,
         fields,
-        "This is a system-generated automatic message. Someone from the Cox's Bazar Boat Club Ltd. Secretariat will be in touch with you shortly for further evaluation. In the meantime, you may reach us directly at registration@cbbcl.org."
+        "This is a system-generated automatic message. Someone from the Cox's Bazar Boat Club Ltd. Secretariat will be in touch with you shortly for further evaluation. In the meantime, you may reach us directly at membership@cbbcl.org."
       );
       await resend.emails.send({
         from: `CBBCL Registry <${NOMINATION_SENDER}>`,
         to: email,
         replyTo: NOMINATION_RECIPIENT,
         subject: "Your Membership Nomination Request Has Been Received - CBBCL",
-        text: `${lines.join("\n")}\n\nThis is a system-generated automatic message. Someone from the Cox's Bazar Boat Club Ltd. Secretariat will be in touch with you shortly for further evaluation. In the meantime, you may reach us directly at registration@cbbcl.org.`,
+        text: `${lines.join("\n")}\n\nThis is a system-generated automatic message. Someone from the Cox's Bazar Boat Club Ltd. Secretariat will be in touch with you shortly for further evaluation. In the meantime, you may reach us directly at membership@cbbcl.org.`,
         html: confirmationHtml,
       });
     } catch (copyError) {
@@ -418,7 +423,7 @@ app.post("/api/contact/inquiry", async (req, res) => {
 
     const { error } = await resend.emails.send({
       from: `CBBCL Registry <${NOMINATION_SENDER}>`,
-      to: NOMINATION_RECIPIENT,
+      to: INQUIRY_RECIPIENT,
       replyTo: email,
       subject: `Contact Registry Inquiry - ${name}`,
       text: lines.join("\n"),
@@ -436,14 +441,14 @@ app.post("/api/contact/inquiry", async (req, res) => {
         "Your Inquiry Has Been Received",
         `Dear ${name}, thank you for reaching out to Cox's Bazar Boat Club Ltd. Here is a copy of the inquiry you submitted.`,
         fields,
-        "This is a system-generated automatic message. Someone from the Cox's Bazar Boat Club Ltd. Secretariat will be in touch with you shortly for further evaluation. In the meantime, you may reach us directly at registration@cbbcl.org."
+        "This is a system-generated automatic message. Someone from the Cox's Bazar Boat Club Ltd. Secretariat will be in touch with you shortly for further evaluation. In the meantime, you may reach us directly at info@cbbcl.org."
       );
       await resend.emails.send({
         from: `CBBCL Registry <${NOMINATION_SENDER}>`,
         to: email,
-        replyTo: NOMINATION_RECIPIENT,
+        replyTo: INQUIRY_RECIPIENT,
         subject: "Your Inquiry Has Been Received - CBBCL",
-        text: `${lines.join("\n")}\n\nThis is a system-generated automatic message. Someone from the Cox's Bazar Boat Club Ltd. Secretariat will be in touch with you shortly for further evaluation. In the meantime, you may reach us directly at registration@cbbcl.org.`,
+        text: `${lines.join("\n")}\n\nThis is a system-generated automatic message. Someone from the Cox's Bazar Boat Club Ltd. Secretariat will be in touch with you shortly for further evaluation. In the meantime, you may reach us directly at info@cbbcl.org.`,
         html: confirmationHtml,
       });
     } catch (copyError) {

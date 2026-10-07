@@ -12,9 +12,15 @@ export interface MembershipCategory {
   /** Only set where the AOA states it. */
   votingRights?: string;
   generalMembership: boolean;
+  /** Optional ribbon shown on cards and the category page. */
+  badge?: string;
+  /** Gives the card the full gold frame. */
+  featured?: boolean;
   fees: {
     /** Short label shown on cards. */
     admissionLabel: string;
+    /** Full amount shown on the category page; falls back to admissionLabel. */
+    admissionAmount?: string;
     admissionDetail: string;
     subscriptionLabel: string;
     subscriptionDetail: string;
@@ -25,17 +31,21 @@ export interface MembershipCategory {
   byInvitation?: boolean;
 }
 
+const MIN_MEMBERSHIP_FEE_DETAIL =
+  "Minimum membership fee stated at incorporation (Article 23). The Board of Directors may revise it upward through a resolution.";
+
 const MIN_FEE_DETAIL =
   "Minimum admission fee stated at incorporation (Article 23). The Board of Directors may revise it upward through a resolution.";
 
 export const MEMBERSHIP_FEE_NOTE =
-  "Admission fees for General Membership categories represent the minimum amounts stated at incorporation in the Articles of Association. The Board of Directors may revise applicable fees through a resolution. Monthly subscriptions and other applicable charges are determined by the Board of Directors.";
+  "Membership fees for General Membership categories represent the minimum amounts stated at incorporation in the Articles of Association. The Board of Directors may revise applicable fees through a resolution. Monthly subscriptions and other applicable charges are determined by the Board of Directors.";
 
 export const MEMBERSHIP_CATEGORIES: MembershipCategory[] = [
   {
     slug: "donor-member",
     title: "Donor Membership",
     formValue: "Donor",
+    badge: "Highest Tier",
     summary: "General Membership category with voting and election rights. No monthly subscription is payable.",
     votingRights: "Yes",
     generalMembership: true,
@@ -53,37 +63,71 @@ export const MEMBERSHIP_CATEGORIES: MembershipCategory[] = [
     slug: "life-member",
     title: "Life Membership",
     formValue: "Life",
+    badge: "Most Prestigious",
+    featured: true,
     summary: "General Membership category with voting and election rights. No monthly subscription is payable.",
     votingRights: "Yes",
     generalMembership: true,
     fees: {
       admissionLabel: "From BDT 4,00,000",
-      admissionDetail: MIN_FEE_DETAIL,
+      admissionAmount: "BDT 400,000/- (Four Hundred Thousand)",
+      admissionDetail: MIN_MEMBERSHIP_FEE_DETAIL,
       subscriptionLabel: "No monthly subscription",
       subscriptionDetail: "Life Members are exempt from monthly subscriptions."
     },
-    eligibility: ["Admission is governed by the membership provisions of the Articles of Association."],
-    privileges: ["General Membership with voting and election rights.", "Exempt from monthly subscriptions."],
+    eligibility: [
+      "Membership is governed by the membership provisions of the Articles of Association.",
+      "Applicants may initially receive Temporary Membership for at least six months, subject to the provisions of the Articles of Association."
+    ],
+    privileges: [
+      "No regular monthly subscription",
+      "Full General Membership rights",
+      "Voting rights",
+      "Eligibility to contest elections subject to Articles",
+      "Club facility access",
+      "Family privileges",
+      "Guest privileges",
+      "Boating access",
+      "Dining and recreation",
+      "Member events",
+      "Nominee/succession provisions"
+    ],
     restrictions: []
   },
   {
     slug: "permanent-member",
     title: "Permanent Membership",
     formValue: "Permanent",
+    badge: "Most Accessible",
     summary: "General Membership category with voting and election rights. Monthly subscription as prescribed by the Board of Directors.",
     votingRights: "Yes",
     generalMembership: true,
     fees: {
       admissionLabel: "From BDT 2,00,000",
-      admissionDetail: MIN_FEE_DETAIL,
+      admissionAmount: "BDT 200,000/- (Two Hundred Thousand)",
+      admissionDetail: MIN_MEMBERSHIP_FEE_DETAIL,
       subscriptionLabel: "As prescribed by the Board",
-      subscriptionDetail: "Monthly subscription as prescribed by the Board of Directors."
+      subscriptionDetail: "Monthly subscription is applicable and is determined by the Board of Directors, who may increase or decrease it."
     },
     eligibility: [
-      "Admission is governed by the membership provisions of the Articles of Association.",
+      "Membership is governed by the membership provisions of the Articles of Association.",
       "Applicants may initially receive Temporary Membership for at least six months, subject to the provisions of the Articles of Association."
     ],
-    privileges: ["General Membership with voting and election rights."],
+    privileges: [
+      "Lower initial admission investment",
+      "Full General Membership rights",
+      "Voting rights",
+      "Club facility access",
+      "Boating access",
+      "Guest privileges",
+      "Family privileges",
+      "Monthly subscription payable",
+      "Dining and recreation",
+      "Member events",
+      "Option to upgrade to Life Membership subject to applicable rules",
+      "Eligibility to contest elections subject to Articles",
+      "Nominee/succession provisions"
+    ],
     restrictions: []
   },
   {

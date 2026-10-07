@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Mail, Phone, MapPin, Clock, Anchor, Send, CheckCircle2, ShieldAlert } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, Anchor, Send, CheckCircle2, ShieldAlert, Navigation } from "lucide-react";
 import { motion } from "motion/react";
 import { MASTER_HERO_VIDEO } from "../../data";
 import BackgroundVideo from "../BackgroundVideo";
 import { fetchFooterSettings, getFooterSettingsSync } from "../../utils/cmsStorage";
 import { FooterSettings } from "../../types";
+// @ts-ignore
+import cbbclLogoGold from "../../assets/logo-gold.svg";
+
+const CLUB_MAP_LINK = "https://maps.app.goo.gl/xqQd5DFKMVDYocsN9";
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
@@ -155,8 +159,9 @@ export default function Contact() {
                 <div>
                   <span className="text-[10px] text-slate-400 font-bold tracking-widest block uppercase">OFFICE OPERATING HOURS</span>
                   <p className="text-text-dark font-light block mt-1 leading-relaxed">
-                    Monday to Saturday: 09:00 AM – 10:00 PM <br />
-                    Sunday: Closed (Lounge and Dining open to Members only)
+                    Sunday to Thursday: 9:00 AM – 5:00 PM <br />
+                    Friday &amp; Saturday: Closed <br />
+                    <span className="text-slate-500 text-[13px]">Visits on closed days are available by appointment.</span>
                   </p>
                 </div>
               </div>
@@ -277,18 +282,47 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* Visual local Map placeholder */}
-      <section className="h-96 w-full relative bg-slate-100 overflow-hidden border-t border-slate-200">
+      {/* Club location map with signboard */}
+      <section className="w-full relative bg-slate-100 border-t border-slate-200 flex flex-col lg:block">
+        {/* Signboard: above the map on phones, floating over the map on desktop */}
+        <div className="order-1 lg:absolute lg:z-10 lg:top-1/2 lg:-translate-y-1/2 lg:left-[max(1.5rem,calc((100vw-72rem)/2))] p-4 lg:p-0">
+          <div className="relative bg-navy text-white rounded-sm border-2 border-gold shadow-[0_18px_40px_-12px_rgba(26,39,68,0.6)] px-6 py-5 lg:w-[22rem] text-center">
+            {/* sign "hangers" */}
+            <span className="hidden lg:block absolute -top-3 left-10 w-1.5 h-3 bg-gold rounded-t-sm" aria-hidden="true" />
+            <span className="hidden lg:block absolute -top-3 right-10 w-1.5 h-3 bg-gold rounded-t-sm" aria-hidden="true" />
+            <img src={cbbclLogoGold} alt="Cox's Bazar Boat Club Ltd. logo" className="w-32 h-32 -my-3 mx-auto object-contain" />
+            <p className="font-sans text-sm uppercase tracking-[0.3em] text-gold font-bold mt-3">Club House</p>
+            <p className="font-sans text-[10px] uppercase tracking-[0.2em] text-slate-300 mt-1">of</p>
+            <h3 className="font-display text-lg uppercase tracking-[0.12em] text-white mt-1">Cox's Bazar Boat Club</h3>
+            <div className="w-10 h-[1px] bg-gold mx-auto my-3" />
+            <p className="font-sans text-xs text-slate-300 font-light leading-relaxed flex items-start justify-center space-x-1.5">
+              <MapPin className="w-3.5 h-3.5 text-gold shrink-0 mt-0.5" />
+              <span>{footerData.contact.address.split("\n")[0]}</span>
+            </p>
+            <a
+              href={CLUB_MAP_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex items-center justify-center space-x-2 px-5 py-2.5 bg-gold text-navy hover:bg-gold-light font-sans text-[10px] font-extrabold uppercase tracking-widest transition-colors"
+            >
+              <Navigation className="w-3.5 h-3.5" />
+              <span>Get Directions</span>
+            </a>
+          </div>
+        </div>
+        <div className="order-2 h-96 w-full overflow-hidden">
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14838.08638069634!2d91.97746401956555!3d21.433245055047463!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30adc80630b92f03%3A0x7d6c5c06fe16938a!2sCox&#39;s%20Bazar%20Beach!5e0!3m2!1sen!2sbd!4v1700000000000!5m2!1sen!2sbd"
+          // Club location pin: 21.445269302061305, 91.97637131173867
+          src="https://maps.google.com/maps?q=21.445269302061305,91.97637131173867&z=16&output=embed"
           width="100%"
           height="100%"
           style={{ border: 0, filter: "grayscale(30%) contrast(105%) brightness(95%)" }}
           allowFullScreen
           loading="lazy"
           referrerPolicy="no-referrer"
-          title="Cox's Bazar Map Anchorage Location"
+          title="Cox's Bazar Boat Club location map"
         ></iframe>
+        </div>
       </section>
     </div>
   );

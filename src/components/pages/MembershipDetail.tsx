@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { RoutePath } from "../../types";
 import {
-  Award, ShieldCheck, Check, Key, ArrowLeft, ArrowRight, Banknote, Scale, Info
+  Award, ShieldCheck, Check, Key, ArrowLeft, ArrowRight, Banknote, Scale, Info, X, FileText
 } from "lucide-react";
 import { MASTER_HERO_VIDEO } from "../../data";
 import BackgroundVideo from "../BackgroundVideo";
+import MembershipInterestForm from "../MembershipInterestForm";
 import { getMembershipCategory, MEMBERSHIP_FEE_NOTE } from "../../membershipCategories";
 
 interface MembershipDetailProps {
@@ -16,9 +17,21 @@ export default function MembershipDetail({ categorySlug, navigate }: MembershipD
   const slug = categorySlug.toLowerCase().replace(/_/g, "-");
   const detail = getMembershipCategory(slug);
 
-  const handleApplyClick = () => {
-    navigate("/membership#nomination-form");
-  };
+  // "Interested in Membership" opens the interest form in a pop-up, pre-set to this category.
+  const [formOpen, setFormOpen] = useState(false);
+  const handleApplyClick = () => setFormOpen(true);
+
+  useEffect(() => {
+    if (!formOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setFormOpen(false); };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [formOpen]);
 
   if (!detail) {
     return (
@@ -80,9 +93,20 @@ export default function MembershipDetail({ categorySlug, navigate }: MembershipD
 
             {/* HERO INTRODUCTION */}
             <div className="space-y-3 pb-6 border-b border-slate-100">
-              <span className="text-[10px] font-mono uppercase text-navy tracking-widest bg-navy/5 px-2.5 py-1 rounded w-fit inline-block">
-                {detail.generalMembership ? "General Membership" : "Membership Category"}
-              </span>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[10px] font-mono uppercase text-navy tracking-widest bg-navy/5 px-2.5 py-1 rounded w-fit inline-block">
+                  {detail.generalMembership ? "General Membership" : "Membership Category"}
+                </span>
+                {detail.badge && (
+                  <span className={`font-sans text-[9px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded shadow-sm ${
+                    detail.featured
+                      ? "bg-gradient-to-r from-gold-light via-gold to-gold-dark text-navy"
+                      : "bg-navy text-gold-light"
+                  }`}>
+                    {detail.badge}
+                  </span>
+                )}
+              </div>
               <h2 className="font-display text-2xl md:text-3xl font-light text-text-dark">
                 {detail.title}
               </h2>
@@ -98,14 +122,14 @@ export default function MembershipDetail({ categorySlug, navigate }: MembershipD
                 <span>Fees &amp; Subscription</span>
               </h3>
               <div className="font-sans text-xs sm:text-[13px] text-text-body font-light leading-relaxed pt-1">
-                <div className="border border-amber-100 bg-amber-50/20 p-4 rounded-sm grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="border border-amber-100 bg-amber-50/20 p-4 rounded-sm grid grid-cols-1 gap-5">
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Admission Fee</span>
-                    <span className="text-navy font-display text-lg font-bold block mt-1">{detail.fees.admissionLabel}</span>
+                    <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Membership Fee</span>
+                    <span className="text-navy font-display text-lg font-bold block mt-1">{detail.fees.admissionAmount || detail.fees.admissionLabel}</span>
                     <span className="text-[11px] text-slate-500 block mt-1">{detail.fees.admissionDetail}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Monthly Subscription</span>
+                    <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Monthly Subscription Fee</span>
                     <span className="text-gold-dark font-display text-lg font-bold block mt-1">{detail.fees.subscriptionLabel}</span>
                     <span className="text-[11px] text-slate-500 block mt-1">{detail.fees.subscriptionDetail}</span>
                   </div>
@@ -142,7 +166,7 @@ export default function MembershipDetail({ categorySlug, navigate }: MembershipD
                   <Key className="w-5 h-5 text-gold shrink-0" />
                   <span>Privileges</span>
                 </h3>
-                <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 pl-1 pt-1">
+                <ul className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 pl-1 pt-1">
                   {detail.privileges.map((item, idx) => (
                     <li key={idx} className="bg-slate-50 p-2.5 border border-slate-100 rounded flex space-x-2 items-start">
                       <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
@@ -228,6 +252,48 @@ export default function MembershipDetail({ categorySlug, navigate }: MembershipD
 
         </div>
       </div>
+
+      {/* Membership interest pop-up */}
+      {formOpen && (
+        <div
+          className="fixed inset-0 z-[200] bg-navy/70 backdrop-blur-sm flex items-start sm:items-center justify-center p-4 overflow-y-auto"
+          onClick={() => setFormOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="membership-form-title"
+        >
+          <div
+            className="relative w-full max-w-2xl bg-slate-50 border border-gold/30 rounded-sm shadow-2xl my-8 max-h-[calc(100vh-4rem)] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="sticky top-0 z-10 bg-navy text-white px-6 py-4 flex items-start justify-between gap-4 border-b border-gold/30">
+              <div className="space-y-1">
+                <div className="flex items-center space-x-2 text-gold">
+                  <FileText className="w-4 h-4" />
+                  <span className="font-sans text-[10px] uppercase font-bold tracking-widest">Membership Nomination Portal</span>
+                </div>
+                <h3 id="membership-form-title" className="font-display text-lg font-light">
+                  Interest of Membership Request — <span className="text-gold-light">{detail.title}</span>
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setFormOpen(false)}
+                aria-label="Close form"
+                className="p-1.5 rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-colors shrink-0"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-6 md:p-8 space-y-4">
+              <p className="font-sans text-[11px] text-slate-500 font-light leading-relaxed">
+                Fill out the form below and the Club Secretariat will follow up with the applicable fees and next steps.
+              </p>
+              <MembershipInterestForm defaultCategory={detail.formValue} />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
