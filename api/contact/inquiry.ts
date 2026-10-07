@@ -18,9 +18,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const phone = (body.phone || "").toString().trim();
     const subject = (body.subject || "").toString().trim();
     const message = (body.message || "").toString().trim();
+    const facebookLink = (body.facebookLink || "").toString().trim();
 
-    if (!name || !email || !message) {
-      return res.status(400).json({ error: "Name, email, and message are required." });
+    if (!name || !email || !facebookLink || !message) {
+      return res.status(400).json({ error: "Name, email, Facebook link, and message are required." });
     }
 
     const apiKey = process.env.RESEND_API_KEY;
@@ -34,6 +35,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       `Full Name: ${name}`,
       `Email: ${email}`,
       `Phone: ${phone || "Not provided"}`,
+      `Facebook Profile: ${facebookLink}`,
       `Inquiry Sphere: ${subject || "Not specified"}`,
       `Message: ${message}`,
     ];
@@ -42,6 +44,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       { label: "Full Name", value: name },
       { label: "Email", value: email },
       { label: "Phone", value: phone || "Not provided" },
+      { label: "Facebook Profile", value: facebookLink, isLink: true },
       { label: "Inquiry Sphere", value: subject || "Not specified" },
       { label: "Message", value: message },
     ];

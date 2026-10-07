@@ -73,6 +73,12 @@ export default function Footer({ navigate }: FooterProps) {
               <p className="text-[10px] text-slate-500 font-light tracking-wider leading-relaxed">
                 {data.copyright || "© 2026 Cox's Bazar Boat Club Limited. All Rights Reserved."}
               </p>
+              <p className="text-[10px] text-slate-500 font-light tracking-wider mt-2">
+                Website Designed &amp; Developed by{" "}
+                <a href="https://choosify.bd" target="_blank" rel="noopener noreferrer" className="text-gold/80 font-medium hover:text-gold transition-colors">
+                  Choosify Technologies Ltd.
+                </a>
+              </p>
             </div>
           </div>
 

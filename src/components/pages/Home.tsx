@@ -23,7 +23,7 @@ export default function Home({ navigate }: HomeProps) {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [formSubmitError, setFormSubmitError] = useState<string | null>(null);
-  const [formData, setFormData] = useState({ name: "", phone: "", email: "", message: "" });
+  const [formData, setFormData] = useState({ name: "", phone: "", email: "", facebookLink: "", message: "" });
   const newsCarouselRef = React.useRef<HTMLDivElement>(null);
   const membershipCarouselRef = React.useRef<HTMLDivElement>(null);
   const membershipAutoplayPaused = React.useRef(false);
@@ -120,7 +120,7 @@ export default function Home({ navigate }: HomeProps) {
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) return;
+    if (!formData.name || !formData.email || !formData.facebookLink || !formData.message) return;
 
     setFormSubmitting(true);
     setFormSubmitError(null);
@@ -140,7 +140,7 @@ export default function Home({ navigate }: HomeProps) {
       setFormSubmitted(true);
       setTimeout(() => {
         setFormSubmitted(false);
-        setFormData({ name: "", phone: "", email: "", message: "" });
+        setFormData({ name: "", phone: "", email: "", facebookLink: "", message: "" });
       }, 5000);
     } catch (error: any) {
       setFormSubmitError(error.message || "Something went wrong. Please try again.");
@@ -1168,6 +1168,20 @@ export default function Home({ navigate }: HomeProps) {
                             />
                           </div>
 
+                          <div className="space-y-1.5">
+                            <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
+                              Facebook Profile Link *
+                            </label>
+                            <input
+                              type="url"
+                              name="facebookLink"
+                              required
+                              value={formData.facebookLink}
+                              onChange={handleInputChange}
+                              className="w-full bg-slate-50 border border-slate-200/80 px-4 py-2.5 text-xs focus:bg-white focus:border-gold outline-none transition-colors rounded-xs"
+                              placeholder="https://facebook.com/yourname"
+                            />
+                          </div>
                           <div className="space-y-1.5">
                             <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
                               Message Body *

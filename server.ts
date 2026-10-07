@@ -12,7 +12,8 @@ const app = express();
 const PORT = 3000;
 
 // Body parser middleware
-app.use(express.json());
+// Membership requests carry a resized applicant photo as a data URL.
+app.use(express.json({ limit: "6mb" }));
 
 // Serve uploads directory as static assets
 const uploadDir = path.join(process.cwd(), "uploads");
@@ -173,6 +174,17 @@ const isAdmin = (req: express.Request, res: express.Response, next: express.Next
 // Nominations recipient inbox (Registration Office)
 const NOMINATION_RECIPIENT = "membership@cbbcl.org";
 const INQUIRY_RECIPIENT = "info@cbbcl.org";
+
+// Applicant photo arrives as a data URL (resized in the browser). Only JPEG/PNG/WebP, max 3 MB.
+const PHOTO_MAX_BYTES = 3 * 1024 * 1024;
+function parseApplicantPhoto(dataUrl: unknown): { content: string; contentType: string; ext: string } | null {
+  if (typeof dataUrl !== "string") return null;
+  const m = dataUrl.match(/^data:(image\/(jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/);
+  if (!m) return null;
+  const content = m[3];
+  if (Math.floor((content.length * 3) / 4) > PHOTO_MAX_BYTES) return null;
+  return { content, contentType: m[1], ext: m[2] === "jpeg" ? "jpg" : m[2] };
+}
 // Verified sender identity for outbound mail via Resend
 const NOMINATION_SENDER = "notifications@cbbcl.org";
 
@@ -296,6 +308,12 @@ app.post("/api/membership/nominate", async (req, res) => {
       return res.status(400).json({ error: "Full name, email, phone, and Facebook link are required." });
     }
 
+    const photo = parseApplicantPhoto(body.photo);
+    if (!photo) {
+      return res.status(400).json({ error: "Please attach a photo (JPG, PNG or WebP, up to 3 MB)." });
+    }
+    const photoFilename = `${fullName.replace(/[^a-z0-9]+/gi, "-").replace(/(^-|-$)/g, "").toLowerCase() || "applicant"}-photo.${photo.ext}`;
+
     const resend = getResendClient();
     if (!resend) {
       console.error("Nomination email not sent: RESEND_API_KEY not configured.");
@@ -335,13 +353,20 @@ app.post("/api/membership/nominate", async (req, res) => {
     const html = buildRegistryEmailHtml(
       "Membership Nomination Request",
       "A new membership nomination request has been submitted through the CBBCL Registry Portal.",
-      fields
+      fields,
+      undefined,
+      "applicant-photo"
     );
 
     const { error } = await resend.emails.send({
       from: `CBBCL Registry <${NOMINATION_SENDER}>`,
       to: NOMINATION_RECIPIENT,
       replyTo: email,
+      attachments: [
+        // Inline copy shown in the email body, plus a regular attachment to download.
+        { filename: photoFilename, content: photo.content, contentType: photo.contentType, contentId: "applicant-photo" },
+        { filename: photoFilename, content: photo.content, contentType: photo.contentType }
+      ],
       subject: `Membership Nomination Request - ${fullName}`,
       text: lines.join("\n"),
       html,
@@ -388,9 +413,10 @@ app.post("/api/contact/inquiry", async (req, res) => {
     const phone = (body.phone || "").toString().trim();
     const subject = (body.subject || "").toString().trim();
     const message = (body.message || "").toString().trim();
+    const facebookLink = (body.facebookLink || "").toString().trim();
 
-    if (!name || !email || !message) {
-      return res.status(400).json({ error: "Name, email, and message are required." });
+    if (!name || !email || !facebookLink || !message) {
+      return res.status(400).json({ error: "Name, email, Facebook link, and message are required." });
     }
 
     const resend = getResendClient();
@@ -403,6 +429,7 @@ app.post("/api/contact/inquiry", async (req, res) => {
       `Full Name: ${name}`,
       `Email: ${email}`,
       `Phone: ${phone || "Not provided"}`,
+      `Facebook Profile: ${facebookLink}`,
       `Inquiry Sphere: ${subject || "Not specified"}`,
       `Message: ${message}`,
     ];
@@ -411,6 +438,7 @@ app.post("/api/contact/inquiry", async (req, res) => {
       { label: "Full Name", value: name },
       { label: "Email", value: email },
       { label: "Phone", value: phone || "Not provided" },
+      { label: "Facebook Profile", value: facebookLink, isLink: true },
       { label: "Inquiry Sphere", value: subject || "Not specified" },
       { label: "Message", value: message },
     ];

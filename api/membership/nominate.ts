@@ -5,6 +5,17 @@ import { buildRegistryEmailHtml } from "../_lib/emailTemplate.js";
 const NOMINATION_RECIPIENT = "membership@cbbcl.org";
 const NOMINATION_SENDER = "notifications@cbbcl.org";
 
+// Applicant photo arrives as a data URL (resized in the browser). Only JPEG/PNG/WebP, max 3 MB.
+const PHOTO_MAX_BYTES = 3 * 1024 * 1024;
+function parseApplicantPhoto(dataUrl: unknown): { content: string; contentType: string; ext: string } | null {
+  if (typeof dataUrl !== "string") return null;
+  const m = dataUrl.match(/^data:(image\/(jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/);
+  if (!m) return null;
+  const content = m[3];
+  if (Math.floor((content.length * 3) / 4) > PHOTO_MAX_BYTES) return null;
+  return { content, contentType: m[1], ext: m[2] === "jpeg" ? "jpg" : m[2] };
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
@@ -29,6 +40,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!fullName || !email || !phone || !facebookLink) {
       return res.status(400).json({ error: "Full name, email, phone, and Facebook link are required." });
     }
+
+    const photo = parseApplicantPhoto(body.photo);
+    if (!photo) {
+      return res.status(400).json({ error: "Please attach a photo (JPG, PNG or WebP, up to 3 MB)." });
+    }
+    const photoFilename = `${fullName.replace(/[^a-z0-9]+/gi, "-").replace(/(^-|-$)/g, "").toLowerCase() || "applicant"}-photo.${photo.ext}`;
 
     const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {
@@ -70,13 +87,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const html = buildRegistryEmailHtml(
       "Membership Nomination Request",
       "A new membership nomination request has been submitted through the CBBCL Registry Portal.",
-      fields
+      fields,
+      undefined,
+      "applicant-photo"
     );
 
     const { error } = await resend.emails.send({
       from: `CBBCL Registry <${NOMINATION_SENDER}>`,
       to: NOMINATION_RECIPIENT,
       replyTo: email,
+      attachments: [
+        // Inline copy shown in the email body, plus a regular attachment to download.
+        { filename: photoFilename, content: photo.content, contentType: photo.contentType, contentId: "applicant-photo" },
+        { filename: photoFilename, content: photo.content, contentType: photo.contentType }
+      ],
       subject: `Membership Nomination Request - ${fullName}`,
       text: lines.join("\n"),
       html,

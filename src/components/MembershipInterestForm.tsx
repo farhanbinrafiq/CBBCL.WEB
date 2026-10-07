@@ -1,7 +1,33 @@
 import React, { useState } from "react";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, Camera, X } from "lucide-react";
 import { getMembershipApplications, saveMembershipApplications } from "../utils/memberStorage";
 import { MEMBERSHIP_CATEGORIES } from "../membershipCategories";
+
+// Photos are scaled down in the browser so large phone pictures still upload quickly.
+const PHOTO_MAX_SIDE = 1000;
+const PHOTO_MAX_INPUT_BYTES = 15 * 1024 * 1024;
+
+function resizePhoto(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, PHOTO_MAX_SIDE / Math.max(img.width, img.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      const ctx = canvas.getContext("2d");
+      if (!ctx) { URL.revokeObjectURL(url); reject(new Error("Could not process the photo.")); return; }
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL("image/jpeg", 0.85));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("That file could not be read as an image.")); };
+    img.src = url;
+  });
+}
 
 interface MembershipInterestFormProps {
   /** Category pre-selected in the form, e.g. "Life" (a MembershipCategory.formValue). */
@@ -29,6 +55,36 @@ export default function MembershipInterestForm({ defaultCategory = "Permanent" }
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [formData, setFormData] = useState(emptyForm);
+  const [photo, setPhoto] = useState<string | null>(null);
+  const [photoError, setPhotoError] = useState<string | null>(null);
+  const photoInputRef = React.useRef<HTMLInputElement | null>(null);
+
+  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0];
+    setPhotoError(null);
+    if (!file) return;
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) {
+      setPhotoError("Please choose a JPG, PNG or WebP image.");
+      e.target.value = "";
+      return;
+    }
+    if (file.size > PHOTO_MAX_INPUT_BYTES) {
+      setPhotoError("That photo is too large. Please choose one under 15 MB.");
+      e.target.value = "";
+      return;
+    }
+    try {
+      setPhoto(await resizePhoto(file));
+    } catch (err: any) {
+      setPhotoError(err.message || "Could not process the photo.");
+      e.target.value = "";
+    }
+  };
+
+  const clearPhoto = () => {
+    setPhoto(null);
+    if (photoInputRef.current) photoInputRef.current.value = "";
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -38,6 +94,10 @@ export default function MembershipInterestForm({ defaultCategory = "Permanent" }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.fullName || !formData.email || !formData.phone || !formData.facebookLink) return;
+    if (!photo) {
+      setPhotoError("Please attach your photo before submitting.");
+      return;
+    }
 
     setSubmitting(true);
     setSubmitError(null);
@@ -46,7 +106,7 @@ export default function MembershipInterestForm({ defaultCategory = "Permanent" }
       const res = await fetch("/api/membership/nominate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ ...formData, photo })
       });
 
       if (!res.ok) {
@@ -74,6 +134,7 @@ export default function MembershipInterestForm({ defaultCategory = "Permanent" }
       setTimeout(() => {
         setFormSubmitted(false);
         setFormData(emptyForm);
+        clearPhoto();
       }, 5000);
     } catch (error: any) {
       setSubmitError(error.message || "Something went wrong. Please try again.");
@@ -255,6 +316,46 @@ export default function MembershipInterestForm({ defaultCategory = "Permanent" }
                 placeholder="e.g. +880 1711223344"
               />
             </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label htmlFor="membership-photo" className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
+              Your Photo *
+            </label>
+            <div className="flex items-center gap-4">
+              <div className="w-20 h-20 shrink-0 rounded-full border border-slate-200 bg-white overflow-hidden flex items-center justify-center">
+                {photo ? (
+                  <img src={photo} alt="Selected photo preview" className="w-full h-full object-cover" />
+                ) : (
+                  <Camera className="w-6 h-6 text-slate-300" />
+                )}
+              </div>
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <label
+                    htmlFor="membership-photo"
+                    className="cursor-pointer inline-block px-3 py-2 bg-white border border-slate-300 hover:border-gold text-[10px] font-sans font-bold uppercase tracking-widest text-navy transition-colors"
+                  >
+                    {photo ? "Change Photo" : "Attach Photo"}
+                  </label>
+                  {photo && (
+                    <button type="button" onClick={clearPhoto} aria-label="Remove photo" className="p-1.5 text-slate-400 hover:text-red-600">
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+                <p className="text-[10px] font-sans text-slate-400">A clear, recent photo of yourself. JPG, PNG or WebP.</p>
+              </div>
+            </div>
+            <input
+              ref={photoInputRef}
+              id="membership-photo"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={handlePhotoChange}
+              className="sr-only"
+            />
+            {photoError && <p className="text-[11px] font-sans text-red-600 font-medium">{photoError}</p>}
           </div>
 
           {submitError && (

@@ -3,13 +3,25 @@
 // Kept inside api/ (rather than imported from src/) so Vercel's serverless
 // function bundler always resolves it correctly.
 
+// Hosted PNG (email clients such as Gmail do not show SVG). Served from public/email-logo.png.
+const EMAIL_LOGO_URL = "https://cbbcl.org/email-logo.png";
+
 export interface EmailField {
   label: string;
   value: string;
   isLink?: boolean;
 }
 
-export function buildRegistryEmailHtml(heading: string, intro: string, fields: EmailField[], closingNote?: string): string {
+export function buildRegistryEmailHtml(heading: string, intro: string, fields: EmailField[], closingNote?: string, photoCid?: string): string {
+  const photoBlock = photoCid
+    ? `
+            <tr>
+              <td style="padding:8px 40px 0 40px;" align="center">
+                <div style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#9a9488;font-weight:700;margin-bottom:8px;">Applicant Photo</div>
+                <img src="cid:${photoCid}" alt="Applicant photo" width="180" style="display:block;width:180px;max-width:100%;height:auto;border-radius:4px;border:2px solid #c9a84c;" />
+              </td>
+            </tr>`
+    : "";
   const rows = fields
     .map(
       (f) => `
@@ -36,6 +48,7 @@ export function buildRegistryEmailHtml(heading: string, intro: string, fields: E
           <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#ffffff;border-radius:4px;overflow:hidden;box-shadow:0 4px 24px rgba(26,39,68,0.08);">
             <tr>
               <td style="background-color:#1a2744;padding:32px 40px;text-align:center;">
+                <img src="${EMAIL_LOGO_URL}" alt="Cox's Bazar Boat Club Ltd." width="88" height="88" style="display:block;margin:0 auto 14px auto;width:88px;height:88px;border:0;" />
                 <div style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#c9a84c;font-weight:700;">
                   Cox's Bazar Boat Club Ltd.
                 </div>
@@ -51,6 +64,7 @@ export function buildRegistryEmailHtml(heading: string, intro: string, fields: E
                 </p>
               </td>
             </tr>
+${photoBlock}
             <tr>
               <td style="padding:0 40px 24px 40px;">
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0">

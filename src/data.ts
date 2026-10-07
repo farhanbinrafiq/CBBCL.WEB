@@ -93,7 +93,50 @@ export const DIRECTORS_DATA: Director[] = [
     id: "farhan-bin-rafiq",
     name: "Farhan Bin Rafiq",
     designation: "Founding Vice President",
-    membershipCode: "CBBCL-FOUNDER-002"
+    membershipCode: "CBBCL-FOUNDER-002",
+    profileSubmitted: true,
+    profileRevision: 6,
+    photoAlt: "Official portrait of Farhan Bin Rafiq, Founding Vice President, Cox's Bazar Boat Club Ltd.",
+    bio: [
+      "Farhan Bin Rafiq is a founding leader of Cox's Bazar Boat Club Ltd., and an entrepreneur and business professional with a diverse background spanning hospitality, operations, business development, technology and e-commerce.",
+      "He is the Founder of Choosify Technologies Ltd., a technology and digital commerce venture focused on product discovery, comparison, trusted sellers and modern e-commerce experiences. He also serves as an advisor and consultant to EZBOOKING.GLOBAL, an online travel and accommodation booking platform, and has been involved in creative digital initiatives such as Artveen / Tanveen's Art Escape.",
+      "With more than ten years of professional experience across business operations, hospitality, client and vendor relationship management, business development, service operations and digital platforms, his career has been marked by significant progression — including seven internal promotions — reflecting his leadership, adaptability and operational excellence. He has worked with corporate organizations, international NGOs, strategic stakeholders and cross-functional teams.",
+      "Beyond business, Farhan is engaged in youth and community leadership through JCI Cox's Bazar. Joining as a member in 2023, he has progressed to his current role as Local Director, taking part in community, environmental and social development initiatives.",
+      "As Founding Vice President of Cox's Bazar Boat Club Ltd., he contributes his experience in entrepreneurship, hospitality, tourism, technology, branding and digital presence, operations, and community and stakeholder engagement toward the growth and strategic development of the Club. He also built the Club's official website, cbbcl.org."
+    ],
+    businessProfile: {
+      // Multiple entries are separated by "; ".
+      role: "Founder, Choosify Technologies Ltd.; Advisor / Consultant, EZBOOKING.GLOBAL; Creative digital initiative, Artveen / Tanveen's Art Escape",
+      company: "Choosify Technologies Ltd.; Artveen / Tanveen's Art Escape",
+      industry: "Technology & E-commerce; Hospitality & Tourism Technology; Digital Creative Platforms",
+      interests: "E-commerce; Technology & Digital Platforms; Product Development; Hospitality & Tourism; Business Development; Digital Marketing; Entrepreneurship",
+      website: "https://choosify.bd"
+    },
+    socials: {
+      facebook: "https://www.facebook.com/farhanbinrafiq.me",
+      linkedin: "https://www.linkedin.com/in/farhanbinrafiq/",
+      email: "farhanbinrafiq@gmail.com, ceo@choosify.bd"
+    },
+    achievements: [
+      "Built the official website of Cox's Bazar Boat Club Ltd. (cbbcl.org)",
+      "Seven internal promotions over more than ten years of professional experience, reflecting consistent performance and growing management responsibility",
+      "Master of Business Administration (MBA)",
+      "Bachelor of Business Administration (BBA)"
+    ],
+    memberships: [
+      "Cox's Bazar Boat Club Ltd. — Founding Vice President",
+      "JCI Cox's Bazar — Local Director (member since 2023)"
+    ],
+    community: [
+      "Project Green Cox's Bazar — environmental and tree plantation initiative with JCI Cox's Bazar",
+      "ECCHE PURAN — community welfare initiative",
+      "JCI Cox's Bazar youth leadership, community development and social welfare initiatives"
+    ],
+    timeline: [
+      { year: "2023", event: "Joined JCI Cox's Bazar as a Member" },
+      { year: "Current", event: "Local Director, JCI Cox's Bazar" },
+      { year: "Current", event: "Founding Vice President, Cox's Bazar Boat Club Ltd." }
+    ]
   },
   {
     id: "arifur-rahman",

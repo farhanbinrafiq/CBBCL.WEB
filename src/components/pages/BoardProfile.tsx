@@ -404,6 +404,23 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
 
               </>
             )}
+            {/* Areas of Expertise */}
+            {director.expertise && director.expertise.length > 0 && (
+              <div className="bg-white p-6 border border-slate-200/60 rounded-xs shadow-sm space-y-4">
+                <h4 className="font-display text-lg text-text-dark border-b border-slate-100 pb-2 flex items-center space-x-2">
+                  <Award className="w-4 h-4 text-gold" />
+                  <span>Areas of Expertise</span>
+                </h4>
+                <ul className="flex flex-wrap gap-2">
+                  {director.expertise.map((item) => (
+                    <li key={item} className="font-sans text-[11px] text-navy bg-gold/10 border border-gold/30 px-3 py-1 rounded-full">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             {/* Vision */}
             {director.vision && director.vision.length > 0 && (
               <div className="bg-white p-8 md:p-10 border border-slate-200/60 rounded-xs shadow-sm space-y-6">
@@ -519,7 +536,7 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
                         </div>
                         <div className="space-y-1">
                           <span className="font-display text-sm font-semibold text-gold-dark font-mono block">
-                            Year {step.year}
+                            {/^\d/.test(step.year) ? `Year ${step.year}` : step.year}
                           </span>
                           <p className="font-sans text-xs text-text-body font-light leading-relaxed">
                             {step.event}

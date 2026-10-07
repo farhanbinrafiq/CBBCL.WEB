@@ -14,7 +14,7 @@ export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [formData, setFormData] = useState({ name: "", email: "", phone: "", subject: "Membership Query", message: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", facebookLink: "", subject: "Membership Query", message: "" });
   const [footerData, setFooterData] = useState<FooterSettings>(() => getFooterSettingsSync());
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export default function Contact() {
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) return;
+    if (!formData.name || !formData.email || !formData.facebookLink || !formData.message) return;
 
     setSubmitting(true);
     setSubmitError(null);
@@ -52,7 +52,7 @@ export default function Contact() {
       setSubmitted(true);
       setTimeout(() => {
         setSubmitted(false);
-        setFormData({ name: "", email: "", phone: "", subject: "Membership Query", message: "" });
+        setFormData({ name: "", email: "", phone: "", facebookLink: "", subject: "Membership Query", message: "" });
       }, 5000);
     } catch (error: any) {
       setSubmitError(error.message || "Something went wrong. Please try again.");
@@ -248,6 +248,20 @@ export default function Contact() {
                   </div>
                 </div>
 
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
+                    Facebook Profile Link *
+                  </label>
+                  <input
+                    type="url"
+                    name="facebookLink"
+                    required
+                    value={formData.facebookLink}
+                    onChange={handleInputChange}
+                    className="w-full bg-slate-50 border border-slate-200 px-4 py-2.5 text-xs focus:bg-white focus:border-gold outline-none transition-colors"
+                    placeholder="https://facebook.com/yourname"
+                  />
+                </div>
                 <div className="space-y-1.5">
                   <label className="text-[9px] font-sans font-bold text-slate-400 uppercase tracking-widest">
                     Your Constructive Inquiry *
