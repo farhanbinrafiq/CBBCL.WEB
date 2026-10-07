@@ -6,3 +6,6 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Original photos/videos kept locally; the site uses copies in src/assets
+Media Files/

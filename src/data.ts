@@ -1,33 +1,53 @@
 import { Director, NewsPost, EventItem, Facility, Affiliation } from "./types";
 // @ts-ignore
-import farhanBinRafiqPortrait from "./assets/images/board/FBR.png";
+import farhanBinRafiqPortrait from "./assets/images/board/farhan-bin-rafiq.png";
 // @ts-ignore
-import amzadMahmudPortrait from "./assets/images/board/AZM.png";
+import amzadMahmudPortrait from "./assets/images/board/amzad-mahmud.png";
 // @ts-ignore
-import mohammedEliasPortrait from "./assets/images/board/ELS.png";
+import mohammedEliasPortrait from "./assets/images/board/mohammed-elias.png";
 // @ts-ignore
-import mdYousufPortrait from "./assets/images/board/YSF.png";
+import mdYousufPortrait from "./assets/images/board/md-yousuf.png";
 // @ts-ignore
-import nurulAbsarPortrait from "./assets/images/board/NRA.png";
+import nurulAbsarPortrait from "./assets/images/board/nurul-absar.png";
+// @ts-ignore
+import presidentPortrait from "./assets/images/board/humayun-kabir-robel.png";
+// @ts-ignore
+import arifurRahmanPortrait from "./assets/images/board/arifur-rahman.png";
+// @ts-ignore
+import akRubelPortrait from "./assets/images/board/ak-rubel.jpg";
+// @ts-ignore
+import maimunalKarimJisanPortrait from "./assets/images/board/maimunal-karim-jisan.jpg";
+// @ts-ignore
+import mdImranAlamPortrait from "./assets/images/board/md-imran-alam.png";
+// @ts-ignore
+import mdRezaulKabirRezaPortrait from "./assets/images/board/md-rezaul-kabir-reza.png";
+// @ts-ignore
+import mehediHasanPortrait from "./assets/images/board/mehedi-hasan.png";
+// @ts-ignore
+import rasadulMaimunEvoPortrait from "./assets/images/board/reshedul-evu.jpg";
+// @ts-ignore
+import ziaulHoquePortrait from "./assets/images/board/ziaul-haque.png";
+// @ts-ignore
+import heroVideo from "./assets/videos/hero.mp4";
 
-export const PRESIDENT_IMAGE = "https://res.cloudinary.com/u6f3l1qm/image/upload/v1791044752/HKR.png";
+export const PRESIDENT_IMAGE = presidentPortrait;
 export const FARHAN_BIN_RAFIQ_IMAGE = farhanBinRafiqPortrait;
-export const ARIFUR_RAHMAN_IMAGE = "https://res.cloudinary.com/u6f3l1qm/image/upload/v1791146710/Untitled_design.png";
+export const ARIFUR_RAHMAN_IMAGE = arifurRahmanPortrait;
 export const AMZAD_MAHMUD_IMAGE = amzadMahmudPortrait;
 export const MOHAMMED_ELIAS_IMAGE = mohammedEliasPortrait;
 export const MD_YOUSUF_IMAGE = mdYousufPortrait;
 export const NURUL_ABSAR_IMAGE = nurulAbsarPortrait;
-export const AK_RUBEL_IMAGE = "https://res.cloudinary.com/u6f3l1qm/image/upload/v1791044746/AKRB_v2.jpg";
-export const MAIMUNAL_KARIM_JISAN_IMAGE = "https://res.cloudinary.com/u6f3l1qm/image/upload/v1791044749/WhatsApp_Image_2026-06-19_at_10.52.46_PM.jpg";
-export const MD_IMRAN_ALAM_IMAGE = "https://res.cloudinary.com/u6f3l1qm/image/upload/v1791044752/Untitled_design_1.png";
-export const MD_REZAUL_KABIR_REZA_IMAGE = "https://res.cloudinary.com/u6f3l1qm/image/upload/v1791044748/Untitled_design_2.png";
-export const MEHEDI_HASAN_IMAGE = "https://res.cloudinary.com/u6f3l1qm/image/upload/v1791044751/Untitled_design_4.png";
-export const RESHEDUL_EVU_IMAGE = "https://res.cloudinary.com/u6f3l1qm/image/upload/v1791046971/WhatsApp_Image_2026-10-03_at_10.44.16_PM.jpg";
+export const AK_RUBEL_IMAGE = akRubelPortrait;
+export const MAIMUNAL_KARIM_JISAN_IMAGE = maimunalKarimJisanPortrait;
+export const MD_IMRAN_ALAM_IMAGE = mdImranAlamPortrait;
+export const MD_REZAUL_KABIR_REZA_IMAGE = mdRezaulKabirRezaPortrait;
+export const MEHEDI_HASAN_IMAGE = mehediHasanPortrait;
+export const RESHEDUL_EVU_IMAGE = rasadulMaimunEvoPortrait;
 export const MD_ZIAUL_HOQUE = {
   name: "MD. Ziaul Hoque",
-  image: "https://res.cloudinary.com/u6f3l1qm/image/upload/v1791046228/ZUQ.png"
+  image: ziaulHoquePortrait
 };
-export const MASTER_HERO_VIDEO = "https://res.cloudinary.com/u6f3l1qm/video/upload/v1791046804/15818830_1920_1080_30fps.mp4";
+export const MASTER_HERO_VIDEO = heroVideo;
 
 export const DIRECTORS_DATA: Director[] = [
   {
