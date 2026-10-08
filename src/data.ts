@@ -117,7 +117,8 @@ export const DIRECTORS_DATA: Director[] = [
     designation: "Founding Vice President",
     membershipCode: "CBBCL-FOUNDER-002",
     profileSubmitted: true,
-    profileRevision: 6,
+    profileRevision: 7,
+    quote: "We make mistakes, and mistakes make us.",
     photoAlt: "Official portrait of Farhan Bin Rafiq, Founding Vice President, Cox's Bazar Boat Club Ltd.",
     bio: [
       "Farhan Bin Rafiq is a founding leader of Cox's Bazar Boat Club Ltd., and an entrepreneur and business professional with a diverse background spanning hospitality, operations, business development, technology and e-commerce.",
