@@ -212,7 +212,7 @@ export const DIRECTORS_DATA: Director[] = [
     designation: "Founding Director",
     membershipCode: "CBBCL-FOUNDER-006",
     profileSubmitted: true,
-    profileRevision: 5,
+    profileRevision: 7,
     bio: [
       "Md. Imran Alam is a Director of Cox's Bazar Boat Club Limited (CBBCL), with professional experience spanning entrepreneurship, hospitality, commercial property, agriculture, dairy farming, and fisheries.",
       "He is the Managing Director of N. Alam Shopping Complex in Court Bazar, Ukhiya, Cox's Bazar, and the Proprietor of Shuvo Guest House and Hena Dairy Farm & Fish Farm. Through these ventures, he has developed experience in business management, hospitality operations, commercial property management, and local enterprise development.",
@@ -232,14 +232,16 @@ export const DIRECTORS_DATA: Director[] = [
       interests: "Real Estate & Commercial Development; Hospitality & Tourism; Agriculture & Dairy; Fisheries; Community & Sports Development"
     },
     achievements: [
-      "Entrepreneurial portfolio — started and developed ventures in hospitality, commercial property, agriculture, dairy farming and fisheries in Ukhiya, Cox's Bazar since 2018",
-      "Commercial leadership — Managing Director of N. Alam Shopping Complex, a major commercial establishment in Court Bazar, Ukhiya",
-      "Hospitality & agri-business — Proprietor of Shuvo Guest House and Hena Dairy Farm & Fish Farm",
-      "Sports administration — Treasurer of the Ukhiya Upazila Players Association (since 2026)",
-      "CBBCL leadership — Director of Cox's Bazar Boat Club Limited"
+      "Entrepreneurial Leadership — Managing Director of N. Alam Shopping Complex and Proprietor of Shuvo Guest House and Hena Dairy Farm & Fish Farm",
+      "Business Diversification — Active involvement across hospitality, commercial real estate, agriculture, dairy farming and fisheries",
+      "Business Development — Building and managing diversified business ventures in Ukhiya, Cox's Bazar since 2018",
+      "Sports Leadership — Serving as Treasurer of the Ukhiya Upazila Players Association, contributing to sports administration and athlete welfare",
+      "District-Level Sports Engagement — Member of the Cox's Bazar District Players Association, supporting the development of local athletes and sports activities"
     ],
     socials: {
       facebook: "https://www.facebook.com/moh.imarana.alama",
+      // Instagram invite link as supplied (does not open the profile directly; replace with instagram.com/<username> when available).
+      instagram: "https://www.instagram.com/invites/contact/?utm_content=1dvzeqw&stkn=19l6mc05scxx1",
       email: "imranalam3333@gmail.com"
     },
     memberships: [
