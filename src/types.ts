@@ -43,6 +43,8 @@ export interface Director {
   community?: string[];
   timeline?: { year: string; event: string }[];
   vision?: string[];
+  /** Short personal statement shown under the biography. */
+  quote?: string;
   /** Professional strengths shown as tags under "Areas of Expertise". */
   expertise?: string[];
   socials?: { linkedin?: string; facebook?: string; twitter?: string; instagram?: string; email?: string };

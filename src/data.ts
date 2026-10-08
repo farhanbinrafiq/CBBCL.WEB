@@ -56,37 +56,59 @@ export const DIRECTORS_DATA: Director[] = [
     designation: "Founding President",
     membershipCode: "CBBCL-FOUNDER-001",
     appointed: "January 2026",
+    profileSubmitted: true,
+    profileRevision: 2,
+    photoAlt: "Humayun Kabir Robel, Founding President of Cox's Bazar Boat Club Ltd.",
+    quote: "Building businesses, creating opportunities, and contributing to sustainable economic growth.",
     bio: [
-      "Humayun Kabir Robel is an eminent industrialist, philanthropist, and pioneering figure in Bangladesh's maritime recreation sector. With over two decades of leadership experience across shipping, real estate, and hospitality, he envisioned Cox's Bazar Boat Club Limited as a world-class hub that bridges community integration with nautical advocacy.",
-      "Under his visionary leadership, the club was incorporated as a private non-profit Company Limited by Guarantee under The Companies Act, 1994, aiming to elevate the social and recreational stature of Cox's Bazar. His commitment to establishing an elite, premium-tier institution comparable to the historic clubs of South Asia has been the driving force behind this landmark initiative.",
-      "As the Founding President, he continues to guide the executive committees, international affiliation efforts, and the architectural master planning of the club's state-of-the-art permanent clubhouse, ensuring it meets international standards for luxury and environmental sustainability."
+      "Humayun Kabir Robel is a dynamic entrepreneur and corporate leader with over 13 years of professional experience across the real estate, construction, logistics, tourism, agro, and related business sectors.",
+      "He is the Founder & CEO of Roshni Construction and M/S Kabir Enterprise and serves as Managing Director (Administration) of Chaytara Group, a diversified business group with sister concerns operating in rice milling, logistics supply to UN bodies and development organizations, construction, agro-business, tourism, and other sectors.",
+      "With strong expertise in sales strategy, financial management, business development, and corporate leadership, he has played an active role in driving sustainable business growth, strengthening operational efficiency, and developing long-term strategic partnerships.",
+      "His business interests extend across construction, real estate, logistics, agro-business, rice and flour milling, tourism, and related commercial activities. Through his leadership, he has focused on developing professionally managed ventures while creating opportunities for employment and economic participation.",
+      "Beyond business, he is committed to employment generation, social initiatives, community development, and responsible corporate practices. Through his entrepreneurial journey, he continues to contribute to local economic development while building sustainable and professionally managed business ventures.",
+      "As the Founding President of Cox's Bazar Boat Club Ltd., he provides leadership toward establishing the Club as a distinguished socio-cultural and nautical institution in Cox's Bazar, bringing together business, professional, social and community interests."
+    ],
+    vision: [
+      "As Founding President, Humayun Kabir Robel is committed to building Cox's Bazar Boat Club Ltd. as a distinguished platform for social connection, professional networking, cultural engagement and nautical experiences."
     ],
     businessProfile: {
-      company: "Bengal Horizon Shipping & Logistics Group",
-      role: "Chairman & Managing Director",
-      industry: "Maritime Logistics & Hospitality"
+      // Multiple entries are separated by "; ".
+      role: "Founder, CEO & Proprietor, Roshni Construction; Founder, CEO & Proprietor, M/S Kabir Enterprise; Managing Director (Administration), Chaytara Group; Managing Director, M/S Chaytara Construction; CEO, M/S Chaytara Rice & Flour Mills; CEO, M/S Chaytara CRH Mill; Director, Chaytara Agro; Authorised Dealer, Seven Rings Cement",
+      company: "Roshni Construction; M/S Kabir Enterprise; Chaytara Group; M/S Chaytara Construction; M/S Chaytara Rice & Flour Mills; M/S Chaytara CRH Mill; Chaytara Agro",
+      industry: "Real Estate; Construction; Logistics; Tourism; Agro-Business; Rice & Flour Milling; Supply & Distribution; Related Commercial Ventures",
+      interests: "Business Development; Sales Strategy; Financial Management; Corporate Leadership; Construction; Real Estate; Logistics & Supply; Agro-Business; Rice & Flour Milling; Tourism; Strategic Partnerships; Sustainable Business Growth; Employment Generation"
     },
     achievements: [
-      "Recipient of the National Maritime Entrepreneurship Award (2024)",
-      "Pioneered the first eco-friendly passenger catamaran service on the Cox's Bazar-Saint Martin's route",
-      "Recognized Commercially Important Person (CIP) by the Ministry of Industries"
+      "13+ years of professional experience across real estate, construction, logistics, tourism, agro and related business sectors",
+      "Entrepreneurial leadership — Founder & CEO of Roshni Construction and M/S Kabir Enterprise",
+      "Corporate leadership — Managing Director (Administration) of Chaytara Group",
+      "Business diversification — active leadership across construction, logistics, agro-business, rice milling, tourism and related commercial ventures",
+      "CBBCL founding leadership — Founding President of Cox's Bazar Boat Club Ltd."
     ],
     memberships: [
-      "Life Member, Dhaka Club Limited",
-      "Permanent Member, Chittagong Club Limited",
-      "Executive Committee, Bangladesh Shipping Agents' Association"
+      "Cox's Bazar Chamber of Commerce & Industry — Director",
+      "Junior Chamber International (JCI), Cox's Bazar — Vice President",
+      "Rotary Club of Cox's Bazar City — Director",
+      "Cox's Bazar Boat Club Ltd. — Founding President"
     ],
     community: [
-      "Trustee, Cox's Bazar Marine Conservation Foundation",
-      "Patron, Robel Welfare Trust for Coastal Communities",
-      "Donor Member, Cox's Bazar Red Crescent Society"
+      "Employment generation & local economic development — business leadership focused on creating employment opportunities for the local community and workforce",
+      "Community development & social initiatives — committed to community development and social initiatives alongside his professional and entrepreneurial activities",
+      "Responsible corporate practices — promotes professionally managed and sustainable business ventures for business stakeholders and local communities"
     ],
+    socials: {
+      facebook: "https://www.facebook.com/hkrobel",
+      instagram: "https://www.instagram.com/the____hk",
+      email: "hkrobel@gmail.com"
+    },
     timeline: [
-      { year: "2026", event: "Incorporated and launched Cox's Bazar Boat Club Limited as Founding President" },
-      { year: "2022", event: "Acquired the coastal parcel for the premium marine recreation complex" },
-      { year: "2018", event: "Established Bengal Horizon Marine Academy to train underprivileged coastal youths" },
-      { year: "2012", event: "Launched first luxury charter sailboat cruise in the Bay of Bengal" },
-      { year: "2005", event: "Founded Bengal Horizon Logistics, marking a milestone in Bangladesh maritime cargo transport" }
+      { year: "2026", event: "Appointed Founding President of Cox's Bazar Boat Club Ltd., leading the establishment and development of CBBCL as a prestigious socio-cultural and nautical institution." },
+      { year: "Current", event: "Managing Director (Administration), Chaytara Group — corporate and administrative leadership across the diversified business group's operations." },
+      { year: "Current", event: "Founder & CEO, Roshni Construction & M/S Kabir Enterprise — leads business development and operations across construction, real estate and related commercial activities." },
+      { year: "Current", event: "Director, Cox's Bazar Chamber of Commerce & Industry — professional leadership within the local business and commercial community." },
+      { year: "Current", event: "Vice President, Junior Chamber International (JCI), Cox's Bazar." },
+      { year: "Current", event: "Director, Rotary Club of Cox's Bazar City — contributes to professional and community-oriented activities." },
+      { year: "13+ Years", event: "Entrepreneurial and corporate career spanning real estate, construction, logistics, tourism, agro-business and related sectors." }
     ]
   },
   {
@@ -187,7 +209,51 @@ export const DIRECTORS_DATA: Director[] = [
     id: "md-imran-alam",
     name: "Md Imran Alam",
     designation: "Founding Director",
-    membershipCode: "CBBCL-FOUNDER-006"
+    membershipCode: "CBBCL-FOUNDER-006",
+    profileSubmitted: true,
+    profileRevision: 5,
+    bio: [
+      "Md. Imran Alam is a Director of Cox's Bazar Boat Club Limited (CBBCL), with professional experience spanning entrepreneurship, hospitality, commercial property, agriculture, dairy farming, and fisheries.",
+      "He is the Managing Director of N. Alam Shopping Complex in Court Bazar, Ukhiya, Cox's Bazar, and the Proprietor of Shuvo Guest House and Hena Dairy Farm & Fish Farm. Through these ventures, he has developed experience in business management, hospitality operations, commercial property management, and local enterprise development.",
+      "Alongside his business activities, he is actively involved in sports administration and community development. He serves as the Treasurer of the Ukhiya Upazila Players Association and is a Member of the Cox's Bazar District Players Association, contributing to the development and welfare of local athletes and sports activities.",
+      "His professional journey reflects a commitment to entrepreneurship, responsible leadership, community engagement, and the development of opportunities for local businesses, young people, and the wider community of Cox's Bazar."
+    ],
+    vision: [
+      "His vision for CBBCL is to contribute to building a professionally managed, welcoming, and responsible boat club that promotes recreation, tourism, boating, and meaningful social connections in Cox's Bazar.",
+      "He believes CBBCL can play an important role in strengthening Cox's Bazar's tourism potential while creating opportunities for local businesses, young people, and the wider community. His vision includes promoting responsible boating, safety, environmental awareness, and a culture of respect among members and visitors.",
+      "Through active member participation, responsible management, and community engagement, he hopes CBBCL will become a respected platform for recreation, networking, tourism, and sustainable coastal development in Cox's Bazar."
+    ],
+    businessProfile: {
+      // Multiple entries are separated by "; ".
+      role: "Managing Director, N. Alam Shopping Complex; Proprietor, Shuvo Guest House; Proprietor, Hena Dairy Farm & Fish Farm",
+      company: "N. Alam Shopping Complex; Shuvo Guest House; Hena Dairy Farm & Fish Farm",
+      industry: "Hospitality & Tourism; Commercial Real Estate; Agriculture & Dairy Farming; Fisheries",
+      interests: "Real Estate & Commercial Development; Hospitality & Tourism; Agriculture & Dairy; Fisheries; Community & Sports Development"
+    },
+    achievements: [
+      "Entrepreneurial portfolio — started and developed ventures in hospitality, commercial property, agriculture, dairy farming and fisheries in Ukhiya, Cox's Bazar since 2018",
+      "Commercial leadership — Managing Director of N. Alam Shopping Complex, a major commercial establishment in Court Bazar, Ukhiya",
+      "Hospitality & agri-business — Proprietor of Shuvo Guest House and Hena Dairy Farm & Fish Farm",
+      "Sports administration — Treasurer of the Ukhiya Upazila Players Association (since 2026)",
+      "CBBCL leadership — Director of Cox's Bazar Boat Club Limited"
+    ],
+    socials: {
+      facebook: "https://www.facebook.com/moh.imarana.alama",
+      email: "imranalam3333@gmail.com"
+    },
+    memberships: [
+      "Cox's Bazar Boat Club Limited (CBBCL) — Director",
+      "Ukhiya Upazila Players Association — Treasurer",
+      "Cox's Bazar District Players Association — Member"
+    ],
+    timeline: [
+      { year: "2018–Present", event: "Entrepreneurship & Business Management — started and developed entrepreneurial ventures in hospitality, commercial property, agriculture, dairy farming, and fisheries in Ukhiya, Cox's Bazar." },
+      { year: "2018–Present", event: "Managing Director, N. Alam Shopping Complex — leading the management and development of a major commercial establishment in Court Bazar, Ukhiya, with a focus on business operations, commercial management, and local enterprise development." },
+      { year: "2018–Present", event: "Proprietor, Shuvo Guest House — managing operations in the hospitality and accommodation sector, with a focus on service, guest experience, and business management." },
+      { year: "2018–Present", event: "Proprietor, Hena Dairy Farm & Fish Farm — engaged in diversified agricultural activities, including dairy farming and fisheries." },
+      { year: "2026–Present", event: "Treasurer, Ukhiya Upazila Players Association — leadership in sports administration, contributing to financial management, organizational activities, and the welfare and development of local athletes." },
+      { year: "2026–Present", event: "Member, Cox's Bazar District Players Association — supporting sports development and the welfare of athletes at the district level." }
+    ]
   },
   {
     id: "maimunal-karim-jisan",

@@ -404,6 +404,14 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
 
               </>
             )}
+            {/* Personal quote */}
+            {director.quote && (
+              <blockquote className="bg-navy text-white px-8 py-6 border-l-4 border-gold rounded-xs shadow-sm">
+                <p className="font-display text-lg md:text-xl font-light italic leading-relaxed">“{director.quote}”</p>
+                <footer className="font-sans text-[10px] uppercase tracking-[0.2em] text-gold mt-3">— {director.name}</footer>
+              </blockquote>
+            )}
+
             {/* Areas of Expertise */}
             {director.expertise && director.expertise.length > 0 && (
               <div className="bg-white p-6 border border-slate-200/60 rounded-xs shadow-sm space-y-4">
@@ -437,8 +445,9 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
             )}
 
             {/* Awards & Professional Memberships Grid */}
-            <div className={`grid grid-cols-1 ${(director.achievements?.length || 0) > 0 && (director.memberships?.length || 0) > 0 ? "md:grid-cols-2" : ""} gap-6`}>
-              {director.achievements && director.achievements.length > 0 && (
+            {/* An empty achievements list (achievements: []) shows the section with "No entries at present." */}
+            <div className={`grid grid-cols-1 ${Array.isArray(director.achievements) && (director.memberships?.length || 0) > 0 ? "md:grid-cols-2" : ""} gap-6`}>
+              {Array.isArray(director.achievements) && (
                 <>
                   {/* Achievements Column */}
                   <div className="bg-white p-6 border border-slate-200/60 rounded-xs shadow-sm space-y-4">
@@ -446,8 +455,11 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
                       <Award className="w-4 h-4 text-gold" />
                       <span>Awards & Achievements</span>
                     </h4>
+                    {director.achievements.length === 0 && (
+                      <p className="font-sans text-xs text-slate-400 font-light italic">No entries at present.</p>
+                    )}
                     <ul className="space-y-3 font-sans text-xs text-text-body font-light leading-relaxed">
-                      {director.achievements?.map((ach, idx) => (
+                      {director.achievements.map((ach, idx) => (
                         <li key={idx} className="flex items-start space-x-2">
                           <CheckCircle className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
                           <span>{ach}</span>
@@ -536,7 +548,7 @@ export default function BoardProfile({ directorId = "humayun-kabir-robel", navig
                         </div>
                         <div className="space-y-1">
                           <span className="font-display text-sm font-semibold text-gold-dark font-mono block">
-                            {/^\d/.test(step.year) ? `Year ${step.year}` : step.year}
+                            {/^\d{4}/.test(step.year) ? `Year ${step.year}` : step.year}
                           </span>
                           <p className="font-sans text-xs text-text-body font-light leading-relaxed">
                             {step.event}
