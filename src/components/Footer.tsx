@@ -73,7 +73,8 @@ export default function Footer({ navigate }: FooterProps) {
               <p className="text-[10px] text-slate-500 font-light tracking-wider leading-relaxed">
                 {data.copyright || "© 2026 Cox's Bazar Boat Club Limited. All Rights Reserved."}
               </p>
-              <p className="text-[10px] text-slate-500 font-light tracking-wider mt-2">
+              {/* Desktop position; on mobile the credit moves to the very bottom (see below). */}
+              <p className="hidden lg:block text-[10px] text-slate-500 font-light tracking-wider mt-2">
                 Website Designed &amp; Developed by{" "}
                 <a href="https://choosify.bd" target="_blank" rel="noopener noreferrer" className="text-gold/80 font-medium hover:text-gold transition-colors">
                   Choosify Technologies Ltd.
@@ -166,6 +167,14 @@ export default function Footer({ navigate }: FooterProps) {
                 <span>Incorporated Company Limited by Guarantee</span>
               </div>
             </div>
+
+            {/* Mobile: credit as the last line of the footer */}
+            <p className="lg:hidden w-full border-t border-white/[0.08] pt-4 text-[10px] text-slate-500 font-light tracking-wider">
+              Website Designed &amp; Developed by{" "}
+              <a href="https://choosify.bd" target="_blank" rel="noopener noreferrer" className="text-gold/80 font-medium hover:text-gold transition-colors">
+                Choosify Technologies Ltd.
+              </a>
+            </p>
           </div>
 
         </div>
