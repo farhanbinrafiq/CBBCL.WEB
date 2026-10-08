@@ -190,9 +190,17 @@ export default function Home({ navigate }: HomeProps) {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.9, delay: 0.2 }}
-                    className="font-display font-light uppercase tracking-tight text-white text-2xl sm:text-5xl md:text-7xl lg:text-8xl leading-tight sm:leading-none break-words whitespace-normal"
+                    className="font-display font-medium uppercase tracking-tight text-white text-2xl sm:text-5xl md:text-7xl lg:text-8xl leading-tight sm:leading-none break-words whitespace-pre-line"
                   >
-                    {h.title}
+                    {/* The club name always breaks as "COX'S BAZAR" / "BOAT CLUB LTD."; other titles show as entered. */}
+                    {/^cox['’]s bazar boat club ltd\.?$/i.test((h.title || "").trim()) ? (
+                      <>
+                        <span className="block">Cox&apos;s Bazar</span>
+                        <span className="block">Boat Club Ltd.</span>
+                      </>
+                    ) : (
+                      h.title
+                    )}
                   </motion.h1>
 
                   <motion.p
